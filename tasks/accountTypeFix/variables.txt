@@ -1,0 +1,12 @@
+Password: do6YtJNJCG1!
+Login: admin
+https://pub-api-etna-demo-ci-int-2.etnasoft.us/api/reference/index#
+
+https://priv-api-etna-demo-ci-int-2.etnasoft.us/api/reference/index#
+
+AppKey: NgA5AEEANwBFADgAQgA5AC0AMwBBAEMAQwAtADQAOQBEADQALQBCADkAMAAxAC0ANwA4ADMARgAyADYANgA4ADYARQA5AEMA
+
+      "Endpoint": "https://sogowebapiserver-qa.azurewebsites.net",
+      "Username": "atlas_etna",
+      "Entity": "correspondent_etna.wiai",
+      "SharedSecret": "pbuAaPnhbxWsUoL.iQ390aNXIh8rJ+wcUMPlnk9YIGjCLRm7.DF1dS+qYl.Y9aFh+i9",

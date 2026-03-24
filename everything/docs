@@ -1,0 +1,742 @@
+# 📋 Что мы сделали и зачем
+
+  
+
+---
+
+  
+
+## 🧩 Проблема (до)
+
+  
+
+Разработчики работают в репозитории ETNA_TRADER без единого контекста для AI-инструментов. Каждый использует Claude/Cursor по-своему: кто-то просит написать код, кто-то объяснить, кто-то ревью. Результат непредсказуемый — AI не знает архитектуры проекта, технологического стека, стиля кода, границ слоёв.
+
+  
+
+---
+
+  
+
+## ✅ Что сделано
+
+  
+
+Мы создали **постоянную AI-инфраструктуру** в репозитории ETNA_TRADER — набор файлов-инструкций, которые автоматически загружаются в Claude Code и Cursor и делают AI "знающим" членом команды.
+
+  
+
+---
+
+  
+
+## 📁 Что создано (файлы)
+
+  
+
+### 1. Архитектурный контекст (`CLAUDE.md` / `AGENTS.md`)
+
+  
+
+Один файл, который читает каждый AI-агент перед любой работой. Описывает:
+
+  
+
+- Структуру репозитория (`src/`, `db/`, `frontend/`, `qa/`)
+
+- Технологический стек (OWIN, Web API 2, SolidJS, NUnit, Unity DI, NLog/Serilog)
+
+- Правила слоёв (кто что может импортировать)
+
+- Как запускать тесты, билд, миграции
+
+  
+
+**Польза**: AI больше не путает ASP.NET Core с OWIN, не предлагает React-паттерны в SolidJS проекте.
+
+  
+
+---
+
+  
+
+### 2. Правила кода (`.claude/rules/` — 6 файлов)
+
+  
+
+Конкретные правила с примерами, адаптированные под реальный код ETNA_TRADER:
+
+  
+
+| Файл | Что регулирует |
+| --- | --- |
+| `trading-csharp-conventions.md` | Namespace-иерархия, `async`/`await`, Unity DI, NLog/Serilog |
+| `trading-api-patterns.md` | OWIN контроллеры, `IHttpActionResult`, `[ParamFilter]`, FluentValidation |
+| `trading-component-patterns.md` | SolidJS компоненты, `createStore`, `props.xxx` (без деструктуризации) |
+| `trading-testing-architecture.md` | NUnit/xUnit, Builder-паттерн для `Order`/`Account`/`Position` |
+| `trading-db-migrations.md` | SSDT, 3-фазное удаление колонок, идемпотентные миграции |
+| `sync.md` | Авто-синхронизация `.claude` ↔ `.cursor` |
+
+  
+
+**Польза**: AI генерирует код, который соответствует стилю проекта с первого раза. Меньше правок на ревью.
+
+  
+
+---
+
+  
+
+### 3. Специализированные агенты (`.claude/agents/` — 17 файлов)
+
+  
+
+Агенты — это AI с конкретной ролью и инструкциями. Вызываются автоматически нужными командами.
+
+  
+
+| Группа | Агенты |
+| --- | --- |
+| **trading-app-agents** | `trading-ui-planning` — планирует UI фичи для ACAT; `api-design` — проектирует REST эндпоинты; `db-migration` — планирует миграции схемы |
+| **code-review-agents** | `security-reviewer` (финансовые данные, ownership); `performance-reviewer` (N+1, EF, DataGrid); `code-quality-reviewer`; `test-coverage-reviewer` |
+| **automation-agents** | `developer-agent` — реализует одну задачу изолированно; `automated-quality-gate` — проверяет билд и тесты |
+| **tasks-validators** | `plan-reviewer`, `task-decomposer`, `task-splitter` — для декомпозиции задач |
+| **wf-agents** | `changelog-generator`, `docs-updater` |
+
+  
+
+**Польза**: Каждый агент знает, что такое `AccountOwnershipValidator`, что нельзя логировать баланс счёта, что `ConfigureAwait(false)` нужен в сервисном слое.
+
+  
+
+---
+
+  
+
+### 4. Команды (Скиллы) — 8 штук
+
+  
+
+Команды, которые запускают полный workflow одной инструкцией:
+
+  
+
+| Команда | Что делает |
+| --- | --- |
+| `/nf [фича]` | Проводит интервью по требованиям, создаёт `discovery-[фича].md` |
+| `/ct [фича]` | TDD-декомпозиция: создаёт task-документ с AC и планом тестов |
+| `/si [задача]` | Реализует задачу по task-документу (TDD: RED → GREEN → REFACTOR) |
+| `/sr [задача]` | Полный code review перед PR (security + architecture + performance) |
+| `/udoc` | Обновляет документацию и changelog после реализации |
+| `/parallelization` | Разбивает задачу на параллельные воркеры (frontend / backend / db) |
+| `/ai-settings [режим]` | **Новый**: реализует 5 режимов доставки качества (см. ниже) |
+
+  
+
+**`/ai-settings`** — это прямая реализация вашего `AI_Settings.md` в виде исполняемого скилла:
+
+  
+
+- `ACCEPTANCE_CRITERIA` — генерирует AC из diff
+
+- `RELEASE_NOTES` — готовит текст release notes
+
+- `REPO_STYLE_ALIGNMENT` — проверяет соответствие стилю
+
+- `UNIT_TEST_OPPORTUNITIES` — находит что легче всего покрыть тестами
+
+- `PRE_COMMIT_CHECK` — решает: готово к коммиту или нет
+
+  
+
+---
+
+  
+
+### 5. Документация (`docs/` — 7 файлов)
+
+  
+
+Написана на основе **реального кода** репозитория (не шаблонно):
+
+  
+
+- `project-structure.md` — реальная структура директорий с объяснениями
+
+- `testing-guide.md` — стратегия тестирования с готовыми шаблонами (`OrderBuilder`, примеры тестов)
+
+- `trading-api-infrastructure.md` — реальный OWIN pipeline с 7 middleware-стадиями
+
+- `trading-authentication.md` — все 5 стратегий аутентификации, найденных в коде
+
+- `adr/README.md` + `adr/TEMPLATE.md` — шаблоны для Architecture Decision Records
+
+- `dev-workflow/commands-reference.md` — шпаргалка: как билдить, тестировать, деплоить миграции
+
+  
+
+---
+
+  
+
+### 6. Автоматическая синхронизация
+
+  
+
+- `scripts/sync-docs.js` и `scripts/sync-configs.js` — при редактировании файлов в `.claude/` автоматически обновляется `.cursor/` (и наоборот)
+
+- `hooks.json` — подключён к PostToolUse в обоих инструментах
+
+- Правила в `.cursor/rules/` также создаются в `.mdc` формате (требование Cursor)
+
+  
+
+---
+
+  
+
+## 🎯 Что это даёт команде
+
+  
+
+### До
+
+  
+
+- AI не знает, что в проекте OWIN, а не ASP.NET Core
+
+- AI не знает, что ACAT — SolidJS, не React
+
+- AI не знает про `AccountOwnershipValidator` и может пропустить security-проверку
+
+- Каждый разработчик объясняет контекст каждый раз заново
+
+  
+
+### После
+
+  
+
+- **AI знает стек** — не нужно объяснять, что здесь OWIN, SolidJS, NUnit
+
+- **AI следует правилам проекта** — `props.xxx` в SolidJS, `IHttpActionResult`, `ConfigureAwait(false)`
+
+- **Стандартный workflow** — `/nf` → `/ct` → `/si` → `/sr` работает у всех одинаково
+
+- **Pre-commit проверка** — `/ai-settings PRE_COMMIT_CHECK` перед каждым коммитом
+
+- **AC и Release Notes** — генерируются автоматически из diff, не пишутся вручную
+
+  
+
+---
+
+  
+
+## 🚀 Как начать использовать (3 шага)
+
+  
+
+1. Открыть ETNA_TRADER в Claude Code или Cursor
+
+2. Запустить `/nf [название фичи]` — AI проведёт интервью и создаст spec
+
+3. Запустить `/ct [фича]` — получить готовый task-документ с планом тестов и реализации
+
+  
+
+**Или для существующего изменения:**
+
+  
+
+```
+
+/ai-settings PRE_COMMIT_CHECK
+
+```
+
+  
+
+AI посмотрит git diff и скажет, что ещё нужно сделать перед коммитом.
+
+  
+
+---
+
+  
+
+## ⏱ Объём работы
+
+  
+
+Вся инфраструктура создана за одну сессию:
+
+  
+
+- **32 файла** в `.claude/` (зеркало в `.cursor/`)
+
+- **17 агентов**, **8 команд**, **6 правил**, **7 документов**
+
+- Всё адаптировано под **реальный код** ETNA_TRADER (не шаблонно)
+
+  
+
+---
+
+  
+
+## 🛠 Требования и установка
+
+  
+
+### Что нужно установить
+
+  
+
+| Инструмент | Версия | Для чего |
+| --- | --- | --- |
+| [Claude Code](https://claude.ai/code) | последняя | Основной AI-инструмент (CLI) |
+| [Cursor](https://cursor.sh) | последняя | Альтернативный AI-редактор |
+| Node.js | ≥ 18 | Скрипты синхронизации (`sync-configs.js`, `sync-docs.js`) |
+
+  
+
+### Установка (одноразово после клонирования репозитория)
+
+  
+
+AI-инфраструктура уже находится в репозитории — никаких дополнительных `npm install` не требуется. Скрипты синхронизации используют только встроенные модули Node.js.
+
+  
+
+```bash
+
+# Проверить что Node.js установлен
+
+node --version   # должно быть >= 18
+
+  
+
+# Проверить что синхронизация работает
+
+node scripts/sync-docs.js --check
+
+node scripts/sync-configs.js --check
+
+```
+
+  
+
+### Настройка Claude Code
+
+  
+
+1. Открыть терминал в корне `ETNA_TRADER`
+
+2. Запустить `claude` — Claude Code автоматически подхватит `CLAUDE.md` и все файлы из `.claude/`
+
+3. Готово — никакой ручной конфигурации не нужно
+
+  
+
+### Настройка Cursor
+
+  
+
+1. Открыть папку `ETNA_TRADER` в Cursor
+
+2. Cursor автоматически загрузит правила из `.cursor/rules/*.mdc`
+
+3. Агенты доступны через Cursor Agent panel
+
+  
+
+> **Важно**: файл `.claude/settings.local.json` и `.cursor/settings.local.json` добавлены в `.gitignore` — локальные настройки не попадут в репозиторий.
+
+  
+
+---
+
+  
+
+## 📖 Полный workflow — шаг за шагом
+
+  
+
+### Сценарий 1: Новая фича
+
+  
+
+```
+
+/nf order-bracket-support
+
+```
+
+  
+
+AI проводит интервью: уточняет требования, исследует существующий код, задаёт уточняющие вопросы.
+
+Результат: `tasks/task-2026-03-20-order-bracket-support/discovery-order-bracket-support.md`
+
+  
+
+```
+
+/ct order-bracket-support
+
+```
+
+  
+
+AI читает discovery-документ и создаёт технический план с AC, тестами и декомпозицией на слои.
+
+Результат: `tasks/task-2026-03-20-order-bracket-support/task-order-bracket-support.md`
+
+  
+
+```
+
+/si tasks/task-2026-03-20-order-bracket-support/task-order-bracket-support.md
+
+```
+
+  
+
+AI реализует задачу по TDD: сначала тесты (RED), потом код (GREEN), потом рефакторинг.
+
+  
+
+```
+
+/sr tasks/task-2026-03-20-order-bracket-support/task-order-bracket-support.md
+
+```
+
+  
+
+AI проводит code review: security, architecture, performance, style.
+
+Результат: `tasks/.../code-review-order-bracket-support.md`
+
+  
+
+```
+
+/udoc
+
+```
+
+  
+
+AI обновляет документацию и changelog на основе того, что было реализовано.
+
+  
+
+---
+
+  
+
+### Сценарий 2: Проверка перед коммитом
+
+  
+
+```
+
+/ai-settings PRE_COMMIT_CHECK
+
+```
+
+  
+
+AI смотрит на `git diff --cached`, запускает билд и тесты, проверяет стиль и выдаёт:
+
+  
+
+- `Ready for Commit: YES / NO`
+
+- Список блокирующих проблем с файлами и строками
+
+- Готовый текст commit message
+
+  
+
+---
+
+  
+
+### Сценарий 3: Нужны AC или Release Notes для существующего diff
+
+  
+
+```
+
+/ai-settings ACCEPTANCE_CRITERIA
+
+```
+
+  
+
+```
+
+/ai-settings RELEASE_NOTES
+
+```
+
+  
+
+AI анализирует `git diff HEAD`, отделяет факты от предположений, явно называет legacy-impact и enterprise-impact.
+
+  
+
+---
+
+  
+
+### Структура task-документов
+
+  
+
+```
+
+tasks/
+
+└── task-2026-03-20-order-bracket-support/
+
+    ├── discovery-order-bracket-support.md   ← /nf создаёт
+
+    ├── task-order-bracket-support.md        ← /ct создаёт
+
+    └── code-review-order-bracket-support.md ← /sr создаёт
+
+```
+
+  
+
+> Папка `tasks/` добавлена в `.gitignore` — рабочие документы не попадают в репозиторий.
+
+  
+
+---
+
+  
+
+## ⚙️ Как расширять инфраструктуру
+
+  
+
+### Добавить новый скилл
+
+  
+
+```
+
+/skill-creator
+
+```
+
+  
+
+AI проведёт тебя через процесс: уточнит назначение скилла, поможет написать `skill.md` в правильном формате и зарегистрирует его в `.claude/skills/README.md`.
+
+  
+
+Файл создаётся в: `.claude/skills/<skill-name>/skill.md`
+
+  
+
+После создания **синхронизация запустится автоматически** (через hook) — скилл появится в `.cursor/skills/` без дополнительных действий.
+
+  
+
+---
+
+  
+
+### Изменить правило кода
+
+  
+
+1. Отредактировать файл в `.claude/rules/`
+
+2. Синхронизация в `.cursor/rules/` запустится автоматически через hook
+
+  
+
+Ручной запуск:
+
+  
+
+```bash
+
+node scripts/sync-configs.js --fix
+
+```
+
+  
+
+---
+
+  
+
+### Добавить нового агента
+
+  
+
+1. Создать файл в `.claude/agents/<group>/my-agent.md`
+
+2. Синхронизация — автоматически
+
+  
+
+Группы агентов: `automation-agents`, `code-review-agents`, `tasks-validators-agents`, `trading-app-agents`, `wf-agents`
+
+  
+
+---
+
+  
+
+### Изменить архитектурный контекст
+
+  
+
+Редактировать только **`CLAUDE.md`** (не `AGENTS.md` напрямую).
+
+После сохранения hook автоматически синхронизирует `AGENTS.md`.
+
+  
+
+Ручной запуск:
+
+  
+
+```bash
+
+node scripts/sync-docs.js --fix
+
+```
+
+  
+
+---
+
+  
+
+## ⚠️ Правила работы с AI-инфраструктурой
+
+  
+
+| Правило | Почему |
+| --- | --- |
+| Редактировать только `.claude/`, не `.cursor/` напрямую | `.cursor/` — зеркало, правки перезапишутся при следующей синхронизации |
+| Не коммитить `settings.local.json` | Содержит локальные настройки — намеренно в `.gitignore` |
+| Не дублировать содержимое из `.claude/rules/` в скиллах | Скиллы ссылаются на rules-файлы, не копируют их |
+| Тестировать скилл на реальной задаче после создания | Скилл без реального теста — гипотеза, не инструмент |
+| Использовать относительные пути в скиллах и агентах | Абсолютные пути сломаются на другой машине |
+
+  
+
+---
+
+  
+
+## 🔧 Диагностика
+
+  
+
+### Синхронизация не запустилась автоматически
+
+  
+
+Hook срабатывает на `Write | Edit | MultiEdit` в Claude Code. Если что-то пошло не так:
+
+  
+
+```bash
+
+# Проверить статус синхронизации
+
+node scripts/sync-docs.js --check
+
+node scripts/sync-configs.js --check
+
+  
+
+# Принудительно синхронизировать всё
+
+node scripts/sync-docs.js --fix
+
+node scripts/sync-configs.js --fix
+
+```
+
+  
+
+---
+
+  
+
+### Claude Code не видит скиллы или агентов
+
+  
+
+Проверить что:
+
+  
+
+1. Файл находится в `.claude/skills/<name>/skill.md` (не `.claude/<name>.md`)
+
+2. Frontmatter содержит `name:` и `description:` — оба обязательны
+
+3. Claude Code запущен из корня репозитория `ETNA_TRADER`
+
+  
+
+---
+
+  
+
+### Cursor не применяет правила
+
+  
+
+Правила в Cursor работают только в формате `.mdc`. Если правило добавлено в `.claude/rules/` — запустить синхронизацию:
+
+  
+
+```bash
+
+node scripts/sync-configs.js --fix
+
+```
+
+  
+
+`.mdc` файлы создаются скриптом автоматически.
+
+  
+
+---
+
+  
+
+### Pre-commit hook заблокировал коммит
+
+  
+
+Hook проверяет что `.claude/` и `.cursor/` синхронизированы. Если коммит не проходит:
+
+  
+
+```bash
+
+node scripts/sync-configs.js --fix
+
+node scripts/sync-docs.js --fix
+
+git add .claude/ .cursor/ CLAUDE.md AGENTS.md
+
+# повторить коммит
+
+```

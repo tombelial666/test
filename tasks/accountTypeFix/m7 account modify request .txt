@@ -1,0 +1,35 @@
+{
+  "_index": "ams-etna-ci-int-2-2026.03",
+  "_type": "_doc",
+  "_id": "JO46G50BTxO5mUeqgitu",
+  "_version": 1,
+  "_score": null,
+  "_source": {
+    "@timestamp": "2026-03-23T15:05:12.5077116+00:00",
+    "level": "Debug",
+    "messageTemplate": "Send JSON to {Uri}",
+    "message": "Send JSON to https://sogowebapiserver-qa.azurewebsites.net/atlas/api/v2/account_requests/",
+    "Uri": "https://sogowebapiserver-qa.azurewebsites.net/atlas/api/v2/account_requests/",
+    "RequestContent": "{\"modifyType\":\"UPDATE\",\"account\":\"5FP05757\",\"repCode\":\"ETN\",\"branch\":\"5FP\",\"externalRequestId\":\"029347ce-3c6e-4865-829b-a8db7840c1bd\",\"forms\":[{\"formId\":{\"version\":6,\"title\":\"new_account_form\"},\"formSchemaHash\":{\"hash\":\"tUJLd/JyEocxGhMP5sqdwwdPXKuMj1n+zFrDrP0m2+g=\",\"algorithm\":\"SHA-256\"},\"jsonData\":{\"backupWithholding\":\"NO\",\"customerType\":\"INDIVIDUAL\",\"catAccountholderType\":\"I\",\"trustedContact\":\"INCLUDE\",\"applicants\":[{\"identity\":{\"name\":{\"legalName\":\"test test\",\"prefix\":\"Mr.\",\"givenName\":\"test\",\"familyName\":\"test\"}},\"contact\":{\"mailingAddress\":{\"country\":\"USA\",\"streetAddress\":[\"Re test st 56\"],\"city\":\"Boca Raton\",\"postalCode\":\"33431\",\"state\":\"FL\"},\"homeAddress\":{\"country\":\"USA\",\"streetAddress\":[\"Re test st 56\"],\"city\":\"Boca Raton\",\"postalCode\":\"33431\",\"state\":\"FL\"}}}],\"applicantSignature\":{\"eSigned\":\"YES\"},\"principalApprover\":{\"approverName\":\"PrincipalApprover\"}}},{\"formId\":{\"version\":1,\"title\":\"trusted_contact_form\"},\"formSchemaHash\":{\"hash\":\"yttAC415v/irRx+JfdZDoEDXNL7H5dmGgrQu4oSTCwc=\",\"algorithm\":\"SHA-256\"},\"jsonData\":{\"emailAddress\":\"retest@retest.com\",\"phoneNumber\":{\"phoneNumber\":\"17024568196\",\"phoneNumberType\":\"MOBILE\"},\"mailingAddress\":{\"country\":\"USA\",\"streetAddress\":[\"test st. 567\"],\"city\":\"Boca Raton\",\"postalCode\":\"33431\",\"state\":\"FL\"},\"givenName\":\"test\",\"familyName\":\"test\"}}]}",
+    "ClearingFirm": "Apex",
+    "SourceContext": "Etna.AccountManagement.Apex.ApexServices.Atlas.AccountRequestsApi",
+    "Environment": "Production",
+    "ServiceName": "AMS"
+  },
+  "fields": {
+    "@timestamp": [
+      "2026-03-23T15:05:12.507Z"
+    ]
+  },
+  "highlight": {
+    "message": [
+      "Send @opensearch-dashboards-highlighted-field@JSON@/opensearch-dashboards-highlighted-field@ to https://sogowebapiserver-qa.azurewebsites.net/atlas/api/v2/account_requests/"
+    ],
+    "messageTemplate": [
+      "Send @opensearch-dashboards-highlighted-field@JSON@/opensearch-dashboards-highlighted-field@ to {Uri}"
+    ]
+  },
+  "sort": [
+    1774278312507
+  ]
+}

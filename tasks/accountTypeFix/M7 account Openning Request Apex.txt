@@ -1,0 +1,32 @@
+{
+  "_index": "ams-etna-ci-int-2-2026.03",
+  "_type": "_doc",
+  "_id": "be41G50BTxO5mUeqTRba",
+  "_version": 1,
+  "_score": null,
+  "_source": {
+    "@timestamp": "2026-03-23T14:59:30.2441474+00:00",
+    "level": "Debug",
+    "messageTemplate": "Send JSON to {Uri}",
+    "message": "Send JSON to https://sogowebapiserver-qa.azurewebsites.net/atlas/api/v2/account_requests/",
+    "Uri": "https://sogowebapiserver-qa.azurewebsites.net/atlas/api/v2/account_requests/",
+    "RequestContent": "{\"modifyType\":\"CREATE\",\"repCode\":\"ETN\",\"branch\":\"5FP\",\"externalRequestId\":\"b41639ac-ed05-4d8e-9bce-31ef173162de\",\"forms\":[{\"formId\":{\"version\":6,\"title\":\"new_account_form\"},\"formSchemaHash\":{\"hash\":\"tUJLd/JyEocxGhMP5sqdwwdPXKuMj1n+zFrDrP0m2+g=\",\"algorithm\":\"SHA-256\"},\"jsonData\":{\"backupWithholding\":\"NO\",\"customerType\":\"INDIVIDUAL\",\"accountType\":\"CASH\",\"catAccountholderType\":\"I\",\"trustedContact\":\"INCLUDE\",\"applicants\":[{\"numDependents\":1,\"maritalStatus\":\"SINGLE\",\"identity\":{\"name\":{\"legalName\":\"test test\",\"prefix\":\"Mr.\",\"givenName\":\"test\",\"familyName\":\"test\"},\"socialSecurityNumber\":\"670-54-6852\",\"birthCountry\":\"USA\",\"citizenshipCountry\":\"USA\",\"dateOfBirth\":\"2000-10-05\"},\"contact\":{\"emailAddresses\":[\"artem.bulgakov@etnatrader.com\"],\"phoneNumbers\":[{\"phoneNumber\":\"17024568596\",\"phoneNumberType\":\"MOBILE\"}],\"mailingAddress\":{\"country\":\"USA\",\"streetAddress\":[\"test st 567\"],\"city\":\"Boca Raton\",\"postalCode\":\"33431\",\"state\":\"FL\"},\"homeAddress\":{\"country\":\"USA\",\"streetAddress\":[\"test st 567\"],\"city\":\"Boca Raton\",\"postalCode\":\"33431\",\"state\":\"FL\"}},\"disclosures\":{\"isPoliticallyExposed\":\"NO\",\"isControlPerson\":\"NO\",\"isAffiliatedExchangeOrFINRA\":\"NO\"},\"employment\":{\"employmentStatus\":\"STUDENT\",\"primaryIncomeSource\":\"Social Security\"}}],\"applicantSignature\":{\"eSigned\":\"YES\"},\"principalApprover\":{\"approverName\":\"test street\"},\"investmentProfile\":{\"federalTaxBracketPercent\":32.0,\"investmentExperience\":\"NONE\",\"riskTolerance\":\"HIGH\",\"investmentObjective\":\"GROWTH\",\"totalNetWorthUSD\":{\"min\":100001,\"max\":200000},\"annualIncomeUSD\":{\"min\":50001,\"max\":100000},\"liquidNetWorthUSD\":{\"min\":100001,\"max\":200000}},\"serviceProfile\":{\"sweepInstructions\":\"NO_SWEEP\",\"issuerDirectCommunication\":\"ACCEPT\"},\"suitabilityProfile\":{\"timeHorizon\":\"AVERAGE\",\"liquidityNeeds\":\"SOMEWHAT_IMPORTANT\"}}},{\"formId\":{\"version\":1,\"title\":\"trusted_contact_form\"},\"formSchemaHash\":{\"hash\":\"yttAC415v/irRx+JfdZDoEDXNL7H5dmGgrQu4oSTCwc=\",\"algorithm\":\"SHA-256\"},\"jsonData\":{\"emailAddress\":\"test@test.com\",\"phoneNumber\":{\"phoneNumber\":\"17024568196\",\"phoneNumberType\":\"MOBILE\"},\"mailingAddress\":{\"country\":\"USA\",\"streetAddress\":[\"test st. 567\"],\"city\":\"Boca Raton\",\"postalCode\":\"33431\",\"state\":\"FL\"},\"givenName\":\"test\",\"familyName\":\"test\"}}],\"customFields\":{\"truliooVerified\":\"Yes\",\"trustedContactRelationship\":\"test\"}}",
+    "ClearingFirm": "Apex",
+    "SourceContext": "Etna.AccountManagement.Apex.ApexServices.Atlas.AccountRequestsApi",
+    "Environment": "Production",
+    "ServiceName": "AMS"
+  },
+  "fields": {
+    "@timestamp": [
+      "2026-03-23T14:59:30.244Z"
+    ]
+  },
+  "highlight": {
+    "ServiceName": [
+      "@opensearch-dashboards-highlighted-field@AMS@/opensearch-dashboards-highlighted-field@"
+    ]
+  },
+  "sort": [
+    1774277970244
+  ]
+}

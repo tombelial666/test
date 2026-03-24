@@ -1,0 +1,119 @@
+Теперь объясняю всё по реальным файлам:
+
+Что такое каждая сущность
+1. Task Carrier (task_carrier.v1.yaml)
+Главная сущность всей системы. Это YAML-файл, который живёт в домен-репо по пути .aiqa/tasks/EXT-12345/task.yaml.
+
+Думай о нём как о паспорте задачи — он создаётся один раз для work item и обогащается по цепочке:
+
+
+Lead создаёт → Dev дописывает → QA дописывает → RCA дописывает
+Что внутри: work_item.id, stage, intent.goal, список затронутых сервисов и репозиториев, контекст от каждой роли, evidence от QA (логи, SQL, test runs), trace (кто запускал, когда, какой pipeline).
+
+Зачем: без него AI не знает — что за задача, кто отвечает, какие репо трогать, что уже нашли.
+
+2. Task Bundle (task_bundle.v1.yaml)
+Ephemeral runtime-объект — собирается оркестратором прямо перед запуском pipeline и выбрасывается после.
+
+Это ответ на вопрос: "что именно подтянуть из всех репо для конкретного запуска?"
+
+Содержит: ссылку на task.yaml, профили людей, список репо с конкретными путями (не весь репо — максимум 10 paths), артефакты (swagger/logs/sql). Всё read-only.
+
+Зачем: LLM нельзя скармливать весь репо. Bundle — это минимальный релевантный контекст, собранный умно.
+
+3. Person Profile + Active State
+Stable profile (artem.yaml) — почти не меняется: роль, домены, типичные репо/сервисы, артефакты.
+
+Active state (artem.active.yaml) — меняется часто: над чем сейчас работает, какие ветки горячие.
+
+Зачем: оркестратор использует это чтобы решить — чей контекст подтянуть первым, какие части системы этому человеку обычно релевантны.
+
+4. Repository Index (etna-trader.yaml)
+Это карта репозитория для оркестратора — не плоский список файлов, а иерархия:
+
+
+repo → subsystem → service → paths → artifacts
+Для ETNA_TRADER: 5 subsystems (trading-engine, oms, clearing, account-opening, gateway), для каждого — конкретные пути, типы артефактов (swagger, sql, configs).
+
+Зачем: когда приходит задача про OMS, оркестратор сразу знает что открывать OMS/, OMS.Service/, swagger из OMS.Service/swagger/ — не сканирует весь репо.
+
+5. Taxonomy + Routing Rules (taxonomy.yaml)
+Deterministic router — смотрит на задачу и выбирает skill без обращения к LLM.
+
+Работает так:
+
+Смотрит keywords в запросе + текущий stage task carrier
+Если keyword "test plan" и stage qa_in_progress → сразу запускает qa.generate_test_plan (confidence 0.90)
+Если ни одно правило не сработало → LLM-fallback (claude-sonnet-4-6)
+Если LLM тоже не уверен (< 0.75) → спрашивает пользователя
+Зачем: предсказуемость, аудируемость. Команда может читать taxonomy.yaml и понимать логику роутинга.
+
+6. Allowlist (allowlist.yaml)
+Default deny — всё запрещено, если явно не разрешено.
+
+Роль	Может	Не может
+qa_agent	читать файлы, искать код, читать артефакты	писать, запускать shell, git
+orchestrator	читать + писать только в .aiqa/tasks/	git commit, http_request
+External repo	всегда read-only	любая запись, всегда
+Зачем: AI-агент не должен случайно сделать git push или дотронуться до .env / *.key.
+
+7. Service Map
+Глобальная карта сервисов: что такое oms-service, где его swagger, какие у него зависимости, типичные артефакты для диагностики.
+
+Зачем: когда в task carrier написано services: [oms, clearing], bundle_builder знает откуда тянуть swagger и логи — не нужно каждый раз объяснять.
+
+Как всё это работает вместе (один цикл)
+
+Ты: "Напиши тест-план для EXT-12345"
+        ↓
+taxonomy.yaml → keyword match → qa.generate_test_plan (confidence 0.90)
+        ↓
+context_loader → читает task.yaml + artem.active.yaml + etna-trader.yaml
+        ↓
+bundle_builder → собирает TaskBundle: OMS/ + Clearing/ + swagger + logs
+        ↓
+qa.generate_test_plan → работает ТОЛЬКО с bundle (не с целым репо)
+        ↓
+результат → .aiqa/tasks/EXT-12345/artifacts/test_plan.md
+trace_logger → пишет в task.yaml: last_pipeline, last_run_at
+
+
+D:\DevReps\detailed-repositories-index.md
+
+с иерархическими индексами для всех основных репозиториев в workspace DevReps:
+
+Включенные репозитории:
+AMS - Account Management System (.NET, Clean Architecture)
+
+21 проект в src/, тесты, скрипты миграций, утилиты
+Интеграции с clearing houses (Apex, Etna Clearing, FC Stone, etc.)
+Domain → Application → Infrastructure слои
+ETNA_TRADER - Trading Platform (.NET backend + TypeScript frontend)
+
+100+ проектов в src/, включая Trader, Trading, Streaming, Web
+База данных SSDT, QA тесты, deployment configs
+AI framework с skills и agents
+ServerlessIntegrations - AWS Lambda functions (.NET 8)
+
+9 Lambda функций для интеграций (JotForm, SFTP, отчеты)
+Базовая библиотека, контракты, тесты
+Azure DevOps CI/CD
+QA - Test Automation Framework (C# + Python)
+
+C# NUnit/SpecFlow фреймворки
+Python Pytest для backend API и UI тестов
+Инструменты для интеграционного тестирования
+MobileLiteApp - React Native App (Expo)
+
+Clean Architecture с feature modules
+Multi-brand support (ETNA, Sogo)
+Redux Toolkit state management
+Everything - Miscellaneous files (AI settings, research reports)
+
+Каждый индекс включает:
+
+Обзор архитектуры и технологий
+Детальную иерархическую структуру директорий
+Описание ключевых компонентов
+Паттерны разработки и интеграции
+Файл готов для использования как справочник по структуре всех репозиториев.
