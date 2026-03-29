@@ -5,6 +5,11 @@ version: 1
 
 rules:
   - id: etna-hooks-sync-chain
+    review_mode: semi_auto
+    confidence: medium
+    evidence_basis:
+      - legacy_audit_docs
+      - manual_governance_review
     when:
       any_paths:
         - ETNA_TRADER/.claude/hooks.json
@@ -42,6 +47,11 @@ rules:
         description: Confirm AGENTS.md and CLAUDE.md remain paired after sync-docs behavior (per Step 3).
 
   - id: etna-twin-skill-layer
+    review_mode: semi_auto
+    confidence: medium
+    evidence_basis:
+      - workspace_index_naming
+      - path_tree_validation
     when:
       any_paths:
         - ETNA_TRADER/.claude/skills/**
@@ -70,6 +80,12 @@ rules:
         description: Cross-read skills README vs FRAMEWORK_INDEX.md skill table for inventory drift.
 
   - id: etna-trader-src-to-qa-surface
+    review_mode: semi_auto
+    confidence: medium
+    evidence_basis:
+      - workspace_index_naming
+      - path_tree_validation
+      - legacy_audit_docs
     when:
       any_paths:
         - ETNA_TRADER/src/**/Etna.Trader.WebApi.*/**
@@ -99,6 +115,11 @@ rules:
   # Standalone qa/ repo root (workspace qa/): triggers are explicit globs derived from dev-sync top-level dirs.
   # Covers: qa/Etna.*, qa/Etna_*, qa/Tools. Excludes: qa/.nuget/** (restore cache only — intentional).
   - id: standalone-qa-fixtures-to-trader
+    review_mode: manual
+    confidence: medium
+    evidence_basis:
+      - path_tree_validation
+      - workspace_index_naming
     when:
       any_paths:
         - qa/Etna.*/**
@@ -133,6 +154,11 @@ rules:
 
   # In-repo QA root inside ETNA_TRADER (ETNA_TRADER/qa/): distinct from standalone qa/; both roots are active per Step 5.1 closure criteria.
   - id: etna-trader-inrepo-qa-cross-surface
+    review_mode: manual
+    confidence: medium
+    evidence_basis:
+      - workspace_index_naming
+      - manual_governance_review
     when:
       any_paths:
         - ETNA_TRADER/qa/**
@@ -158,6 +184,11 @@ rules:
         description: Map in-repo test changes to ETNA_TRADER/src surfaces (WebApi, contracts) where assertions encode API behavior.
 
   - id: serverless-shared-core
+    review_mode: semi_auto
+    confidence: high
+    evidence_basis:
+      - path_tree_validation
+      - workspace_index_naming
     when:
       any_paths:
         - ServerlessIntegrations/IntegrationLambdaBase/**

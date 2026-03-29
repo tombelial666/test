@@ -2,6 +2,8 @@
 
 **Status:** supporting notes for `aiqa/repo-index.yaml` and `aiqa/impact-map.yaml`. Not canonical on its own.
 
+**Maturity:** how far reviewers may trust these artifacts (vs. what CI enforces) is defined in [`artifact-maturity-policy.md`](../policies/artifact-maturity-policy.md) — Step 5 outputs are **not** all automation-grade.
+
 ## Workspace layout
 
 - Paths `ETNA_TRADER/`, `ServerlessIntegrations/`, and `qa/` follow `detailed-repositories-index.md`. If a clone omits a subtree, rules still apply logically when that path appears in a change set.
