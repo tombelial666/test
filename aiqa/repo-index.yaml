@@ -19,9 +19,13 @@ repos:
     linked_repos:
       - id: qa
         relationship: test_and_automation_consumer
+        confidence: medium
+        evidence_basis:
+          - workspace_index_naming
+        review_only: true
         evidence:
-          - detailed-repositories-index.md describes ETNA_TRADER/qa/ (tests inside platform tree).
-          - detailed-repositories-index.md describes separate qa/ repo with Etna.QA.* and Etna.Trader.* test projects.
+          - Standalone qa/ repo (workspace root) is documented separately from ETNA_TRADER/qa/; in-tree qa/ does not establish cross-repo coupling.
+          - detailed-repositories-index.md lists Etna.QA.* and Etna.Trader.*-named projects under standalone qa/ — naming and inventory only; no build or contract graph verified in index inputs.
 
   - id: ServerlessIntegrations
     role: >
@@ -47,5 +51,9 @@ repos:
     linked_repos:
       - id: ETNA_TRADER
         relationship: tests_etna_trader_surface
+        confidence: medium
+        evidence_basis:
+          - workspace_index_naming
+        review_only: true
         evidence:
-          - detailed-repositories-index.md lists Etna.Trader.WebService and Etna.QA.* under qa/.
+          - detailed-repositories-index.md lists Etna.Trader.WebService, Etna.QA.*, and related Etna-prefixed test projects under standalone qa/ — implies test target surfaces; exact code references to ETNA_TRADER/src not enumerated in that index.

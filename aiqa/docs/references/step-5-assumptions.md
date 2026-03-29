@@ -10,7 +10,13 @@
 ## Linked repos conservatism
 
 - **No `linked_repos` entry** was added between `ServerlessIntegrations` and `ETNA_TRADER`: inputs do not state a direct integration contract between these two repositories.
-- **ETNA_TRADER ↔ qa** links reflect test/automation coupling implied by `Etna.*` / `Etna.Trader.*` naming in the standalone `qa/` index section and the presence of `ETNA_TRADER/qa/` in the ETNA tree description.
+- **ETNA_TRADER ↔ qa** (standalone `qa/` repo id) entries are **partly inferred**: `confidence: medium`, `evidence_basis: [workspace_index_naming]`, `review_only: true` in `repo-index.yaml`. They reflect naming and workspace inventory from `detailed-repositories-index.md`, not a verified dependency or contract map. **`ETNA_TRADER/qa/`** and **`qa/`** remain two distinct roots; the in-tree path alone does not prove linkage to the standalone repo.
+
+## `linked_repos` uncertainty fields (Step 5.1 / BUG-STEP5-001)
+
+- **`confidence`**: `high` — index or primary artifact states the relationship explicitly; `medium` — relationship is reasonable from naming/layout but not proven by cited build or API contracts in inputs.
+- **`evidence_basis`**: short tags for automation (`workspace_index_naming`, etc.); extend only when new evidence types are agreed.
+- **`review_only`**: when true, consumers must not treat the edge as a hard automated dependency without further verification.
 
 ## Impact rules
 
