@@ -1,0 +1,51 @@
+# Canonical repo index (Step 5). Evidence: aiqa/MANIFEST.md, aiqa/STRUCTURE.md,
+# detailed-repositories-index.md, decision-review-step-3.md, governance-reconciliation-plan-step-4.md.
+# Scope: ETNA_TRADER, ServerlessIntegrations, qa only.
+
+version: 1
+
+repos:
+  - id: ETNA_TRADER
+    role: >
+      Primary trading platform (.NET OWIN/Web API, frontend, DB, deployment);
+      hosts legacy AI adapter stack (hooks, sync scripts, twin .claude/.cursor) documented in Step 3–4.
+    roots:
+      - ETNA_TRADER/
+    domains:
+      - trading_platform
+      - ai_legacy_adapter
+      - database_migrations
+      - deployment_ci
+    linked_repos:
+      - id: qa
+        relationship: test_and_automation_consumer
+        evidence:
+          - detailed-repositories-index.md describes ETNA_TRADER/qa/ (tests inside platform tree).
+          - detailed-repositories-index.md describes separate qa/ repo with Etna.QA.* and Etna.Trader.* test projects.
+
+  - id: ServerlessIntegrations
+    role: >
+      AWS Lambda integrations (.NET 8), shared base library and per-function projects
+      (reports, JotForm, SFTP/S3, etc.) per detailed-repositories-index.md.
+    roots:
+      - ServerlessIntegrations/
+    domains:
+      - serverless_integration
+      - aws_lambda
+    linked_repos: []
+
+  - id: qa
+    role: >
+      Standalone QA automation repository (C# NUnit/SpecFlow, Python Pytest) at workspace root qa/;
+      not the same path as ETNA_TRADER/qa/ (two distinct roots — coordination is a known workspace concern).
+    roots:
+      - qa/
+    domains:
+      - integration_testing
+      - ui_automation
+      - api_automation
+    linked_repos:
+      - id: ETNA_TRADER
+        relationship: tests_etna_trader_surface
+        evidence:
+          - detailed-repositories-index.md lists Etna.Trader.WebService and Etna.QA.* under qa/.

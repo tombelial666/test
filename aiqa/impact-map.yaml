@@ -1,0 +1,101 @@
+# Minimal cross-repo impact rules (Step 5). Narrow, testable triggers; expand sets are hints for human/script review.
+# Evidence base: decision-review-step-3.md, governance-reconciliation-plan-step-4.md, legacy-layer-audit-scope-corrected.md.
+
+version: 1
+
+rules:
+  - id: etna-hooks-sync-chain
+    when:
+      any_paths:
+        - ETNA_TRADER/.claude/hooks.json
+        - ETNA_TRADER/.cursor/hooks.json
+        - ETNA_TRADER/scripts/sync-configs.js
+        - ETNA_TRADER/scripts/sync-docs.js
+    expand:
+      repos:
+        - ETNA_TRADER
+      domains:
+        - ai_legacy_adapter
+        - deployment_ci
+    legacy_hotspots:
+      - ETNA_TRADER/.claude/**
+      - ETNA_TRADER/.cursor/**
+      - ETNA_TRADER/AGENTS.md
+      - ETNA_TRADER/CLAUDE.md
+      - DevReps/.claude/skills/**
+      - DevReps/.cursor/skills/**
+    required_checks:
+      - Verify identical hook payloads in .claude and .cursor hooks.json before merge.
+      - Dry-run or branch test: confirm sync scripts do not corrupt twin trees or parent DevReps skills output.
+      - Confirm AGENTS.md and CLAUDE.md remain paired after sync-docs behavior (per Step 3).
+
+  - id: etna-twin-skill-layer
+    when:
+      any_paths:
+        - ETNA_TRADER/.claude/skills/**
+        - ETNA_TRADER/.cursor/skills/**
+        - ETNA_TRADER/.claude/skills/README.md
+        - ETNA_TRADER/.cursor/skills/README.md
+    expand:
+      repos:
+        - ETNA_TRADER
+      domains:
+        - ai_legacy_adapter
+    legacy_hotspots:
+      - ETNA_TRADER/.claude/hooks.json
+      - ETNA_TRADER/.cursor/hooks.json
+      - ETNA_TRADER/scripts/sync-configs.js
+    required_checks:
+      - Diff .claude vs .cursor skill paths touched; parity required unless a generator owns one side.
+      - Cross-read skills README vs FRAMEWORK_INDEX.md skill table for inventory drift (manual).
+
+  - id: etna-trader-src-to-qa-surface
+    when:
+      any_paths:
+        - ETNA_TRADER/src/**/Etna.Trader.WebApi.*/**
+        - ETNA_TRADER/src/**/Contracts/**/*.cs
+    expand:
+      repos:
+        - ETNA_TRADER
+        - qa
+      domains:
+        - trading_platform
+        - api_automation
+        - integration_testing
+    legacy_hotspots: []
+    required_checks:
+      - Identify affected HTTP contracts/DTOs; grep qa/ for matching routes, models, or SpecFlow bindings.
+      - Run or schedule targeted API/UI automation where those surfaces are covered (exact test cmds repo-specific).
+
+  - id: standalone-qa-fixtures-to-trader
+    when:
+      any_paths:
+        - qa/Etna_QA_BackendTests_WebApi/**
+        - qa/Etna_QA_BackendTests_Models/**
+        - qa/Etna.Trader.WebService/**
+    expand:
+      repos:
+        - qa
+        - ETNA_TRADER
+      domains:
+        - api_automation
+        - trading_platform
+    legacy_hotspots: []
+    required_checks:
+      - Map changed fixtures/models to ETNA_TRADER WebApi or contract projects; note if only test expectations moved.
+      - Confirm environment/config used by qa still matches ETNA deployment assumptions.
+
+  - id: serverless-shared-core
+    when:
+      any_paths:
+        - ServerlessIntegrations/IntegrationLambdaBase/**
+        - ServerlessIntegrations/IntegrationLambdaContracts/**
+    expand:
+      repos:
+        - ServerlessIntegrations
+      domains:
+        - serverless_integration
+    legacy_hotspots: []
+    required_checks:
+      - Run unit/tests for IntegrationLambdaBase and IntegrationReportAny.Tests if contracts or base helpers changed.
+      - List Integration*/ projects importing changed public surface; smoke-build solution IntegrationReports.sln.
