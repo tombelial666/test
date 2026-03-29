@@ -53,7 +53,8 @@ rules:
     when:
       any_paths:
         - ETNA_TRADER/src/**/Etna.Trader.WebApi.*/**
-        - ETNA_TRADER/src/**/Contracts/**/*.cs
+        - ETNA_TRADER/src/**/Etna.Trading.TradeStation.WebApi/**
+        - ETNA_TRADER/src/**/*Contracts*/**/*.cs
     expand:
       repos:
         - ETNA_TRADER
@@ -64,15 +65,17 @@ rules:
         - integration_testing
     legacy_hotspots: []
     required_checks:
-      - Identify affected HTTP contracts/DTOs; grep qa/ for matching routes, models, or SpecFlow bindings.
+      - Identify affected HTTP contracts/DTOs; grep standalone qa/ and ETNA_TRADER/qa/ for matching routes, models, or SpecFlow bindings.
       - Run or schedule targeted API/UI automation where those surfaces are covered (exact test cmds repo-specific).
 
+  # Standalone qa/ repo root (workspace qa/): triggers are explicit globs derived from dev-sync top-level dirs.
+  # Covers: qa/Etna.*, qa/Etna_*, qa/Tools. Excludes: qa/.nuget/** (restore cache only — intentional).
   - id: standalone-qa-fixtures-to-trader
     when:
       any_paths:
-        - qa/Etna_QA_BackendTests_WebApi/**
-        - qa/Etna_QA_BackendTests_Models/**
-        - qa/Etna.Trader.WebService/**
+        - qa/Etna.*/**
+        - qa/Etna_*/**
+        - qa/Tools/**
     expand:
       repos:
         - qa
@@ -80,10 +83,31 @@ rules:
       domains:
         - api_automation
         - trading_platform
+        - integration_testing
+        - ui_automation
     legacy_hotspots: []
     required_checks:
-      - Map changed fixtures/models to ETNA_TRADER WebApi or contract projects; note if only test expectations moved.
+      - Scope policy (encoded above): Etna-prefixed subtrees and qa/Tools only; qa/.nuget/** out of scope for this rule.
+      - Map changed fixtures/models to ETNA_TRADER src (WebApi/contracts) and cross-check ETNA_TRADER/qa/ for overlapping coverage.
       - Confirm environment/config used by qa still matches ETNA deployment assumptions.
+
+  # In-repo QA root inside ETNA_TRADER (ETNA_TRADER/qa/): distinct from standalone qa/; both roots are active per Step 5.1 closure criteria.
+  - id: etna-trader-inrepo-qa-cross-surface
+    when:
+      any_paths:
+        - ETNA_TRADER/qa/**
+    expand:
+      repos:
+        - ETNA_TRADER
+        - qa
+      domains:
+        - integration_testing
+        - api_automation
+        - trading_platform
+    legacy_hotspots: []
+    required_checks:
+      - Cross-check standalone qa/ (Etna.*, Etna_*, Tools) for shared scenarios, duplicated bindings, or environment drift.
+      - Map in-repo test changes to ETNA_TRADER/src surfaces (WebApi, contracts) where assertions encode API behavior.
 
   - id: serverless-shared-core
     when:
