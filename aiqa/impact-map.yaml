@@ -5,6 +5,11 @@ version: 1
 
 rules:
   - id: etna-hooks-sync-chain
+    review_mode: semi_auto
+    confidence: medium
+    evidence_basis:
+      - legacy_audit_docs
+      - manual_governance_review
     when:
       any_paths:
         - ETNA_TRADER/.claude/hooks.json
@@ -25,11 +30,28 @@ rules:
       - DevReps/.claude/skills/**
       - DevReps/.cursor/skills/**
     required_checks:
-      - Verify identical hook payloads in .claude and .cursor hooks.json before merge.
-      - Dry-run or branch test: confirm sync scripts do not corrupt twin trees or parent DevReps skills output.
-      - Confirm AGENTS.md and CLAUDE.md remain paired after sync-docs behavior (per Step 3).
+      - id: hooks_json_claude_cursor_parity
+        type: parity_check
+        mode: semi_auto
+        blocking: true
+        description: Verify identical hook payloads in .claude and .cursor hooks.json before merge.
+      - id: sync_scripts_twin_trees_safety
+        type: targeted_test
+        mode: semi_auto
+        blocking: true
+        description: Dry-run or branch test; confirm sync scripts do not corrupt twin trees or parent DevReps skills output.
+      - id: agents_claude_paired_after_sync_docs
+        type: config_review
+        mode: manual
+        blocking: true
+        description: Confirm AGENTS.md and CLAUDE.md remain paired after sync-docs behavior (per Step 3).
 
   - id: etna-twin-skill-layer
+    review_mode: semi_auto
+    confidence: medium
+    evidence_basis:
+      - workspace_index_naming
+      - path_tree_validation
     when:
       any_paths:
         - ETNA_TRADER/.claude/skills/**
@@ -46,14 +68,29 @@ rules:
       - ETNA_TRADER/.cursor/hooks.json
       - ETNA_TRADER/scripts/sync-configs.js
     required_checks:
-      - Diff .claude vs .cursor skill paths touched; parity required unless a generator owns one side.
-      - Cross-read skills README vs FRAMEWORK_INDEX.md skill table for inventory drift (manual).
+      - id: twin_skill_paths_claude_cursor_parity
+        type: parity_check
+        mode: semi_auto
+        blocking: true
+        description: Diff .claude vs .cursor skill paths touched; parity required unless a generator owns one side.
+      - id: skills_readme_framework_index_inventory
+        type: impact_review
+        mode: manual
+        blocking: false
+        description: Cross-read skills README vs FRAMEWORK_INDEX.md skill table for inventory drift.
 
   - id: etna-trader-src-to-qa-surface
+    review_mode: semi_auto
+    confidence: medium
+    evidence_basis:
+      - workspace_index_naming
+      - path_tree_validation
+      - legacy_audit_docs
     when:
       any_paths:
         - ETNA_TRADER/src/**/Etna.Trader.WebApi.*/**
-        - ETNA_TRADER/src/**/Contracts/**/*.cs
+        - ETNA_TRADER/src/**/Etna.Trading.TradeStation.WebApi/**
+        - ETNA_TRADER/src/**/*Contracts*/**/*.cs
     expand:
       repos:
         - ETNA_TRADER
@@ -64,15 +101,30 @@ rules:
         - integration_testing
     legacy_hotspots: []
     required_checks:
-      - Identify affected HTTP contracts/DTOs; grep qa/ for matching routes, models, or SpecFlow bindings.
-      - Run or schedule targeted API/UI automation where those surfaces are covered (exact test cmds repo-specific).
+      - id: contract_dto_qa_bindings_trace
+        type: impact_review
+        mode: semi_auto
+        blocking: true
+        description: Identify affected HTTP contracts/DTOs; grep standalone qa/ and ETNA_TRADER/qa/ for matching routes, models, or SpecFlow bindings.
+      - id: targeted_api_ui_automation_surface
+        type: targeted_test
+        mode: manual
+        blocking: true
+        description: Run or schedule targeted API/UI automation where those surfaces are covered (exact test cmds repo-specific).
 
+  # Standalone qa/ repo root (workspace qa/): triggers are explicit globs derived from dev-sync top-level dirs.
+  # Covers: qa/Etna.*, qa/Etna_*, qa/Tools. Excludes: qa/.nuget/** (restore cache only — intentional).
   - id: standalone-qa-fixtures-to-trader
+    review_mode: manual
+    confidence: medium
+    evidence_basis:
+      - path_tree_validation
+      - workspace_index_naming
     when:
       any_paths:
-        - qa/Etna_QA_BackendTests_WebApi/**
-        - qa/Etna_QA_BackendTests_Models/**
-        - qa/Etna.Trader.WebService/**
+        - qa/Etna.*/**
+        - qa/Etna_*/**
+        - qa/Tools/**
     expand:
       repos:
         - qa
@@ -80,12 +132,63 @@ rules:
       domains:
         - api_automation
         - trading_platform
+        - integration_testing
+        - ui_automation
     legacy_hotspots: []
     required_checks:
-      - Map changed fixtures/models to ETNA_TRADER WebApi or contract projects; note if only test expectations moved.
-      - Confirm environment/config used by qa still matches ETNA deployment assumptions.
+      - id: standalone_qa_scope_policy
+        type: config_review
+        mode: manual
+        blocking: false
+        description: Scope policy (encoded in rule triggers); Etna-prefixed subtrees and qa/Tools only; qa/.nuget/** out of scope for this rule.
+      - id: fixtures_models_trader_src_overlap
+        type: impact_review
+        mode: manual
+        blocking: true
+        description: Map changed fixtures/models to ETNA_TRADER src (WebApi/contracts) and cross-check ETNA_TRADER/qa/ for overlapping coverage.
+      - id: qa_env_matches_etna_deployment
+        type: config_review
+        mode: manual
+        blocking: true
+        description: Confirm environment/config used by qa still matches ETNA deployment assumptions.
+
+  # In-repo QA root inside ETNA_TRADER (ETNA_TRADER/qa/): distinct from standalone qa/; both roots are active per Step 5.1 closure criteria.
+  - id: etna-trader-inrepo-qa-cross-surface
+    review_mode: manual
+    confidence: medium
+    evidence_basis:
+      - workspace_index_naming
+      - manual_governance_review
+    when:
+      any_paths:
+        - ETNA_TRADER/qa/**
+    expand:
+      repos:
+        - ETNA_TRADER
+        - qa
+      domains:
+        - integration_testing
+        - api_automation
+        - trading_platform
+    legacy_hotspots: []
+    required_checks:
+      - id: standalone_qa_shared_scenarios_drift
+        type: impact_review
+        mode: manual
+        blocking: true
+        description: Cross-check standalone qa/ (Etna.*, Etna_*, Tools) for shared scenarios, duplicated bindings, or environment drift.
+      - id: inrepo_qa_assertions_trader_src_map
+        type: impact_review
+        mode: manual
+        blocking: true
+        description: Map in-repo test changes to ETNA_TRADER/src surfaces (WebApi, contracts) where assertions encode API behavior.
 
   - id: serverless-shared-core
+    review_mode: semi_auto
+    confidence: high
+    evidence_basis:
+      - path_tree_validation
+      - workspace_index_naming
     when:
       any_paths:
         - ServerlessIntegrations/IntegrationLambdaBase/**
@@ -97,5 +200,13 @@ rules:
         - serverless_integration
     legacy_hotspots: []
     required_checks:
-      - Run unit/tests for IntegrationLambdaBase and IntegrationReportAny.Tests if contracts or base helpers changed.
-      - List Integration*/ projects importing changed public surface; smoke-build solution IntegrationReports.sln.
+      - id: integration_lambda_base_unit_tests
+        type: targeted_test
+        mode: semi_auto
+        blocking: true
+        description: Run unit/tests for IntegrationLambdaBase and IntegrationReportAny.Tests if contracts or base helpers changed.
+      - id: integration_reports_sln_smoke_build
+        type: build_smoke
+        mode: semi_auto
+        blocking: true
+        description: List Integration*/ projects importing changed public surface; smoke-build solution IntegrationReports.sln.

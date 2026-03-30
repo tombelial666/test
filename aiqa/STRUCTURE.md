@@ -15,7 +15,9 @@ Primary source of truth under `aiqa/`:
 - `aiqa/STRUCTURE.md`
 - `aiqa/task-schema.yaml`
 - `aiqa/docs/` (domain, policy, and reference docs)
-- `aiqa/templates/` (canonical templates)
+- `aiqa/docs/knowledge/` (supporting operational and design knowledge migrated from transition buckets; **not** canonical policy unless promoted with evidence)
+- `aiqa/templates/` (canonical templates and reusable prompt shells)
+- `aiqa/archive/` (preserved historical bundles — **not** canonical definitions)
 
 ### Generated Runtime Adapter Layer
 

@@ -1,3 +1,5 @@
+> **Supporting knowledge (Step 5.5B).** Non-canonical design narrative; may contain LLM citation artifacts. Not automation-grade unless separately evidenced. Migrated from `everything/AI-frame-docs/PROGRESS/`.
+
 # AI QA Framework V1 — Best Current Architecture
 
 ## 1. Decision

@@ -1,3 +1,5 @@
+<!-- Non-canonical template (Step 5.5B). Principal QA Architect / AI Engineer design prompt. Canonical: aiqa/MANIFEST.md. Migrated from everything/AI-frame-docs/I-AM.txt. -->
+
 <context>
 Ты — Principal QA Architect / AI Engineer.
 

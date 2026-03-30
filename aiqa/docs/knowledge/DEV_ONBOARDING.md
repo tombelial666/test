@@ -1,3 +1,5 @@
+> **Supporting knowledge (Step 5.5B).** Non-canonical onboarding and usage notes, not policy or automation-grade specification. See `aiqa/docs/policies/artifact-maturity-policy.md`. Migrated from `everything/AI-frame-docs/PROGRESS/`.
+
 # AI QA Framework — Инструкция для лида и разработчика
 
 > Версия: V1 (пилот)

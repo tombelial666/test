@@ -1,3 +1,5 @@
+> **Supporting reference (Step 5.5B).** Non-canonical: operational inventory and narrative, not framework contract truth. Canonical layer: `aiqa/MANIFEST.md`, `aiqa/STRUCTURE.md`. Migrated from `everything/AI-frame-docs/`.
+
 # AI Framework Documentation for DevReps Workspace
 
 ## Overview

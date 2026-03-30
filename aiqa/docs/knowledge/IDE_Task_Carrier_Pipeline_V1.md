@@ -1,3 +1,5 @@
+> **Supporting knowledge (Step 5.5B).** Non-canonical pipeline design notes. Canonical contracts remain under `aiqa/` per `MANIFEST.md`. Migrated from `everything/AI-frame-docs/PROGRESS/`.
+
 # IDE Task Carrier Pipeline V1
 
 ## 1. Core idea
