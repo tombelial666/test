@@ -1,0 +1,59 @@
+# Canonical repo index (Step 5). Evidence: aiqa/MANIFEST.md, aiqa/STRUCTURE.md,
+# detailed-repositories-index.md, decision-review-step-3.md, governance-reconciliation-plan-step-4.md.
+# Scope: ETNA_TRADER, ServerlessIntegrations, qa only.
+
+version: 1
+
+repos:
+  - id: ETNA_TRADER
+    role: >
+      Primary trading platform (.NET OWIN/Web API, frontend, DB, deployment);
+      hosts legacy AI adapter stack (hooks, sync scripts, twin .claude/.cursor) documented in Step 3–4.
+    roots:
+      - ETNA_TRADER/
+    domains:
+      - trading_platform
+      - ai_legacy_adapter
+      - database_migrations
+      - deployment_ci
+    linked_repos:
+      - id: qa
+        relationship: test_and_automation_consumer
+        confidence: medium
+        evidence_basis:
+          - workspace_index_naming
+        review_only: true
+        evidence:
+          - Standalone qa/ repo (workspace root) is documented separately from ETNA_TRADER/qa/; in-tree qa/ does not establish cross-repo coupling.
+          - detailed-repositories-index.md lists Etna.QA.* and Etna.Trader.*-named projects under standalone qa/ — naming and inventory only; no build or contract graph verified in index inputs.
+
+  - id: ServerlessIntegrations
+    role: >
+      AWS Lambda integrations (.NET 8), shared base library and per-function projects
+      (reports, JotForm, SFTP/S3, etc.) per detailed-repositories-index.md.
+    roots:
+      - ServerlessIntegrations/
+    domains:
+      - serverless_integration
+      - aws_lambda
+    linked_repos: []
+
+  - id: qa
+    role: >
+      Standalone QA automation repository (C# NUnit/SpecFlow, Python Pytest) at workspace root qa/;
+      not the same path as ETNA_TRADER/qa/ (two distinct roots — coordination is a known workspace concern).
+    roots:
+      - qa/
+    domains:
+      - integration_testing
+      - ui_automation
+      - api_automation
+    linked_repos:
+      - id: ETNA_TRADER
+        relationship: tests_etna_trader_surface
+        confidence: medium
+        evidence_basis:
+          - workspace_index_naming
+        review_only: true
+        evidence:
+          - detailed-repositories-index.md lists Etna.Trader.WebService, Etna.QA.*, and related Etna-prefixed test projects under standalone qa/ — implies test target surfaces; exact code references to ETNA_TRADER/src not enumerated in that index.
