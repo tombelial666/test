@@ -55,6 +55,20 @@ A **diff** answers “what lines changed,” not:
 
 ---
 
+## 5.5 Task-level indexing first
+
+When a task has enough evidence to support a real analysis, the framework should prefer building a **complete task package** before promoting anything into canonical indexing.
+
+That means:
+
+- add or expand the task-local document set (for example summary, dependency map, legacy hotspots, risk-based QA plan, evidence notes, test-case inventory, and open questions if justified);
+- link newly discovered useful artifacts inside the task package so they are indexed for that task even if they are not yet canonical;
+- treat this task-level indexing as the default place for one-off, emerging, or still-unproven findings.
+
+This keeps task analysis rich and reviewable without overstating canonical framework coverage.
+
+---
+
 ## 6. ETNA_TRADER indexing strategy (as implemented)
 
 - **Legacy AI adapter chain:** hooks, `sync-configs.js` / `sync-docs.js`, twin `.claude`/`.cursor` — high sensitivity; rules `etna-hooks-sync-chain`, `etna-twin-skill-layer`.
@@ -66,6 +80,8 @@ Operational discovery still uses **ETNA** `FRAMEWORK_INDEX.md` and skills README
 ---
 
 ## 7. How to expand indexing next
+
+Before changing canonical YAML, first confirm that task-level indexing is no longer enough for the finding in question.
 
 1. **Amend `repo-index.yaml`** with new `repos` entries — add `linked_repos` only with agreed **evidence_basis** and confidence (BUG-001 pattern).
 2. **Add impact rules** with new `when.any_paths` — run **path/tree validation** and record evidence (BUG-004 style).

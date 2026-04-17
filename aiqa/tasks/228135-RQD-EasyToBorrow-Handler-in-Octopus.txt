@@ -1,0 +1,20 @@
+| Config Name | Config Value | Octopus Tenant Variable | Comment |
+| --- | --- | --- | --- |
+| uri | #{CM.Volant.Endpoint} | CM.Volant.Endpoint | Endpoint used to load the ETB file |
+| username | #{CM.Volant.Username} | CM.Volant.Username | Username for source access |
+| password | #{CM.Volant.Password} | CM.Volant.Password | Password for source access |
+| fileName | #{CM.Volant.EasyToBorrow.FileName} | CM.Volant.EasyToBorrow.FileName | Easy To Borrow file name |
+| fileDelimeter | , | - | File delimiter |
+| symbolColumnIndex | 0 | - | Symbol column index |
+| cusipColumnIndex | -1 | - | CUSIP is not used |
+| storagePath | #{Install.Root}\Clearing\Volant | Install.Root | Local storage path for the downloaded file |
+| exactDate | "" | - | No fixed processing date is configured |
+| businessDaysOffset | 0 | - | Business day offset for file lookup |
+| force | false | - | Do not force reprocessing |
+| hasHeaderRecord | #{CM.Volant.EasyToBorrow.HasHeaderRecord} | CM.Volant.EasyToBorrow.HasHeaderRecord | Indicates whether the file contains a header row |
+| stopProcessingOnEmptyFile | true | - | Stop processing when the file is empty |
+| setOthersFalse | true | - | Controls whether AllowShort is reset for securities missing from the ETB file |
+| clearingFirm | #{CM.Volant.SOD_EOD_ClearingFirm} | CM.Volant.SOD_EOD_ClearingFirm | Clearing firm name used for overridden securities updates |
+| period | #{CM.Volant.EasyToBorrow.Period} | CM.Volant.EasyToBorrow.Period | Schedule period |
+| time | #{CM.Volant.EasyToBorrow.ProcessingTime} | CM.Volant.EasyToBorrow.ProcessingTime | Schedule execution time |
+| timeZone | Eastern Standard Time | - | Schedule time zone |

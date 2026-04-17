@@ -98,6 +98,9 @@ ACCEPTANCE_CRITERIA → REPO_STYLE_ALIGNMENT → UNIT_TEST_OPPORTUNITIES → REL
 8. Before recommending a commit, verify whether outputs from commands 1–4 are already complete enough.
 9. Never claim something is covered unless it is visibly covered by code/tests/docs.
 10. Be explicit, not verbose for the sake of verbosity.
+11. If a task has sufficient evidence/context and a full task package does not yet exist, assemble the full task package in the task folder instead of stopping at a single summary doc.
+12. Index newly discovered useful task artifacts at the task level first (README, evidence notes, dependency map, linked task docs); only propose promotion to canonical indexing when scope and reusable evidence are explicit.
+13. Do not assume a `pilot-package/` folder is mandatory. That folder is a presentation-specific exception; for normal tasks, place the package docs directly in the task folder unless the repository already standardizes a different structure.
 </general_rules>
 
 <thinking_framework>

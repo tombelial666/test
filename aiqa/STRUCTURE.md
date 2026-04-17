@@ -34,6 +34,9 @@ Task execution outputs (for example task folders, test runs, intermediate artifa
 - Context-specific and time-bound
 - Useful for execution and audit
 - Not canonical framework definitions
+- When a task has sufficient evidence/context, the task folder should contain a complete task package rather than a single summary artifact
+- New useful artifacts discovered during task analysis should be indexed at the task level first (for example via `README.md`, evidence notes, dependency mapping, and linked task docs)
+- Promotion from task-level indexing into canonical artifacts such as `repo-index.yaml` or `impact-map.yaml` requires explicit scope and reusable evidence; task discovery alone is not enough
 
 ### Temporary / Experimental / Reference Layer
 
