@@ -1,0 +1,23 @@
+# Минимальная метаданная задачи (см. aiqa/task-schema.yaml)
+task:
+  id: "228135"
+  title: "RQD ETB через Volant: EasyToBorrow в Octopus + флаг setOthersFalse в EasyToBorrowHandler"
+  area: "OMS / Clearing Manager / Start-of-day (ETB), Octopus"
+  change_type: "feature_config_and_behavior_toggle"
+  touched_repos:
+    - ETNA_TRADER
+  touched_domains:
+    - trading_platform
+    - clearing_sod
+    - deployment_octopus
+  evidence:
+    - "Azure DevOps PR: https://dev.azure.com/etnasoft/ETNA_TRADER/_git/19afa09e-4f75-4f60-ad0c-b3357693c4ef/pullrequest/15578"
+    - "Ветка: feature/228135-rqd-easy-to-borrow; сверка: origin/dev...origin/feature/228135-rqd-easy-to-borrow"
+    - "Oms.ClearingManager.Octopus.config — блок #{if CM.Volant.EasyToBorrow} (SecurityIdentifiersSingleFileClearingProvider + EasyToBorrowHandler)"
+    - "EasyToBorrowHandler.cs — параметр setOthersFalse (дефолт true, обратная совместимость)"
+    - "CorSodETBTest.json — сценарий setOthersFalse: false (бумаги вне файла сохраняют AllowShort)"
+    - "Таблица Octopus-переменных: ../228135-RQD-EasyToBorrow-Handler-in-Octopus.txt"
+  unknowns:
+    - "В canonical impact-map.yaml нет триггера на Etna.Trading.Oms.Clearing / Oms.ClearingManager.Octopus.config — расширенный регресс по SOD ETB вручную."
+    - "Фактическое имя/маска файла RQD на SODData — подтвердить с CM.Volant.EasyToBorrow.FileName и вложениями в PR."
+    - "Одновременное включение нескольких ETB-провайдеров (COR/Velocity/Volant) на стенде — порядок прогонов и итоговое состояние AllowShort."
