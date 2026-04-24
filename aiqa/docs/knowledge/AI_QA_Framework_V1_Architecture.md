@@ -1,4 +1,6 @@
 > **Supporting knowledge (Step 5.5B).** Non-canonical design narrative; may contain LLM citation artifacts. Not automation-grade unless separately evidenced. Migrated from `everything/AI-frame-docs/PROGRESS/`.
+>
+> **Status alignment note:** architecture sections here are target-state design. For current implementation status and non-claims, rely on `aiqa/docs/knowledge/framework-current-state.md` and `aiqa/docs/policies/artifact-maturity-policy.md`.
 
 # AI QA Framework V1 — Best Current Architecture
 

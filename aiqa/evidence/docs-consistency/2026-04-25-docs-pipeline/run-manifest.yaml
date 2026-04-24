@@ -1,0 +1,23 @@
+run_id: 2026-04-25-docs-pipeline
+timestamp_utc: "2026-04-25T00:00:00Z"
+trigger: manual
+scope:
+  roots:
+    - aiqa/docs
+    - aiqa/MANIFEST.md
+    - aiqa/STRUCTURE.md
+    - aiqa/repo-index.yaml
+    - aiqa/impact-map.yaml
+    - aiqa/docs/policies/artifact-maturity-policy.md
+checks:
+  - canonical-contract-alignment
+  - markdown-link-existence
+  - stale-path-scan
+  - yaml-parse-validation
+  - claim-consistency-scan
+artifacts:
+  - pipeline-report.md
+status: completed
+notes:
+  - "Goal: remove user-facing contradictions between design docs and current-state docs."
+  - "No canonical scope expansion performed by this run."

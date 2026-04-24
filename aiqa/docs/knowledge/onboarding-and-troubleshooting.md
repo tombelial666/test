@@ -33,6 +33,7 @@
 | Which repos are in scope for the index | `aiqa/repo-index.yaml` |
 | Impact triggers and suggested checks | `aiqa/impact-map.yaml` |
 | How to talk about trust levels | `aiqa/docs/policies/artifact-maturity-policy.md` |
+| How to handle secrets/sensitive configs | `aiqa/docs/policies/secrets-and-sensitive-config-policy.md` |
 | Assumptions and uncertainty | `aiqa/docs/references/step-5-assumptions.md` |
 
 ---
@@ -86,6 +87,21 @@ See `aiqa/archive/everything-step-5-5b/README.md`.
 
 ## 8. Troubleshooting scenarios
 
+### Как запускать новые QA-агенты/скиллы?
+
+Используй runtime-адаптеры из `.cursor/skills/README.md` или `.claude/skills/README.md`, но помни, что канон находится в `aiqa/skills-catalog/*.yaml` и `aiqa/agents/agents.yaml`.
+
+Текущие ключевые скиллы:
+
+- `clearing-systemactions-int2`
+- `leaderboard-ui-api-tests`
+- `frontoffice-login-guard`
+- `sub-account-sftp-to-s3-tests`
+- `option-chain-layout-regression`
+- `leaderboard-totalcount-backend-regression`
+
+Если содержимое адаптеров и канона расходится, источником истины считается `aiqa/`; адаптеры нужно регенерировать через `aiqa/scripts/generate_skills.py`.
+
 ### Why is `.cursor` / `.claude` not canonical?
 
 By design (`MANIFEST.md`, `STRUCTURE.md`): canonical contracts live under **`aiqa/`**. Adapter trees are **rebuildable / operational** and may duplicate content; they must not redefine framework policy.
@@ -126,6 +142,18 @@ Canonical **`repo-index.yaml`** intentionally scopes **three** repos. Others (e.
 2. **Step 5 / 5.5 execution and bug reports.**  
 3. **Archive / old handoff** — context only, especially where paths cite `C:/Reps/...` or other stale topology (`HANDOFF.md` in archive).
 
+### Push в `main` блокируется GitHub secret protection. Что делать?
+
+Если push падает с `GH013` и `Push cannot contain secrets`:
+
+1. Смотри точный hash коммита и путь к файлу, которые вернул GitHub.
+2. Выбирай один из двух безопасных путей:
+   - **Предпочтительно:** удалить секрет из истории и пушить уже очищенную цепочку коммитов.
+   - **Временное исключение:** мейнтейнер может явно разблокировать детект по ссылке из ошибки GitHub.
+3. После очистки/разблокировки повторить `git push origin main`.
+
+`force push` в `main` использовать только по явному согласованию.
+
 ---
 
 ## 9. Safe working rules
@@ -135,6 +163,7 @@ Canonical **`repo-index.yaml`** intentionally scopes **three** repos. Others (e.
 3. **Two QA roots:** when touching tests, know whether you are in **`qa/`** or **`ETNA_TRADER/qa/`** — impact map has **different** rules (`standalone-qa-fixtures-to-trader` vs `etna-trader-inrepo-qa-cross-surface`).
 4. **Promote knowledge to policy** only with an **evidence trail** (same standard as policy §6).
 5. Prefer **`framework-current-state.md`** and **`indexing-and-impact-strategy.md`** when explaining the project to a colleague.
+6. **Sensitive files (`*.json`, `*.env*`, auth scripts):** use template + local ignored config; never commit real secrets; if leakage happened, remediate history before push.
 
 ---
 
@@ -143,3 +172,4 @@ Canonical **`repo-index.yaml`** intentionally scopes **three** repos. Others (e.
 - [`framework-current-state.md`](framework-current-state.md)
 - [`indexing-and-impact-strategy.md`](indexing-and-impact-strategy.md)
 - [`../policies/artifact-maturity-policy.md`](../policies/artifact-maturity-policy.md)
+- [`../policies/secrets-and-sensitive-config-policy.md`](../policies/secrets-and-sensitive-config-policy.md)

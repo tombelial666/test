@@ -1,4 +1,6 @@
 > **Supporting knowledge (Step 5.5B).** Non-canonical onboarding and usage notes, not policy or automation-grade specification. See `aiqa/docs/policies/artifact-maturity-policy.md`. Migrated from `everything/AI-frame-docs/PROGRESS/`.
+>
+> **Status alignment note:** this document describes the Task Carrier/Bundle operating model as a **pilot target design**. Canonical "implemented vs planned" status must be taken from `aiqa/docs/knowledge/framework-current-state.md`.
 
 # AI QA Framework — Инструкция для лида и разработчика
 

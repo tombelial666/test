@@ -248,3 +248,48 @@ rules:
         mode: semi_auto
         blocking: true
         description: Diff /public/v1 vs /api/v1 responses for same params; ensure data/channel consistency.
+
+  - id: sensitive-config-and-secrets-hygiene
+    review_mode: semi_auto
+    confidence: high
+    evidence_basis:
+      - manual_governance_review
+      - path_tree_validation
+    when:
+      any_paths:
+        - .cursor/skills/**/*.json
+        - .claude/skills/**/*.json
+        - ETNA_TRADER/.cursor/skills/**/*.json
+        - ETNA_TRADER/.claude/skills/**/*.json
+        - .cursor/postman/**/*.json
+        - ETNA_TRADER/.cursor/postman/**/*.json
+        - "**/*secret*.json"
+        - "**/*token*.json"
+        - "**/*.env*"
+    expand:
+      repos:
+        - ETNA_TRADER
+      domains:
+        - ai_legacy_adapter
+        - deployment_ci
+    legacy_hotspots:
+      - DevReps/.cursor/skills/**
+      - DevReps/.claude/skills/**
+      - ETNA_TRADER/.cursor/skills/**
+      - ETNA_TRADER/.claude/skills/**
+    required_checks:
+      - id: no_real_secrets_in_committed_configs
+        type: data_validation
+        mode: semi_auto
+        blocking: true
+        description: Verify changed config/script files contain no real credentials, API keys, tokens, or shared secrets.
+      - id: template_plus_local_ignore_pattern
+        type: config_review
+        mode: manual
+        blocking: true
+        description: Ensure committed templates exist and local env-specific secret files are git-ignored (for example *.local.json).
+      - id: secret_incident_history_remediation
+        type: impact_review
+        mode: manual
+        blocking: true
+        description: If a secret was committed previously, require documented remediation including history cleanup before protected-branch push.

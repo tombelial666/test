@@ -1,4 +1,6 @@
 > **Supporting knowledge (Step 5.5B).** Non-canonical pipeline design notes. Canonical contracts remain under `aiqa/` per `MANIFEST.md`. Migrated from `everything/AI-frame-docs/PROGRESS/`.
+>
+> **Status alignment note:** this is a V1 design proposal for Task Carrier orchestration, not a statement that orchestrator/runtime pipeline is already implemented in production.
 
 # IDE Task Carrier Pipeline V1
 
