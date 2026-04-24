@@ -1,0 +1,216 @@
+{
+    "Result": [
+        {
+            "BalanceAttributes": [
+                {
+                    "Order": -1,
+                    "Name": "cash",
+                    "Value": 773.41
+                },
+                {
+                    "Order": -1,
+                    "Name": "netCash",
+                    "Value": 773.41
+                },
+                {
+                    "Order": -1,
+                    "Name": "excess",
+                    "Value": 773.41
+                },
+                {
+                    "Order": -1,
+                    "Name": "changeAbsolute",
+                    "Value": 123.23
+                },
+                {
+                    "Order": -1,
+                    "Name": "changePercent",
+                    "Value": 15.933334195316843588782146600
+                },
+                {
+                    "Order": -1,
+                    "Name": "moneyMarket",
+                    "Value": 123.23
+                },
+                {
+                    "Order": -1,
+                    "Name": "marginBalance",
+                    "Value": 650.18
+                },
+                {
+                    "Order": -1,
+                    "Name": "ROI",
+                    "Value": 0.0
+                },
+                {
+                    "Order": 0,
+                    "Name": "equityTotal",
+                    "Value": 896.64
+                },
+                {
+                    "Order": 0,
+                    "Name": "pendingOrdersCount",
+                    "Value": 0.0
+                },
+                {
+                    "Order": 1,
+                    "Name": "netLiquidity",
+                    "Value": 0.0
+                },
+                {
+                    "Order": 5,
+                    "Name": "unsettledCash",
+                    "Value": 0.0
+                },
+                {
+                    "Order": 6,
+                    "Name": "stockLongMarketValue",
+                    "Value": 0.0
+                },
+                {
+                    "Order": 7,
+                    "Name": "stockShortMarketValue",
+                    "Value": 0.0
+                },
+                {
+                    "Order": 8,
+                    "Name": "optionLongMarketValue",
+                    "Value": 0.0
+                },
+                {
+                    "Order": 9,
+                    "Name": "optionShortMarketValue",
+                    "Value": 0.0
+                },
+                {
+                    "Order": 10,
+                    "Name": "dayTrades",
+                    "Value": 0.0
+                },
+                {
+                    "Order": 11,
+                    "Name": "stockBuyingPower",
+                    "Value": 773.41
+                },
+                {
+                    "Order": 12,
+                    "Name": "optionBuyingPower",
+                    "Value": 773.41
+                },
+                {
+                    "Order": 13,
+                    "Name": "dayTradingBuyingPower",
+                    "Value": 3093.64
+                },
+                {
+                    "Order": 13,
+                    "Name": "overNightBuyingPower",
+                    "Value": 0.0
+                },
+                {
+                    "Order": 15,
+                    "Name": "pendingCash",
+                    "Value": 0.0
+                },
+                {
+                    "Order": 16,
+                    "Name": "maintenanceMargin",
+                    "Value": 0.0
+                },
+                {
+                    "Order": 17,
+                    "Name": "optionMaintenanceMargin",
+                    "Value": 0.0
+                },
+                {
+                    "Order": 21,
+                    "Name": "openPL",
+                    "Value": 0.0
+                },
+                {
+                    "Order": 21,
+                    "Name": "openPLDay",
+                    "Value": 0.0
+                },
+                {
+                    "Order": 21,
+                    "Name": "openPLPercent",
+                    "Value": 0.0
+                },
+                {
+                    "Order": 22,
+                    "Name": "closePL",
+                    "Value": 0.0
+                },
+                {
+                    "Order": 23,
+                    "Name": "marketValue",
+                    "Value": 0.0
+                },
+                {
+                    "Order": 23,
+                    "Name": "totalPL",
+                    "Value": 0.0
+                }
+            ],
+            "User": {
+                "FirstName": "admin",
+                "Middle": "",
+                "LastName": "admin",
+                "Login": "admin"
+            },
+            "Rank": 0,
+            "Id": 95715,
+            "ClearingAccount": "11288683",
+            "DateOfBirth": "0001-01-01T00:00:00Z",
+            "CreatedDate": "2025-04-29T09:20:57.7336794Z",
+            "ModifiedDate": "2026-04-07T12:11:08.3294389Z",
+            "Enabled": true,
+            "IsChanged": false,
+            "Cash": 773.41,
+            "Currency": "USD",
+            "Status": "Approved",
+            "CommissionPlan": "FJ62",
+            "RepCode": "FJ62",
+            "MarginInterestRate": 0.0,
+            "CashInterestRate": 0.0,
+            "CloseEquity": 773.41,
+            "OpenExcess": 773.41,
+            "OptionLevel": 0,
+            "MarginType": "Cash",
+            "Permissions": "LongStock, AllowTrade, AllowOpen",
+            "BaseCash": 773.41,
+            "OwnerType": "IndividualCustomer",
+            "DayTradingBuyingPower": 3093.64,
+            "DayTrades": 0,
+            "SmaBalance": 0.0,
+            "HouseCall": 0.0,
+            "MaintenanceCall": 0.0,
+            "EquityCall": 0.0,
+            "InitialCall": 0.0,
+            "DayTradeCall": 0.0,
+            "TradeDayBalance": 650.18,
+            "MoneyMarket": 123.23,
+            "Cip": 0.0,
+            "IsAverageAccount": false,
+            "MarginEquity": 773.41,
+            "ClearingFirm": "Fidelity",
+            "ExcessEquity": 650.18000000,
+            "DayTraderRate": 0.0,
+            "EquityTotal": 0.0,
+            "FixedAccountType": false,
+            "SkipClearing": false,
+            "SubscriptionPlanId": 0,
+            "Sweep": 0.0,
+            "IsSolicitedAccount": false,
+            "UnsettledCash": 0.0,
+            "MarketValue": 0.0,
+            "OpenPL": 0.0,
+            "OpenPLPercent": 0.0,
+            "AvailableToWithdraw": 0.0
+        }
+    ],
+    "NextPageLink": "",
+    "PreviousPageLink": "https://pub-api-etna-demo-ci-int-2.etnasoft.us/api/v1/accounts-with-balances?pageNumber=66&pageSize=10&isAscending=true&propertyName=changePercent&filter=",
+    "TotalCount": 664
+}

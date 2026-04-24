@@ -1,0 +1,195 @@
+[DEFAULT]
+
+
+
+
+
+ConnectionType=initiator
+SocketConnectPort=29700
+SocketConnectHost=198.178.38.56
+
+
+
+
+BeginString=FIX.4.2
+TargetCompID=INCAUAT
+SenderCompID=ETNAHUBUAT
+
+
+
+
+
+#08:00 EST – 17:00 EST
+StartTime=00:30:00
+EndTime=20:30:00
+TimeZone=Eastern Standard Time
+
+ReconnectInterval=10
+HeartBtInt=30
+
+UseDataDictionary=Y
+DataDictionary=FixDictionaries\FIX42-APEX.xml
+
+FileStorePath=C:\Deployment\Etna\Logs\ET.MessageGateway(InstinetFIX.4.2)\FIXStore
+FileLogPath=C:\Deployment\Etna\Logs\ET.MessageGateway(InstinetFIX.4.2)\FIXLog
+
+DebugFileLogPath=C:\Deployment\Etna\Logs\ET.MessageGateway(InstinetFIX.4.2)\FIXAcceptorDebug
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <configSections>
+    <section name="messageSenderConfig" type="Etna.Trading.MessageSenderConfigurationSection, Etna.Trading" />
+    <section name="fixMessageSenderConfig" type="Etna.Trading.Fix.FixMessageSenderConfigurationSection, Etna.Trading.Fix" />
+    <section name="loggerConfig" type="Etna.Common.Logger.LoggerConfigurationSection, Etna.Common" />
+    <section name="messageBuilderConfig" type="Etna.Trading.Build.MessageBuilderConfigurationSection, Etna.Trading" />
+    <section name="appEnvironmentConfig" type="Etna.Common.AppEnvironment.AppEnvironmentConfigurationSection, Etna.Common" />
+    <section name="backRoutingConfig" type="Etna.Trading.Net.BackRouting.BackRoutingRuleConfigurationSection, Etna.Trading.Net" />
+  </configSections>
+  <appSettings>
+    <add key="Service.Name" value="ET.MessageGateway(InstinetFIX.4.2)" />
+    <!-- SERILOG CONFIGURATION -->
+    <add key="Serilog.ServiceName" value="ET.MessageGateway(InstinetFIX.4.2)" />
+    <add key="Serilog.EnableSelfLog" value="False" />
+    <add key="serilog:minimum-level" value="Information" />
+
+    <!-- CONSOLE -->
+    <add key="console:serilog:using" value="Serilog.Sinks.Console" />
+    <add key="console:serilog:write-to:Console" />
+    <!-- ELASTICSEARCH -->
+    <add key="Serilog.EnableElastic" value="True" />
+    <add key="elastic:serilog:using" value="Serilog.Sinks.Elasticsearch" />
+    <add key="elastic:serilog:write-to:Elasticsearch.nodeUris" value="http://internal-et-opensearch-staging-1967574972.us-east-1.elb.amazonaws.com:9200" />
+    <add key="elastic:serilog:write-to:Elasticsearch.indexFormat" value="mg-instinet42-{0:yyyy.MM}" />
+    <add key="elastic:serilog:write-to:Elasticsearch.autoRegisterTemplate" value="true" />
+    <add key="elastic:serilog:write-to:Elasticsearch.autoRegisterTemplateVersion" value="ESv6" />
+    <add key="elastic:serilog:write-to:Elasticsearch.inlineFields" value="true" />
+    <add key="elastic:serilog:write-to:Elasticsearch.customFormatter" value="Etna.Common.Serilog.ElasticLogFormatter, Etna.Common.Serilog" />
+    <add key="elastic:serilog:write-to:Elasticsearch.emitEventFailure" value="WriteToFailureSink " />
+    <add key="elastic:serilog:write-to:Elasticsearch.failureSink" value="Etna.Common.Serilog.ElasticFailureSink, Etna.Common.Serilog" />
+    <!-- FILE -->
+    <add key="file:serilog:using" value="Serilog.Sinks.File" />
+    <add key="file:serilog:write-to:File.path" value="C:\Deployment\Etna\Logs\ET.MessageGateway(InstinetFIX.4.2)\log.txt" />
+    <add key="file:serilog:write-to:File.outputTemplate" value="{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message} [{SourceContext:l}]{NewLine}{Exception}" />
+    <add key="file:serilog:write-to:File.rollingInterval" value="Day" />
+    <add key="file:serilog:write-to:File.buffered" value="true" />
+    <add key="file:serilog:write-to:File.rollOnFileSizeLimit" value="true" />
+    <add key="file:serilog:write-to:File.flushToDiskInterval" value="00:00:30" />
+    <!-- LOGSTASH -->
+    <add key="Serilog.EnableLogstash" value="False" />
+    <add key="logstash:serilog:using:TCPSink" value="Etna.Common.Serilog" />
+    <add key="logstash:serilog:write-to:TCPSink.host" value="tcp://logstash.staging.projects.etna.etnasoft.com" />
+    <add key="logstash:serilog:write-to:TCPSink.port" value="5399" />
+    <add key="logstash:serilog:write-to:TCPSink.textFormatter" value="Etna.Common.Serilog.Logstash.LogstashJsonFormatter, Etna.Common.Serilog" />
+    <add key="logstash:serilog:write-to:TCPSink.failureSink" value="Etna.Common.Serilog.Logstash.LogstashFailureSink, Etna.Common.Serilog" />
+    <add key="logstash:serilog:enrich:with-property:index" value="mg-instinet42" />
+    <add key="elastic:serilog:write-to:Elasticsearch.typeName" value="_doc"/>
+  </appSettings>
+  <backRoutingConfig>
+    <backRoutingRules>
+	     <add name="SenderCompID" value="ETNAHUBUAT" fixMessageTag="49">
+        <endpoints>
+         <add target="instinet_gats"/>
+        </endpoints>
+		</add>
+          <add name="DeliverToCompId" value="VSIN" fixMessageTag="128">
+        <endpoints>
+          <add target="instinet_gats"/>
+        </endpoints>
+		</add>
+		  <add name="OnBehalfOfCompID" value="ETNA" fixMessageTag="115">
+        <endpoints>
+          <add target="instinet_gats"/>
+        </endpoints>
+		</add>
+    </backRoutingRules>
+  </backRoutingConfig>
+  <appEnvironmentConfig>
+    <environmentType type="Etna.Common.AppEnvironment.AppEnvironmentFactoryAppDomain" />
+    <extraLocation location="C:\Deployment\Etna\Misc"/>
+  </appEnvironmentConfig>
+  <loggerConfig>
+    <loggerType type="Etna.Common.Serilog.LoggerFactory, Etna.Common.Serilog" />
+  </loggerConfig>
+
+  <messageSenderConfig cfgName="default.ini" id="gateway">
+    <messageSender type="Etna.Trading.Fix.FixMessageSender, Etna.Trading.Fix" />
+  </messageSenderConfig>
+
+  <fixMessageSenderConfig heartbeatTimeout="2000" orderedGroupTags="False" routeMessages="True">
+  	<messageSender type="Etna.Trading.Fix.FixInitiator, Etna.Trading.Fix"/>
+  </fixMessageSenderConfig>
+
+  <messageBuilderConfig>
+    <!--    <messageBuilderFactory type="Etna.Trading.Net.Fix42.FixMessageBuilderFactory, Etna.Trading.Net.Fix42"/>-->
+    <builders>
+    </builders>
+  </messageBuilderConfig>
+
+  <system.serviceModel>
+    <services>
+      <service name="Etna.Trading.Net.Service.MessageSenderService" behaviorConfiguration="MessageSenderServiceBehavior">
+        <endpoint name="MessageSenderService" address="net.tcp://host.staging.mghub.projects.etna.etnasoft.com:9017" binding="netTcpBinding" contract="Etna.Trading.IMessageSender" bindingConfiguration="netTcpBinding_IMessageSender" />
+      </service>
+    </services>
+
+    <behaviors>
+      <serviceBehaviors>
+        <behavior name="MessageSenderServiceBehavior">
+          <serviceMetadata httpGetEnabled="false" />
+        </behavior>
+      </serviceBehaviors>
+    </behaviors>
+
+    <bindings>
+      <netTcpBinding>
+        <binding name="netTcpBinding_IMessageSender" closeTimeout="00:01:00" openTimeout="00:01:00" receiveTimeout="00:10:00" sendTimeout="00:01:00" transactionFlow="false" hostNameComparisonMode="StrongWildcard" maxBufferPoolSize="524288" maxReceivedMessageSize="65536" transferMode="Buffered">
+
+          <security mode="None" />
+        </binding>
+      </netTcpBinding>
+    </bindings>
+  </system.serviceModel>
+
+  <startup>
+    <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0" />
+  </startup>
+
+  <system.diagnostics>
+    <trace autoflush="true" indentsize="4">
+      <listeners>
+        <add name="configConsoleListener" type="System.Diagnostics.ConsoleTraceListener" />
+        <add name="configFileListener" type="System.Diagnostics.TextWriterTraceListener" initializeData="Trace_Launcher.log" traceOutputOptions="DateTime" />
+      </listeners>
+    </trace>
+  </system.diagnostics>
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <probing privatePath="dependencies" />
+      <dependentAssembly>
+        <assemblyIdentity name="Serilog.Sinks.Console" publicKeyToken="24c2f752a8e58a10" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-3.1.1.0" newVersion="3.1.1.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.ValueTuple" publicKeyToken="cc7b13ffcd2ddd51" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-4.0.3.0" newVersion="4.0.3.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Microsoft.Bcl.AsyncInterfaces" publicKeyToken="cc7b13ffcd2ddd51" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-5.0.0.0" newVersion="5.0.0.0" />
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+</configuration>
+
+
+
+
+
+
+
+
+
+

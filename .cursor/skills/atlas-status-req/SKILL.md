@@ -26,6 +26,19 @@ description: Queries Atlas account request status via GET on account_requests v2
 - JWT из навыка **legit-api-token-jwt** (Postman `{{JWT}}` или вывод скрипта).
 - **Как в AMS** (`LegitAuthHandler`): заголовок `Authorization` = **сырой JWT без префикса `Bearer `**. Если ручной `curl` даёт **401**, попробуйте `-H "Authorization: %LEGIT_JWT%"` без слова Bearer; иначе — `Authorization: Bearer %LEGIT_JWT%` (зависит от шлюза).
 
+## Локальный конфиг и выбор env
+
+Секреты не хранятся в git. Используйте локальный конфиг:
+
+1. Скопируйте `.cursor/skills/atlas-status-req/atlas.env.template.json` в:
+   - `.cursor/skills/atlas-status-req/atlas.<env>.local.json`
+2. Заполните `username`, `entity`, `sharedSecret`, `baseUrl`, `atlasId`.
+3. Перед запуском установите env:
+   - `set ATLAS_ENV=dev` (или ваш env)
+   - опционально: `set ATLAS_CONFIG_PATH=<полный_путь_к_json>`
+
+По умолчанию скрипт берёт `.cursor/skills/atlas-status-req/atlas.%ATLAS_ENV%.local.json`.
+
 ## Пример curl (Windows) — только `externalRequestId` подставить вручную
 
 ```bash

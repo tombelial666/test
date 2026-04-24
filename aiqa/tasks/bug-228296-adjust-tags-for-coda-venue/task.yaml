@@ -1,0 +1,22 @@
+# Минимальная метаданная задачи (см. aiqa/task-schema.yaml)
+task:
+  id: "228296"
+  title: "Adjust tags for Coda venue (FIX Tag59 / Tag100, PDQ)"
+  area: "OMS / Execution venue PDQ (Coda, Adelphi LP)"
+  change_type: "feature_toggle_behavior_change"
+  touched_repos:
+    - ETNA_TRADER
+  touched_domains:
+    - trading_platform
+    - execution_connectivity
+    - database_settings
+  evidence:
+    - "Azure DevOps discussion: финальные правила Alisa Minnakhmetova (toggle OMS_MG_PDQ_UseCodaSessionRules)"
+    - "Комментарии Timur Butorov: семантика Tag59/Tag100; PREONLY/COREONLY как routes"
+    - "Письмо Zack Wilezol: Tag100 = strategies; Tag59=0 vs 5 (окна 04:00–20:00 vs day до 16:00)"
+    - "Ветка: feature/adjust-fix-tags-for-coda-venue; PR 15539 (см. QA-пакет)"
+    - "Кодовые якоря (ожидаемые по разбору): PDQOrderConvertor.cs, SettingKeys.cs (OMS_MG_PDQ_UseCodaSessionRules / PDQUseCodaSessionRules)"
+  unknowns:
+    - "Локальный checkout ETNA_TRADER в workspace может не содержать ветку PR — сверка diff с origin/feature/adjust-fix-tags-for-coda-venue обязательна перед тестом."
+    - "В canonical impact-map.yaml нет отдельного триггера на Etna.Trading.ExecutionVenue.PDQ — расширенный impact по соседним venue/converters вручную."
+    - "Миграция маршрутов PREONLY/COREONLY на стороне контрагента (Timur): подтвердить готовность стенда перед e2e."

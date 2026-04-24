@@ -1,0 +1,118 @@
+{
+    "Serilog": {
+      "SelfLogEnabled": false,
+      "ConsoleEnabled": false,
+      "Level": "Debug",
+      "MicrosoftLevel": "Warning"
+    },
+    "AWS": {
+      "Region": "us-east-1"
+    },
+    "JotForm": {
+      "Host": "https://jotform.com/",
+      "ApiKey": "be1d5a10e1b303ec715bfc5f530f24aa",
+      "FormId": "260953195552463",
+      "AccountTransferFormId": "232011975309352",
+      "CountriesMapping": {
+        "The Bahamas": "Bahamas",
+        "Hong Kong": "Hong Kong SAR"
+      }
+    },
+    "AuditProviders": {
+      "Trulioo": {
+        "Enabled": false,
+        "IsMandatoryForAccountOpening": false,
+        "Endpoint": "api.globaldatacompany.com",
+        "Demo": true,
+        "UserName": "SogoTrading_Sandbox_IDV_API",
+        "Password": "Jzdy.b@Ho1"
+      }
+    },
+    "Clearings": {
+      "PaperTrading": {
+        "Enabled": true
+      },
+      "Apex": {
+        "Enabled": true,
+        "ClearingFirmName": "Apex",
+        "Endpoint": "https://uat-api.apexclearing.com",
+        "Username": "etna_api",
+        "Entity": "correspondent.FDSC",
+      "SharedSecret": "pUhe5QkyFexJ_F1XOMqgAqed9WKVE4lN76zMssAIlA5fW1Rvt6XAfmIbl3oaI1Ttu6R-9wlEDpvz56NlYePZ-Q",
+      "Branch": "449",
+      "DefaultRepCode": "449",
+        "Ale": {
+          "Partition": "FDSC",
+          "PollingTimeoutSeconds": 60,
+          "RepositoryDir": "../ale",
+          "UseAllAleListeners": true
+        },
+        "Edocs": {
+          "Endpoint": "https://uatwebservices.apexclearing.com",
+          "CustomerId": "101945",
+          "Firm": "48",
+          "EncryptionKey": "78Q7PDAKsVhHNdY0"
+        },
+        "PdfTemplateMap": {
+          "w8ben": "W-8BEN.pdf"
+        },
+        "Alps": {
+          "UseSimulator": true,
+          "SimulatorConfig": {
+            "TifRejectReason": "EMPTY",
+            "ReviewAction": "EMPTY",
+            "ReviewActionReason": "EMPTY",
+            "SimulateAsDeliverer": false
+          }
+        }
+      }
+    },
+    "AccountOpeningProviders": {
+      "PaperTrading": {
+        "Enabled": false,
+        "Editable": false,
+        "AccountProvider": "PaperTrading",
+        "FormType": "Direct",
+        "ShowReminder": true,
+        "ContinueLater": false,
+        "InstantApproval": false,
+        "EnableAccountTransfer": true,
+        "TransferRegulations": {
+          "AchEnabled": true,
+          "WireEnabled": true,
+          "ZelleEnabled": true,
+          "CheckEnabled": true
+        }
+      },
+      "Apex": {
+        "Enabled": true,
+        "Editable": true,
+        "AccountProvider": "Apex",
+     		"Form": {
+        "Type":"JotForm",
+        "Args": {
+          "ApiKey": "be1d5a10e1b303ec715bfc5f530f24aa",
+          "FormId": "211403803814345",
+          "AccountTransferFormId": "232011975309352",
+          "Host": "https://jotform.com/"
+        }
+      },
+        "ShowReminder": true,
+        "ContinueLater": true,
+        "InstantApproval": true,
+        "DepositInstantApproval": true,
+        "WithdrawalInstantApproval": true,
+        "TransferInstantApprovalDelay": 10,
+        "DoNotSendNotifications": false,
+        "EnableAccountTransfer": true,
+        "AddRepCodeToAccountRequest": true,
+        "BindRiaModelToAccount": true,
+        "TransferRegulations": {
+          "AchEnabled": true,
+          "WireEnabled": true,
+          "ZelleEnabled": true,
+          "CheckEnabled": true
+        }
+      }
+    }
+  }

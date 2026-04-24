@@ -1,0 +1,210 @@
+{
+  "info": {
+    "_postman_id": "a26c2b35-241a-42d4-ba8e-a4c25811276d",
+    "name": "Legit API",
+    "description": "Legit is Apex's authentication and authorization system. Its implementation is based on the Client Credentials Grant flow of the OAuth 2 specification, whereby the Client makes an authentication request to the Authorization Server, and receives an access token in response (if the request is valid).\r\n\r\nThis access token is then used for authentication of subsequent requests to individual application APIs. All Apex application API endpoints take the JWT as part of the request headers, allowing the application to verify the access token with Legit, and check that the user has been granted the necessary permissions.\r\n\r\nCollection updated: SharedSecret header on token request; Entity variable (full string, e.g. correspondent_etna.wiai).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "44525709",
+    "_collection_link": "https://go.postman.co/collection/44525709-a26c2b35-241a-42d4-ba8e-a4c25811276d?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Request JWT Token",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.globals.set(\"JWT\", pm.response.text());"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "var jwtSecret = pm.variables.get('jwtSecret')",
+              "var header = {",
+              "\t'alg': 'HS512',",
+              "    'typ': 'JWT'",
+              "};",
+              "var data = {",
+              "\t'username': pm.variables.get('Username'),",
+              "\t'entity': pm.variables.get('Entity'),",
+              "\t'datetime': new Date().toISOString()",
+              "}",
+              "console.log(data)",
+              "function base64url(source) {",
+              "    encodedSource = CryptoJS.enc.Base64.stringify(source)",
+              "    encodedSource = encodedSource.replace(/=+$/, '')",
+              "    encodedSource = encodedSource.replace(/\\+/g, '-')",
+              "    encodedSource = encodedSource.replace(/\\//g, '_')",
+              "    return encodedSource",
+              "}",
+              "var stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))",
+              "var encodedHeader = base64url(stringifiedHeader)",
+              "var stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data))",
+              "var encodedData = base64url(stringifiedData)",
+              "var token = `${encodedHeader}.${encodedData}`",
+              "var signature = CryptoJS.HmacSHA512(token, jwtSecret)",
+              "signature = base64url(signature)",
+              "var signedToken = `${token}.${signature}`",
+              "console.log(signedToken)",
+              "pm.globals.set(\"jws\", signedToken);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "SharedSecret",
+            "value": "{{SharedSecret}}",
+            "type": "secret"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\"jws\": \"{{jws}}\"\n}"
+        },
+        "url": {
+          "raw": "{{Endpoint}}/legit/api/v1/cc/token",
+          "host": [
+            "{{Endpoint}}"
+          ],
+          "path": [
+            "legit",
+            "api",
+            "v1",
+            "cc",
+            "token"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Logout",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.globals.set(\"JWT\", \"\");"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{JWT}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{Endpoint}}/legit/api/v1/logout",
+          "host": [
+            "{{Endpoint}}"
+          ],
+          "path": [
+            "legit",
+            "api",
+            "v1",
+            "logout"
+          ]
+        },
+        "description": "The /legit/api/v1/logout endpoint allows a client to invalidate an issued JWT access token. Once a JWT has been invalidated usage of the token is no longer allowed."
+      },
+      "response": []
+    },
+    {
+      "name": "Verify token",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{JWT}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{Endpoint}}/legit/api/v2/verify",
+          "host": [
+            "{{Endpoint}}"
+          ],
+          "path": [
+            "legit",
+            "api",
+            "v2",
+            "verify"
+          ]
+        },
+        "description": "The verify token endpoint can be used to verify whether a token is valid, and retrieve information from valid tokens."
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "jwtSecret",
+      "value": ""
+    },
+    {
+      "key": "SharedSecret",
+      "value": ""
+    },
+    {
+      "key": "Username",
+      "value": ""
+    },
+    {
+      "key": "Entity",
+      "value": ""
+    },
+    {
+      "key": "Endpoint",
+      "value": ""
+    }
+  ]
+}

@@ -1,0 +1,173 @@
+{
+  "Serilog": {
+    "SelfLogEnabled": false,
+    "ConsoleEnabled": false,
+    "Level": "Debug",
+    "MicrosoftLevel": "Warning"
+  },
+  "AWS": {
+    "Region": "us-east-1"
+  },
+  "JotForm": {
+    "Host": "https://jotform.com/",
+    "ApiKey": "be1d5a10e1b303ec715bfc5f530f24aa",
+    "FormId": "260953195552463",
+    "AccountTransferFormId": "232011975309352",
+    "CountriesMapping": {
+      "The Bahamas": "Bahamas",
+      "Hong Kong": "Hong Kong SAR"
+    }
+  },
+  "AuditProviders": {
+    "Trulioo": {
+      "Enabled": false,
+      "IsMandatoryForAccountOpening": false,
+      "Endpoint": "api.globaldatacompany.com",
+      "Demo": true,
+      "UserName": "SogoTrading_Sandbox_IDV_API",
+      "Password": "Jzdy.b@Ho1"
+    }
+  },
+  "Clearings": {
+    "PaperTrading": {
+      "Enabled": true
+    },
+    "ClearingFirmToProviderMapping": [
+      {
+        "Provider": "Apex",
+        "ClearingFirmNames": [ "Apex1", "Apex2" ]
+      }
+    ],
+    "Apex1": {
+      "Enabled": true,
+      "ClearingFirmName": "Apex1",
+      "PrincipalApprover": "PrincipalApprover",
+      "CatAccountholderType": "I",
+      "Endpoint": "https://uat-api.apexclearing.com",
+      "Username": "apex_api",
+      "Entity": "correspondent.STRG",
+      "SharedSecret": "ZD-e4_g3UCdiTIxseDOc4G4CizyLK7efyTK4tVI2Rt_WeCPylQ6pob5QUtkU-9F-d2v3x0WJFJMWC7Ekk6f_Mw",
+      "Branch": "2GX",
+      "DefaultRepCode": "STA",
+      "Ale": {
+        "Partition": "FDSC",
+        "PollingTimeoutSeconds": 60,
+        "RepositoryDir": "../ale"
+      },
+      "Edocs": {
+        "Endpoint": "https://uatwebservices.apexclearing.com",
+        "CustomerId": "101945",
+        "Firm": "48",
+        "EncryptionKey": "78Q7PDAKsVhHNdY0"
+      },
+      "PdfTemplateMap": {
+        "w8ben": "W-8BEN.pdf"
+      },
+      "Alps": {
+        "UseSimulator": true,
+        "SimulatorConfig": {
+          "TifRejectReason": "EMPTY",
+          "ReviewAction": "EMPTY",
+          "ReviewActionReason": "EMPTY",
+          "SimulateAsDeliverer": false
+        }
+      }
+    },
+    "Apex2": {
+      "Enabled": true,
+      "ClearingFirmName": "Apex2",
+      "PrincipalApprover": "PrincipalApprover",
+      "OptionPrincipalApprover": "OprionPrincipalApprover",
+      "RegisteredRepApprover":"RegistredApprover",
+      "CatAccountholderType": "I",
+      "Endpoint": "https://sogowebapiserver-qa.azurewebsites.net",
+      "Username": "atlas_etna",
+      "Entity": "correspondent_etna.wiai",
+      "SharedSecret": "pbuAaPnhbxWsUoL.iQ390aNXIh8rJ+wcUMPlnk9YIGjCLRm7.DF1dS+qYl.Y9aFh+i9",
+      "Branch": "5FP",
+      "DefaultRepCode": "ETN",
+      "OptionLevel": "2",
+      "Ale": {
+        "Partition": "WIAI",
+        "LongPollTimeout": "60",
+        "RepositoryDir": "../ale"
+      },
+      "Edocs": {
+        "Endpoint": "https://uatwebservices.apexclearing.com",
+        "CustomerId": "2158",
+        "Firm": "48",
+        "EncryptionKey": "4hyS03Kjqw6i8h7N"
+      },
+      "PdfTemplateMap": {
+        "w8ben": "W-8BEN.pdf"
+      }
+    }
+  },
+  "AccountOpeningProviders": {
+    "PaperTrading": {
+      "Enabled": true,
+      "Editable": false,
+      "AccountProvider": "PaperTrading",
+      "FormType": "Direct",
+      "ShowReminder": true,
+      "ContinueLater": false,
+      "InstantApproval": false,
+      "EnableAccountTransfer": true,
+      "TransferRegulations": {
+        "AchEnabled": true,
+        "WireEnabled": true,
+        "ZelleEnabled": true,
+        "CheckEnabled": true
+      }
+    },
+    "Apex1": {
+      "Enabled": true,
+      "Editable": true,
+      "AccountProvider": "Apex1",
+      "FormType": "JotForm",
+      "ShowReminder": true,
+      "ContinueLater": true,
+      "InstantApproval": false,
+      "DepositInstantApproval": true,
+      "WithdrawalInstantApproval": true,
+      "TransferInstantApprovalDelay": 0,
+      "EnableAccountTransfer": true,
+      "TransferRegulations": {
+        "AchEnabled": true,
+        "WireEnabled": true,
+        "ZelleEnabled": true,
+        "CheckEnabled": true
+      },
+      "SendAdditionalParamsWithPlaid": true,
+      "BindRiaModelToAccount": true
+    },
+    "Apex2": {
+      "Enabled": true,
+      "Editable": true,
+      "AccountProvider": "Apex2",
+      "FormType": "JotForm",
+      "ShowReminder": true,
+      "ContinueLater": true,
+      "InstantApproval": true,
+      "DepositInstantApproval": true,
+      "WithdrawalInstantApproval": true,
+      "TransferInstantApprovalDelay": 10,
+      "DoNotSendNotifications": false,
+      "EnableAccountTransfer": true,
+      "AddRepCodeToAccountRequest": true,
+      "BindRiaModelToAccount": true,
+      "TransferRegulations": {
+        "AchEnabled": true,
+        "WireEnabled": true,
+        "ZelleEnabled": true,
+        "CheckEnabled": true
+      }
+    }
+  }
+}
+
+
+
+
+
+перепроверь еще раз конфиг

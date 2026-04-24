@@ -1,10 +1,20 @@
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-$username     = 'atlas_etna'
-$entity       = 'correspondent_etna.wiai'
-$sharedSecret = 'pbuAaPnhbxWsUoL.iQ390aNXIh8rJ+wcUMPlnk9YIGjCLRm7.DF1dS+qYl.Y9aFh+i9'
-$baseUrl      = 'https://sogowebapiserver-qa.azurewebsites.net'
-$atlasId      = '991fa870-290a-4148-8d24-d6d2c8c11ee5'
+$atlasEnv = if ($env:ATLAS_ENV) { $env:ATLAS_ENV } else { "dev" }
+$defaultConfigPath = ".cursor/skills/atlas-status-req/atlas.$atlasEnv.local.json"
+$configPath = if ($env:ATLAS_CONFIG_PATH) { $env:ATLAS_CONFIG_PATH } else { $defaultConfigPath }
+
+if (!(Test-Path -LiteralPath $configPath)) {
+    throw "Atlas config not found: $configPath. Copy .cursor/skills/atlas-status-req/atlas.env.template.json to atlas.$atlasEnv.local.json and fill secrets locally."
+}
+
+$cfg = Get-Content -LiteralPath $configPath -Raw | ConvertFrom-Json
+
+$username     = $cfg.username
+$entity       = $cfg.entity
+$sharedSecret = $cfg.sharedSecret
+$baseUrl      = $cfg.baseUrl
+$atlasId      = $cfg.atlasId
 
 # === Шаг 1: JWS (по JwtFactory.cs) ===
 function Base64UrlEncode([byte[]]$bytes) {

@@ -1,0 +1,4 @@
+# Local Atlas/Legit configs with secrets must never be committed
+.cursor/skills/atlas-status-req/*.local.json
+.cursor/skills/atlas-status-req/consul*.json
+!.cursor/skills/atlas-status-req/atlas.env.template.json

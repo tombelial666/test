@@ -1,0 +1,18 @@
+# Минимальная метаданная задачи (см. aiqa/task-schema.yaml)
+task:
+  id: "AMS-CAT-NONE-ATLAS-400"
+  title: "Atlas ERR002: catAccountholderType NONE → дефолт I для retail new_account_form v6"
+  area: "AMS Apex onboarding / Atlas account_requests"
+  change_type: "bugfix"
+  touched_repos:
+    - "AMS (см. aiqa/repo-index.yaml — при отсутствии записи: unknowns)"
+  touched_domains:
+    - account_opening
+    - clearing_apex
+  evidence:
+    - "OpenSearch: APEX Error 400, jsonPointer /catAccountholderType, NONE not in enum A,E,I"
+    - "Код: AnswersMappingExt.GetNewAccountForm — ResolveCatAccountHolderTypeForNewAccount"
+    - "Связанное тестирование со сборкой JotForm 228719 (TC-228719-*): после прохода вложений не должно снова падать на Atlas validation"
+  unknowns:
+    - "Нет тикета Azure — при появлении подставить в id/evidence."
+    - "Если корреспонденту нужен обязательный A/E вместо I при пустом поле формы — уточнить у compliance; текущий дефолт I для retail Individual/Joint."

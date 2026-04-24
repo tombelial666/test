@@ -1,0 +1,18 @@
+# Минимальная метаданная задачи (см. aiqa/task-schema.yaml)
+task:
+  id: "228719"
+  title: "JotForm — передача API key при скачивании uploaded files (после изменения API)"
+  area: "AMS onboarding / JotForm integration"
+  change_type: "bugfix"
+  touched_repos:
+    - "AMS (вне canonical repo-index.yaml DevReps — см. unknowns)"
+  touched_domains:
+    - account_opening
+    - external_api_jotform
+  evidence:
+    - "Azure DevOps build 175660 / 1.0.106.175660, commit message: 228719 fix after JotForm api update"
+    - "Переписка: вместо файла — HTML Login · Jotform"
+    - "Фрагменты JotFormClient.cs / ImageUploadService.cs (рабочий стол / PR)"
+  unknowns:
+    - "Репозиторий AMS не перечислен в aiqa/repo-index.yaml — impact-map триггеры по путям AMS не формализованы."
+    - "Официально: JotForm принимает ключ только в заголовке APIKEY или также ?apiKey= в URL для uploads — сверить с докой и финальным PR."

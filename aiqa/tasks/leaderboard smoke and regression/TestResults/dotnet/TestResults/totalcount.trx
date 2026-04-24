@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="a9a49f13-6a86-4cac-898d-474f75288fcd" name="Admin@TOMPC 2026-04-11 00:20:28" runUser="TOMPC\Admin" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-04-11T00:20:28.0946478+07:00" queuing="2026-04-11T00:20:28.0946480+07:00" start="2026-04-11T00:20:22.4402125+07:00" finish="2026-04-11T00:20:31.0730737+07:00" />
+  <TestSettings name="default" id="79eab3bc-a0e8-4a05-a60a-3bbaaeabab11">
+    <Deployment runDeploymentRoot="Admin_TOMPC_2026-04-11_00_20_28" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="2862763c-453c-4f95-8626-f4304f03002a" testId="8bd5e1f2-1782-7675-a671-5c5d35e4af5f" testName="TotalCount_FullPagination_SumOfResultEqualsTotalCount" computerName="TOMPC" duration="00:00:04.8771440" startTime="2026-04-11T00:20:23.1763209+07:00" endTime="2026-04-11T00:20:28.0534135+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2862763c-453c-4f95-8626-f4304f03002a" />
+    <UnitTestResult executionId="b97bc5d7-7368-45d7-832b-c77ec9b2f8d6" testId="48d4673d-1dc1-ce06-0c0d-cdd453ac06d5" testName="TotalCount_LastPage_ResultCount_MatchesFormula_DefaultFilter" computerName="TOMPC" duration="00:00:02.9339450" startTime="2026-04-11T00:20:28.0548401+07:00" endTime="2026-04-11T00:20:30.9887850+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b97bc5d7-7368-45d7-832b-c77ec9b2f8d6" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="TotalCount_LastPage_ResultCount_MatchesFormula_DefaultFilter" storage="d:\devreps\aiqa\tasks\leaderboard smoke and regression\bin\debug\net8.0\backend-automation.dll" id="48d4673d-1dc1-ce06-0c0d-cdd453ac06d5">
+      <Execution id="b97bc5d7-7368-45d7-832b-c77ec9b2f8d6" />
+      <TestMethod codeBase="D:\DevReps\aiqa\tasks\leaderboard smoke and regression\bin\Debug\net8.0\backend-automation.dll" adapterTypeName="executor://nunit3testexecutor/" className="Etna.QA.TestAutomation.BackendTests.AccountsWithBalancesApiTests" name="TotalCount_LastPage_ResultCount_MatchesFormula_DefaultFilter" />
+    </UnitTest>
+    <UnitTest name="TotalCount_FullPagination_SumOfResultEqualsTotalCount" storage="d:\devreps\aiqa\tasks\leaderboard smoke and regression\bin\debug\net8.0\backend-automation.dll" id="8bd5e1f2-1782-7675-a671-5c5d35e4af5f">
+      <Execution id="2862763c-453c-4f95-8626-f4304f03002a" />
+      <TestMethod codeBase="D:\DevReps\aiqa\tasks\leaderboard smoke and regression\bin\Debug\net8.0\backend-automation.dll" adapterTypeName="executor://nunit3testexecutor/" className="Etna.QA.TestAutomation.BackendTests.AccountsWithBalancesApiTests" name="TotalCount_FullPagination_SumOfResultEqualsTotalCount" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="8bd5e1f2-1782-7675-a671-5c5d35e4af5f" executionId="2862763c-453c-4f95-8626-f4304f03002a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="48d4673d-1dc1-ce06-0c0d-cdd453ac06d5" executionId="b97bc5d7-7368-45d7-832b-c77ec9b2f8d6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Список результатов" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Все загруженные результаты" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="2" executed="2" passed="2" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>NUnit Adapter 4.6.0.0: Test execution started&#xD;
+Running selected tests in D:\DevReps\aiqa\tasks\leaderboard smoke and regression\bin\Debug\net8.0\backend-automation.dll&#xD;
+   NUnit3TestExecutor discovered 2 of 2 NUnit test cases using Current Discovery mode, Non-Explicit run&#xD;
+NUnit Adapter 4.6.0.0: Test execution complete&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

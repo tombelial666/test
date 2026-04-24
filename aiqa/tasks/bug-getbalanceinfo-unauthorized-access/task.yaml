@@ -1,0 +1,29 @@
+# Task metadata (see aiqa/task-schema.yaml)
+task:
+  id: "SECURITY-GetBalanceInfo-Unauthorized-Access"
+  title: "Authorization bypass: GetBalanceInfo API allows access to accounts not owned by user"
+  area: "Account Management / Authorization / Account API"
+  change_type: "security_vulnerability_authorization_bypass"
+  severity: "CRITICAL"
+  touched_repos:
+    - ETNA_TRADER
+  touched_domains:
+    - trading_platform
+    - account_management
+    - api_security
+    - authorization_control
+  environment: "etna-demo-ci-int.etnasoft.us"
+  evidence:
+    - "Environment: etna-demo-ci-int.etnasoft.us (staging/demo)"
+    - "Endpoint: POST /Account/GetBalanceInfo"
+    - "Vulnerability: Any authenticated user can request balance info for ANY accountId"
+    - "Reproduction: fetch() in browser DevTools with arbitrary accountId in body"
+    - "Impact: Customer balance, position, and account data exposed to unauthorized users"
+    - "Date discovered: 2026-04-15"
+    - "Reproducible: Yes, consistent behavior"
+  unknowns:
+    - "Unknown: list of ALL affected environments (confirmed on multiple, likely includes production)"
+    - "Unknown scope: how many other Account/* endpoints have same authorization issue"
+    - "Unknown if backend validation exists for account ownership before data return"
+    - "Unknown if authorization is only missing from frontend or also from backend API contract"
+    - "Unknown which other users/groups have been able to access accounts"

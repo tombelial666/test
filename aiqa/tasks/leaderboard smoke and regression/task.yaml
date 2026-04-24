@@ -1,0 +1,19 @@
+# Минимальная метаданная задачи (см. aiqa/task-schema.yaml)
+task:
+  id: "leaderboard-regression"
+  title: "Leaderboard — smoke и регресс (ETNA Trader / accounts-with-balances)"
+  area: "ETNA_TRADER — отчётность по счетам, публичный и веб-API"
+  change_type: "regression"
+  touched_repos:
+    - "ETNA_TRADER"
+  touched_domains:
+    - accounts_balances
+    - leaderboard_ui
+  evidence:
+    - "aiqa/tasks/leaderboard smoke and regression/test-cases.md"
+    - "Снимок UI Leaderboard; curl /public/v1/accounts-with-balances; ответ API (фрагмент в db.ci-int-2.demo.etna.projects.etna.etna)"
+  unknowns:
+    - "Точная семантика Rank в UI (например «667 / 14») относительно поля Rank в JSON — зафиксировано: Rank=0 в sample, возможно статический или рассчитанный."
+    - "Канонический источник для колонок при расхождении BalanceAttributes и корневых полей (например equityTotal vs EquityTotal) — зафиксировано: BalanceAttributes.equityTotal=896.64, root.EquityTotal=0.0; использовать BalanceAttributes для UI."
+    - "Совпадение набора данных между etna-demo веб-хостом и pub-api-etna-demo для одинаковых query-параметров — требует проверки на стенде."
+    - "Совпадение набора данных между etna-demo веб-хостом и pub-api-etna-demo для одинаковых query-параметров — подтвердить на стенде."

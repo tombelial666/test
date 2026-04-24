@@ -210,3 +210,41 @@ rules:
         mode: semi_auto
         blocking: true
         description: List Integration*/ projects importing changed public surface; smoke-build solution IntegrationReports.sln.
+
+  - id: leaderboard-accounts-balances-surface
+    review_mode: semi_auto
+    confidence: medium
+    evidence_basis:
+      - task_yaml_unknowns_resolution
+      - sample_api_response_validation
+    when:
+      any_paths:
+        - ETNA_TRADER/src/**/Leaderboard*/**
+        - ETNA_TRADER/src/**/AccountsWithBalances*/**
+        - ETNA_TRADER/src/**/*BalanceAttributes*/**
+    expand:
+      repos:
+        - ETNA_TRADER
+      domains:
+        - accounts_balances
+        - leaderboard_ui
+        - api_reporting
+    legacy_hotspots:
+      - ETNA_TRADER/.claude/tasks/leaderboard*
+      - ETNA_TRADER/.cursor/tasks/leaderboard*
+    required_checks:
+      - id: balance_attributes_field_consistency
+        type: data_validation
+        mode: semi_auto
+        blocking: true
+        description: Verify BalanceAttributes fields (e.g., equityTotal) match UI/API expectations; flag discrepancies like root vs attr values.
+      - id: rank_display_logic_stability
+        type: targeted_test
+        mode: manual
+        blocking: true
+        description: Confirm Rank calculation/display stable; regression test for 0-value bugs.
+      - id: accounts_balances_api_ui_parity
+        type: parity_check
+        mode: semi_auto
+        blocking: true
+        description: Diff /public/v1 vs /api/v1 responses for same params; ensure data/channel consistency.

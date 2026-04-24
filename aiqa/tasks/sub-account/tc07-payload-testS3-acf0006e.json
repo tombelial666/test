@@ -1,0 +1,16 @@
+{
+  "EnvironmentName": "ci-int-2",
+  "AmsSecret": "arn:aws:secretsmanager:us-east-1:518020165174:secret:ci/int2/ams-C5iY3c",
+  "SecretKey": "arn:aws:secretsmanager:us-east-1:518020165174:secret:test/SFTP-ishWnO",
+  "DestinationBucket": "fcc-edocs",
+  "DaysFromUploadOffset": 0,
+  "ClearingProvider": "Fidelity",
+  "AccountStatementOptions": [
+    {
+      "Path": "sftp/downloads/testS3/{accountNumber}/{ignore}.pdf",
+      "DayOffset": 0,
+      "MonthOffset": 0,
+      "YearOffset": 0
+    }
+  ]
+}

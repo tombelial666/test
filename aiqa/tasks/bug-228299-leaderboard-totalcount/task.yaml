@@ -1,0 +1,16 @@
+# См. aiqa/task-schema.yaml
+task:
+  id: "bug-228299-leaderboard-totalcount"
+  title: "Leaderboard — TotalCount vs фактическое число строк (bug 228299 / PR 15607)"
+  area: "ETNA_TRADER — accounts-with-balances, Leaderboard UI, export"
+  change_type: "regression"
+  touched_repos:
+    - "ETNA_TRADER"
+  touched_domains:
+    - accounts_balances
+    - leaderboard_ui
+  evidence:
+    - "aiqa/tasks/bug-228299-leaderboard-totalcount/README.md"
+    - "aiqa/tasks/leaderboard smoke and regression/backend-automation.cs"
+  unknowns:
+    - "Наличие счёта с позицией без котировок на целевом стенде — для ручного сценария Zhukau."
