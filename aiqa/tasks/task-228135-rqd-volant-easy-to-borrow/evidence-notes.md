@@ -87,6 +87,57 @@ Why this matters:
 - local workspace content alone is not a sufficient evidence source for this task;
 - the authoritative basis for the package is the branch diff plus PR metadata.
 
+## Evidence 6: Successful INT2 automation run
+
+**Source**: `qa/Tools/ClearingTester/run_volant_easy_to_borrow_int2.py`
+
+Confirmed run context:
+
+- token host: `https://pub-api-etna-demo-ci-int-2.etnasoft.us/api/token`
+- clearing host: `https://priv-api-etna-demo-ci-int-2.etnasoft.us/api/v1.0/systemactions/clearing`
+- auth model: one token requested once via `/api/token`, then reused for the full suite
+
+Confirmed run result:
+
+```text
+Ran 9 tests in 4.519s
+
+OK
+```
+
+What this evidence proves:
+
+- the action exists and is enabled on INT2;
+- handler names and parameter key shape are discoverable;
+- `PUT /systemactions/clearing` succeeds for the prepared execution payload.
+
+Linked execution artifacts:
+
+- `retest-runbook.md`
+- `acceptance-criteria.md`
+- `test-execution-summary.md`
+
+## Evidence 7: Feature-branch test coverage for handler semantics
+
+**Source**: feature branch `origin/feature/228135-rqd-easy-to-borrow`
+
+Confirmed facts:
+
+- `EasyToBorrowHandler.cs` introduces `_setOthersFalse = parameters.TryGetParameter<bool?>("setOthersFalse") ?? true`;
+- the update condition becomes `(allowShort || _setOthersFalse) && security.AllowShort != allowShort`;
+- `CorSodETBTest.json` adds explicit scenario `ETB setOthersFalse false`;
+- `Etna.Trading.Oms.Clearing.Tests.csproj` includes `CorSodETBTest.json`;
+- `AdditionalSecurityDataProcessingTest.cs` consumes `CorSodETBTest.json` as part of `EasyToBorrowTests`.
+
+Interpretation:
+
+- TC-228135-02 and TC-228135-03 are covered by concrete branch test artifacts, not only by prose analysis;
+- current local checkout drift does not invalidate these conclusions because the authoritative source here is the feature-branch tree.
+
+Limit note:
+
+- a temporary feature-branch worktree was prepared to attempt a fresh local run, but the available local `dotnet test` flow for this legacy NUnit project did not yield standalone runnable test-result output, so the strongest available evidence remains branch artifacts plus the already successful INT2 API automation run.
+
 ## What is not yet evidenced strongly enough
 
 - exact attached RQD sample files inside the task folder;

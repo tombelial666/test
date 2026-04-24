@@ -17,6 +17,12 @@ QA-пакет в рамках [`aiqa/MANIFEST.md`](../../MANIFEST.md).
 | [`evidence-notes.md`](evidence-notes.md) | Primary evidence: PR, branch diff, changed files, observed limits of local checkout |
 | [`framework-rule-open-questions.md`](framework-rule-open-questions.md) | Только доказательные OPEN questions, которые нельзя закрыть текущим evidence |
 | [`test-cases-comprehensive.md`](test-cases-comprehensive.md) | Полный набор test cases и traceability Requirement/Risk -> TC |
+| [`retest-runbook.md`](retest-runbook.md) | Единый INT2 runbook: preflight, payload preparation, discovery/full run, expected results |
+| [`acceptance-criteria.md`](acceptance-criteria.md) | Явные product acceptance criteria и testing completion criteria |
+| [`test-execution-summary.md`](test-execution-summary.md) | Фактический статус execution evidence, что закрыто automation, что остаётся manual |
+| [`qa/Tools/ClearingTester/run_volant_easy_to_borrow_int2.py`](../../../qa/Tools/ClearingTester/run_volant_easy_to_borrow_int2.py) | Atomic INT2 test runner for `GET/PUT /systemactions/clearing` |
+| [`qa/Tools/ClearingTester/tests/test_volant_easy_to_borrow_int2.py`](../../../qa/Tools/ClearingTester/tests/test_volant_easy_to_borrow_int2.py) | Atomic `unittest` cases for Volant EasyToBorrow action discovery and execution |
+| [`qa/Tools/ClearingTester/payloads/volant_easy_to_borrow_int2.template.json`](../../../qa/Tools/ClearingTester/payloads/volant_easy_to_borrow_int2.template.json) | Safe payload template for local INT2 execution |
 | [`../228135-RQD-EasyToBorrow-Handler-in-Octopus.txt`](../228135-RQD-EasyToBorrow-Handler-in-Octopus.txt) | Таблица: config keys ↔ Octopus tenant variables ↔ комментарии |
 
 ## Репозитории и ссылки
@@ -40,6 +46,7 @@ QA-пакет в рамках [`aiqa/MANIFEST.md`](../../MANIFEST.md).
 - diff `origin/dev...origin/feature/228135-rqd-easy-to-borrow`
 - mapping artifact `228135-RQD-EasyToBorrow-Handler-in-Octopus.txt`
 - code anchors в `Oms.ClearingManager.Octopus.config`, `EasyToBorrowHandler.cs`, `CorSodETBTest.json`
+- execution artifacts: `retest-runbook.md`, `acceptance-criteria.md`, `test-execution-summary.md`
 
 Важно: текущих данных **недостаточно** для расширения canonical `repo-index.yaml` или `impact-map.yaml`, поэтому индексация ограничена уровнем этой task-папки.
 
@@ -52,8 +59,34 @@ QA-пакет в рамках [`aiqa/MANIFEST.md`](../../MANIFEST.md).
 
 Локальный `ETNA_TRADER` может быть не на ветке PR — выполнить `git fetch` и сверку с `origin/feature/228135-rqd-easy-to-borrow` и Azure DevOps **PR 15578**.
 
+## Automation helper
+
+Для API smoke / targeted integration runnable automation перенесена в `qa/Tools/ClearingTester`.
+
+Новая реализация:
+
+- использует обычный `POST /api/token` на `pub-api-etna-demo-ci-int-2.etnasoft.us` с `username/password/Et-App-Key`;
+- выполняет `systemactions/clearing` через `priv-api-etna-demo-ci-int-2.etnasoft.us/api/v1.0/systemactions/clearing`;
+- использует атомарные `unittest` tests в `qa/Tools/ClearingTester/tests/test_volant_easy_to_borrow_int2.py`;
+- держит безопасный payload template в `qa/Tools/ClearingTester/payloads/volant_easy_to_borrow_int2.template.json`.
+
+Пример запуска:
+
+```bash
+python qa/Tools/ClearingTester/run_volant_easy_to_borrow_int2.py
+```
+
+Важно: template JSON намеренно хранится **без реальных секретов**. Перед запуском подставить реальные значения локально или использовать отдельный некоммитимый payload-файл через `CLEARING_TESTER_PAYLOAD`.
+
 ## Рекомендуемые проверки
 
 1. Сборка и тесты `Etna.Trading.Oms.Clearing.Tests` (в т.ч. обновлённый JSON Cor ETB).
 2. На стенде с Octopus: при включённом `CM.Volant.EasyToBorrow` — успешная загрузка файла, срабатывание по расписанию, ожидаемые `AllowShort` в БД/мастере бумаг.
 3. Регрессия других потоков **EasyToBorrowHandler** (COR/Velocity и т.д.) при дефолтном `setOthersFalse` без изменений в их конфигах.
+
+## Testing completion criteria
+
+- INT2 automation path is green for discovery and execution via `systemactions/clearing`.
+- Product and QA acceptance are documented explicitly in `acceptance-criteria.md`.
+- Execution evidence is captured in `test-execution-summary.md`.
+- Remaining environment/manual gaps are documented, not implied.

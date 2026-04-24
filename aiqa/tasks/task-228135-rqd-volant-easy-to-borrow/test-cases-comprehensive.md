@@ -5,6 +5,7 @@
 - **Total planned cases**: 7
 - **Primary focus**: config wiring, `AllowShort` semantics, shared-handler regression
 - **Test types**: config review, automated clearing tests, targeted environment validation
+- **Automation helper**: `qa/Tools/ClearingTester/run_volant_easy_to_borrow_int2.py` + atomic `unittest` suite
 
 ## P1 test cases
 
@@ -28,6 +29,10 @@
 
 - mapping is internally consistent;
 - no parameter mismatch between code and task mapping.
+
+**Automation note:**
+
+- `qa/Tools/ClearingTester/tests/test_volant_easy_to_borrow_int2.py` covers the discovery path via atomic GET-based tests.
 
 ### TC-228135-02: Default mode resets missing securities
 
@@ -71,6 +76,7 @@
 **Evidence:**
 
 - branch diff of `CorSodETBTest.json`.
+- for API execution path, use `qa/Tools/ClearingTester/run_volant_easy_to_borrow_int2.py` with `RUN_MUTATING_CLEARING_TESTS=1` and a local payload derived from `qa/Tools/ClearingTester/payloads/volant_easy_to_borrow_int2.template.json`.
 
 ### TC-228135-04: Clearing-firm path remains valid
 
@@ -87,6 +93,10 @@
 - no runtime error for overridden securities branch;
 - resulting shortability is coherent for the clearing-firm subset.
 
+**Automation note:**
+
+- the atomic INT2 suite covers the WebApi invocation path and basic action/handler validation, but DB/result-state verification still remains a targeted environment check.
+
 ## P2 test cases
 
 ### TC-228135-05: Header handling matches actual RQD file
@@ -96,6 +106,7 @@
 **Expected:**
 
 - first row is either correctly skipped or correctly processed depending on tenant variable.
+- use a local copy of `qa/Tools/ClearingTester/payloads/volant_easy_to_borrow_int2.template.json` with real `hasHeaderRecord` and `exactDate` values for the environment under test.
 
 ### TC-228135-06: Schedule and timezone are operationally correct
 
@@ -105,6 +116,7 @@
 
 - provider executes in the intended SOD window;
 - no accidental off-by-timezone scheduling issues.
+- helper execution should target a controlled date/time window; for ad hoc runs prefer explicit `exactDate`.
 
 ## P3 / governance case
 

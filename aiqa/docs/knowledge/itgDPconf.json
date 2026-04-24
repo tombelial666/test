@@ -1,0 +1,102 @@
+{
+	"Serilog": {
+		"SelfLogEnabled": false,
+		"ConsoleEnabled": false,
+		"Level": "Debug",
+		"MicrosoftLevel": "Warning"
+	},
+	"AWS": {
+		"Region": "us-east-1"
+	},
+	"FidelityWindow": {
+		"AllowedMarginTypes": "Cash,Margin",
+		"AllowedCurrency": "USD,CAD",
+		"ReportAccountInfo": {
+			"AccountNumber": "",
+			"FirstName": "formType:applicants:primary:identity:name:first",
+			"MiddleName": "formType:applicants:primary:identity:name:middle",
+			"LastName": "formType:applicants:primary:identity:name:last",
+			"OfficeCode": "",
+			"CorrespondentCode": "",
+			"CustomerType": ""
+		}
+	},
+	"Clearings": {
+		"Fidelity": {
+			"Enabled": true,
+			"ClearingFirmName": "Fidelity",
+			"Endpoint": "https://serenityconnect.uat.itg84.com/",
+			"Username": "etna",
+			"Password": "seT1253kll"
+		}
+	},
+	"AccountOpeningProviders": {
+		"Fidelity": {
+			"Enabled": true,
+			"Editable": true,
+			"AccountProvider": "Fidelity",
+			"FormType": "FidelityForm",
+			"Form": {
+				"Type": "FidelityForm"
+			},
+			"ShowReminder": true,
+			"ContinueLater": true,
+			"InstantApproval": true,
+			"DepositInstantApproval": false,
+			"WithdrawalInstantApproval": false,
+			"TransferInstantApprovalDelay": 10,
+			"DoNotSendNotifications": false,
+			"EnableAccountTransfer": false,
+			"AddRepCodeToAccountRequest": false,
+			"ExcludeUnsettledCash": false,
+			"TypesWithIRAContributionYearRestriction": ""
+		},
+		"PaperTrading": {
+			"Enabled": true,
+			"Editable": true,
+			"AccountProvider": "PaperTrading",
+			"FormType": "Direct",
+			"ShowReminder": true,
+			"ContinueLater": false,
+			"InstantApproval": true
+		}
+	},
+	"AuditProviders": {
+		"Trulioo": {
+			"Enabled": true,
+      "IsMandatoryForAccountOpening": true,
+      "Demo": true,
+			"UserName": "Stirlingshire_Demo_IDV_API",
+			"Password": "fre77JKL!!",
+      "Endpoint": "api.globaldatacompany.com"
+		}
+	},
+	"Permissions": {
+		"OptionLevel": 2,
+		"Empty": [],
+		"Cash": [
+			"AllowTrade"
+		],
+		"Margin": [
+			"ShortStock"
+		],
+		"DayTrader": [
+			"AllowMargin"
+		],
+		"MarginIra": []
+	},
+	"OptionPermissions": {
+		"Empty": [],
+		"Cash": [
+			"LongOption"
+		],
+		"Margin": [
+			"LongOption",
+			"ShortOption"
+		],
+		"DayTrader": [
+			"ShortOption"
+		],
+		"MarginIra": []
+	}
+}

@@ -44,7 +44,8 @@ Powered by **`senior-qa-engineer`** agent (`.claude/agents/qa-agents/senior-qa-e
 |---|---|
 | `/parallelization` | Split implementation into isolated workers (frontend + backend, independent services) |
 | `/udoc` | Update docs and changelog from a completed task |
-| `/pub-api-orders` | Pub API workflow: login via `Get_token`, then place stock/equity orders via `Orders/PlaceOrder` without storing secrets in the repo |
+| `/pub-api` | Pub API workflow: login via `POST /api/token`, then call order-related Pub API endpoints without storing secrets in the repo |
+| `/clearing-system-actions` | Clearing workflow: `systemactions/clearing`, standard `/api/token` auth, and atomic INT2 checks in `qa/Tools/ClearingTester` |
 
 ## AI-Assisted Quality Skills
 
