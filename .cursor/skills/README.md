@@ -46,6 +46,12 @@ Powered by **`senior-qa-engineer`** agent (`.claude/agents/qa-agents/senior-qa-e
 | `/udoc` | Update docs and changelog from a completed task |
 | `/pub-api` | Pub API workflow: login via `POST /api/token`, then call order-related Pub API endpoints without storing secrets in the repo |
 | `/clearing-system-actions` | Clearing workflow: `systemactions/clearing`, standard `/api/token` auth, and atomic INT2 checks in `qa/Tools/ClearingTester` |
+| `/clearing-systemactions-int2` | Generated skill: run Volant EasyToBorrow INT2 atomic checks via `qa/Tools/ClearingTester` |
+| `/leaderboard-ui-api-tests` | Generated skill: run leaderboard Playwright/pytest smoke+regression with explicit creds |
+| `/frontoffice-login-guard` | Generated skill: validate FrontOffice LogOn/ExternalLogOn guard, rate limit, Bloom precheck |
+| `/sub-account-sftp-to-s3-tests` | Generated skill: run sub-account IntegrationSftpToS3 workflow (Lambda + logs + SQL checks) with safety gates |
+| `/option-chain-layout-regression` | Generated skill: manual-first Option Chain bottom layout regression checklist with automation backlog hooks |
+| `/leaderboard-totalcount-backend-regression` | Generated skill: backend TotalCount invariants regression for accounts-with-balances |
 
 ## AI-Assisted Quality Skills
 

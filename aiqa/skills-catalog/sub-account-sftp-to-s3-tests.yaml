@@ -1,0 +1,57 @@
+id: sub-account-sftp-to-s3-tests
+name: sub-account-sftp-to-s3-tests
+maturity: review-grade
+purpose: >
+  Execute sub-account ingestion regression for SFTP to S3 pipeline using controlled payloads,
+  Lambda invocation, CloudWatch log checks, and SQL validation for TC-02..TC-07 scenarios.
+when_to_use:
+  - sub-account ingestion validation is requested
+  - IntegrationSftpToS3TEST troubleshooting is required
+  - E/F account behavior and eDocs propagation must be verified
+out_of_scope:
+  - storing real credentials or PII in repository artifacts
+  - production execution without explicit approval
+runners:
+  - command: .\\run-optimized-tc.ps1 -FunctionName \"IntegrationSftpToS3TEST\" -Region \"us-east-1\" -PayloadFile \".\\json.json\"
+    working_dir: aiqa/tasks/sub-account
+  - command: aws lambda invoke --function-name IntegrationSftpToS3TEST --region us-east-1 --cli-binary-format raw-in-base64-out --payload file://json.json lambda-response.json
+    working_dir: aiqa/tasks/sub-account
+inputs:
+  env_required:
+    - AWS_PROFILE
+    - DB_SERVER
+    - DB_USER
+    - DB_PASSWORD
+    - TRADER_DB
+    - AMS_DB
+  env_optional:
+    - FUNCTION_NAME
+    - REGION
+    - PAYLOAD_FILE
+    - ACCOUNT_E
+    - ACCOUNT_F
+    - BASE_ACCOUNT
+    - SKIP_INVOKE
+    - SKIP_LOGS
+    - SKIP_SQL
+endpoints:
+  - method: invoke
+    url: aws:lambda:IntegrationSftpToS3TEST
+  - method: read
+    url: aws:logs:/aws/lambda/IntegrationSftpToS3TEST
+  - method: query
+    url: sql:etna_trader/et.ams
+safety:
+  no_secrets_in_repo: true
+  pii_in_payloads_must_be_masked: true
+  non_prod_only: true
+  mutation_gating:
+    flags:
+      - SKIP_INVOKE
+      - SKIP_SQL
+      - SKIP_LOGS
+evidence_basis:
+  - aiqa/evidence/qa-suite-inventory/2026-04-25-agents-skills-v1/qa-suite-inventory.md
+  - aiqa/tasks/sub-account/README.md
+  - aiqa/tasks/sub-account/run-optimized-tc.ps1
+  - aiqa/tasks/sub-account/probe-sftp-paths.ps1

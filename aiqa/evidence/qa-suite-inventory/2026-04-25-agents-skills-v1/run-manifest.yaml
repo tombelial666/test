@@ -1,0 +1,17 @@
+run_id: 2026-04-25-agents-skills-v1
+timestamp_utc: "2026-04-25T00:00:00Z"
+trigger: manual
+scope:
+  suites:
+    - qa/Tools/ClearingTester
+    - qa/leaderboard-tests
+    - qa/frontoffice_login_guard
+  harvested_repos:
+    - ETNA_TRADER
+    - ServerlessIntegrations
+artifacts:
+  - qa-suite-inventory.md
+status: completed
+notes:
+  - "Inventory is evidence-only and does not auto-promote canonical repo-index/impact-map."
+  - "Secrets policy: default passwords in test code must be removed."

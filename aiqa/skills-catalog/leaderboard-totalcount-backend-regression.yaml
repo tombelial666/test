@@ -1,0 +1,42 @@
+id: leaderboard-totalcount-backend-regression
+name: leaderboard-totalcount-backend-regression
+maturity: review-grade
+purpose: >
+  Validate backend totalcount invariants for leaderboard responses and detect regressions
+  where TotalCount diverges from effective paged data.
+when_to_use:
+  - bug-228299 regression checks are requested
+  - post-fix validation for accounts-with-balances totalcount logic is needed
+  - release checks require leaderboard paging consistency
+out_of_scope:
+  - replacing UI smoke suite
+  - forcing failure on environments that intentionally run pre-fix versions
+runners:
+  - command: dotnet test backend-automation.csproj --filter \"FullyQualifiedName~TotalCount\"
+    working_dir: aiqa/tasks/leaderboard smoke and regression
+inputs:
+  env_required:
+    - ETNA_ACCOUNTS_URL
+    - ETNA_TOKEN_URL
+    - ETNA_APP_KEY
+    - ETNA_USERNAME
+    - ETNA_PASSWORD
+  env_optional:
+    - ETNA_LB_PAGE_SIZE
+    - ETNA_LB_FILTER
+    - ETNA_LB_FULL_WALK
+    - ETNA_LB_TOTALCOUNT_REGRESSION
+endpoints:
+  - method: GET
+    url: "{ETNA_ACCOUNTS_URL}/accounts-with-balances"
+  - method: POST
+    url: "{ETNA_TOKEN_URL}"
+safety:
+  no_secrets_in_repo: true
+  regression_flag_required_for_strict_mode: ETNA_LB_TOTALCOUNT_REGRESSION
+  allow_pre_fix_expected_failures: true
+evidence_basis:
+  - aiqa/tasks/bug-228299-leaderboard-totalcount/README.md
+  - aiqa/tasks/bug-228299-leaderboard-totalcount/task.yaml
+  - aiqa/tasks/leaderboard smoke and regression/backend-automation.cs
+  - aiqa/tasks/leaderboard smoke and regression/test-cases.md

@@ -1,0 +1,37 @@
+id: option-chain-layout-regression
+name: option-chain-layout-regression
+maturity: review-grade
+purpose: >
+  Reproduce and verify Option Chain bottom layout regression with a stable manual-first checklist,
+  collecting expected vs actual UI evidence and preparing future automation hooks.
+when_to_use:
+  - option chain bottom layout appears visually broken
+  - UI regression verification is needed after frontend fixes
+  - release smoke requires quick layout sanity check for Option Chain
+out_of_scope:
+  - production load testing
+  - claiming automated pass where only manual evidence exists
+runners:
+  - command: "manual-checklist: aiqa/tasks/bug-etnatrader-option-chain-bottom-layout/bug-description.md"
+    working_dir: aiqa/tasks/bug-etnatrader-option-chain-bottom-layout
+inputs:
+  env_required:
+    - OPTION_CHAIN_BASE_URL
+    - OPTION_CHAIN_SYMBOL
+  env_optional:
+    - OPTION_CHAIN_BROWSER
+    - OPTION_CHAIN_SCREENSHOT_DIR
+    - OPTION_CHAIN_AUTOMATION_BACKLOG_ID
+endpoints:
+  - method: open
+    url: "{OPTION_CHAIN_BASE_URL}"
+  - method: navigate
+    url: "ui:OptionChain"
+safety:
+  no_secrets_in_repo: true
+  manual_first: true
+  screenshot_pii_review_required: true
+  automation_status: backlog_only
+evidence_basis:
+  - aiqa/evidence/agents-skills-wave2/2026-04-25-wave2-coverage/scope-lock-summary.md
+  - aiqa/tasks/bug-etnatrader-option-chain-bottom-layout/bug-description.md

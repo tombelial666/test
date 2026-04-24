@@ -1,0 +1,43 @@
+id: leaderboard-ui-api-tests
+name: leaderboard-ui-api-tests
+maturity: review-grade
+purpose: >
+  Run and interpret leaderboard UI/API smoke and regression checks built on Playwright + pytest,
+  including API response capture for accounts-with-balances.
+when_to_use:
+  - leaderboard widget validation is requested
+  - UI/API parity and regression checks are requested for leaderboard
+  - smoke coverage of leaderboard flows is needed
+out_of_scope:
+  - hardcoded credentials in code or docs
+  - unsupported production load/stress execution
+runners:
+  - command: python -m pytest -v test_smoke test_regression
+    working_dir: qa/leaderboard-tests
+inputs:
+  env_required:
+    - LB_BASE_URL
+    - INT2_USERNAME
+    - INT2_PASSWORD
+  env_optional:
+    - LB_PRIV_API_URL
+    - LB_APP_KEY
+  cli_optional:
+    - --lb-base-url
+    - --lb-username
+    - --lb-password
+    - --lb-priv-api-url
+    - --lb-app-key
+endpoints:
+  - method: GET
+    url: "{LB_BASE_URL}/public/v1/accounts-with-balances"
+safety:
+  no_secrets_in_repo: true
+  no_default_password_literals: true
+  require_explicit_credentials: true
+evidence_basis:
+  - aiqa/evidence/qa-suite-inventory/2026-04-25-agents-skills-v1/qa-suite-inventory.md
+  - qa/leaderboard-tests/conftest.py
+  - qa/leaderboard-tests/model/pages/leaderboard_page.py
+  - ETNA_TRADER/src/Etna.Trader/Etna.Trader.Web/src/scripts/API/AccountWithBalancesService.js
+  - ETNA_TRADER/src/Etna.Trader/Etna.Trader.WebApi.Customization/AccountsWithBalances/AccountsWithBalancesController.cs

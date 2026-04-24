@@ -1,0 +1,74 @@
+version: 1
+agents:
+  - id: clearing-int2-agent
+    suite: qa/Tools/ClearingTester
+    skill_spec: aiqa/skills-catalog/clearing-systemactions-int2.yaml
+    responsibilities:
+      - validate action discovery for Volant EasyToBorrow
+      - validate handler parameter shape and action availability
+      - run non-mutating checks by default
+    boundaries:
+      - no mutation unless RUN_MUTATING_CLEARING_TESTS=1
+      - no secret persistence in repository artifacts
+    maturity: review-grade
+
+  - id: leaderboard-ui-api-agent
+    suite: qa/leaderboard-tests
+    skill_spec: aiqa/skills-catalog/leaderboard-ui-api-tests.yaml
+    responsibilities:
+      - execute smoke/regression leaderboard flows
+      - capture and validate accounts-with-balances API responses
+      - highlight skipped or mapping-dependent checks
+    boundaries:
+      - require explicit credentials via env or CLI
+      - do not introduce credential defaults in source code
+    maturity: review-grade
+
+  - id: frontoffice-guard-agent
+    suite: qa/frontoffice_login_guard
+    skill_spec: aiqa/skills-catalog/frontoffice-login-guard.yaml
+    responsibilities:
+      - validate LogOn and ExternalLogOn guard behavior
+      - verify 429 Retry-After behavior for burst scenarios
+      - validate Bloom precheck and no-500 guarantees
+    boundaries:
+      - run only against approved non-prod environments
+      - avoid broad load patterns beyond declared test scope
+    maturity: review-grade
+
+  - id: sub-account-sftp-s3-agent
+    suite: aiqa/tasks/sub-account
+    skill_spec: aiqa/skills-catalog/sub-account-sftp-to-s3-tests.yaml
+    responsibilities:
+      - execute controlled Lambda invoke and log checks for TC-02..TC-07
+      - validate SQL expectations for E/F account flows
+      - verify SFTP path probing before main run when needed
+    boundaries:
+      - no real credential persistence in files or reports
+      - non-prod environments only
+      - mask PII in all exported evidence
+    maturity: review-grade
+
+  - id: option-chain-layout-agent
+    suite: aiqa/tasks/bug-etnatrader-option-chain-bottom-layout
+    skill_spec: aiqa/skills-catalog/option-chain-layout-regression.yaml
+    responsibilities:
+      - execute stable manual reproduction checklist for Option Chain layout
+      - capture expected versus actual visual evidence
+      - maintain automation backlog hooks for future Playwright coverage
+    boundaries:
+      - do not claim automation-grade coverage for this scenario
+      - redact sensitive content in screenshots before evidence publication
+    maturity: review-grade
+
+  - id: leaderboard-totalcount-backend-agent
+    suite: aiqa/tasks/bug-228299-leaderboard-totalcount
+    skill_spec: aiqa/skills-catalog/leaderboard-totalcount-backend-regression.yaml
+    responsibilities:
+      - run backend regression checks for totalcount versus paged results
+      - classify expected fail/pass state depending on pre-fix or post-fix environment
+      - report invariant breaks with reproduction parameters
+    boundaries:
+      - preserve separate ownership between backend regression and UI smoke suites
+      - keep credential handling env-only
+    maturity: review-grade

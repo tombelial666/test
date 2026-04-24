@@ -1,0 +1,19 @@
+run_id: 2026-04-25-wave2-coverage
+timestamp_utc: "2026-04-25T00:00:00Z"
+trigger: manual
+scope:
+  target_tasks:
+    - aiqa/tasks/bug-228299-leaderboard-totalcount
+    - aiqa/tasks/leaderboard smoke and regression
+    - aiqa/tasks/pr-15493-frontoffice-login-ddos-protection
+    - aiqa/tasks/sub-account
+    - aiqa/tasks/bug-etnatrader-option-chain-bottom-layout
+  excluded_as_noise_or_out_of_scope:
+    - tasks/logs060426.json
+status: completed
+artifacts:
+  - scope-lock-summary.md
+  - tasks-gap-report.md
+  - scorecard-wave2.md
+notes:
+  - "Wave 2 adds missing skill/agent coverage for sub-account, option-chain, and leaderboard backend totalcount regression."

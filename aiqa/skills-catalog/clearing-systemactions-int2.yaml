@@ -1,0 +1,45 @@
+id: clearing-systemactions-int2
+name: clearing-systemactions-int2
+maturity: review-grade
+purpose: >
+  Execute and validate INT2 clearing system actions with safe defaults, focusing on
+  Volant EasyToBorrow via GET/PUT /v1.0/systemactions/clearing.
+when_to_use:
+  - systemactions/clearing validation is requested
+  - Volant EasyToBorrow handler checks are needed
+  - INT2 clearing smoke or targeted integration checks are requested
+out_of_scope:
+  - production environment mutation
+  - canonical repo-index/impact-map auto updates
+runners:
+  - command: python qa/Tools/ClearingTester/run_volant_easy_to_borrow_int2.py
+    working_dir: qa/Tools/ClearingTester
+inputs:
+  env_required:
+    - CLEARING_TESTER_USERNAME
+    - CLEARING_TESTER_PASSWORD
+    - CLEARING_TESTER_APP_KEY
+  env_optional:
+    - CLEARING_TESTER_TOKEN_URL
+    - CLEARING_TESTER_BASE_URL
+    - CLEARING_TESTER_ROUTE
+    - CLEARING_TESTER_PAYLOAD
+    - CLEARING_TESTER_TOKEN
+    - RUN_MUTATING_CLEARING_TESTS
+endpoints:
+  - method: POST
+    url: https://pub-api-etna-demo-ci-int-2.etnasoft.us/api/token
+  - method: GET
+    url: https://priv-api-etna-demo-ci-int-2.etnasoft.us/api/v1.0/systemactions/clearing
+  - method: PUT
+    url: https://priv-api-etna-demo-ci-int-2.etnasoft.us/api/v1.0/systemactions/clearing
+safety:
+  no_secrets_in_repo: true
+  mutation_gating:
+    flag: RUN_MUTATING_CLEARING_TESTS
+    enabled_value: "1"
+  default_mode: non_mutating_get_checks
+evidence_basis:
+  - aiqa/evidence/qa-suite-inventory/2026-04-25-agents-skills-v1/qa-suite-inventory.md
+  - qa/Tools/ClearingTester/README.md
+  - qa/Tools/ClearingTester/tests/test_volant_easy_to_borrow_int2.py
