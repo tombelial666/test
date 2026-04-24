@@ -2,3 +2,6 @@
 .cursor/skills/atlas-status-req/*.local.json
 .cursor/skills/atlas-status-req/consul*.json
 !.cursor/skills/atlas-status-req/atlas.env.template.json
+
+# Local scratch (Legit/JWS experiments — do not commit)
+.cursor/tmp-legit-token.py
