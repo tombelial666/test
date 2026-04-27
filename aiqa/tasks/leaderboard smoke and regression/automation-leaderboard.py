@@ -8,11 +8,13 @@ import pytest
 from playwright.sync_api import Page, expect
 
 BASE_URL = "https://etna-demo-ci-int-2.etnasoft.us"
-USERNAME = os.getenv("INT2_USERNAME", "admin")
-PASSWORD = os.getenv("INT2_PASSWORD", "do6YtJNJCG1!")
+USERNAME = os.getenv("INT2_USERNAME", "")
+PASSWORD = os.getenv("INT2_PASSWORD", "")
 
 @pytest.fixture(scope="function")
 def authenticated_page(page: Page):
+    if not (USERNAME and PASSWORD):
+        pytest.skip("Set INT2_USERNAME/INT2_PASSWORD to run Leaderboard smoke/regression automation.")
     page.goto(BASE_URL, wait_until="domcontentloaded")
     if "/User/LogOn" in page.url:
         page.fill('input#Login', USERNAME)
@@ -255,10 +257,16 @@ class TestLeaderboardChannels:
         """TC-LB-19 — Priv API: получение токена"""
         import requests
 
+        username = os.getenv("INT2_USERNAME", "")
+        password = os.getenv("INT2_PASSWORD", "")
+        app_key = os.getenv("ETNA_APP_KEY", "")
+        if not (username and password and app_key):
+            pytest.skip("Set INT2_USERNAME/INT2_PASSWORD and ETNA_APP_KEY to run Pub API token test.")
+
         headers = {
-            "username": os.getenv("INT2_USERNAME", "admin"),
-            "password": os.getenv("INT2_PASSWORD", "do6YtJNJCG1!"),
-            "et-app-key": DEFAULT_APP_KEY,
+            "username": username,
+            "password": password,
+            "et-app-key": app_key,
             "Accept": "application/json",
             "X-Requested-With": "XMLHttpRequest",
         }

@@ -1,0 +1,53 @@
+id: load-smoke-jmeter-sqlserver
+name: load-smoke-jmeter-sqlserver
+maturity: draft
+purpose: >
+  Run a non-prod load smoke using JMeter and capture SQL Server before/after snapshots
+  (perf counters + waits), producing a markdown delta summary for quick regression triage.
+when_to_use:
+  - need a quick, repeatable load smoke with DB evidence (before/after)
+  - validate rate-limits / login guard / token endpoints under burst load
+  - investigate “DB pressure” changes with a minimal metrics bundle
+out_of_scope:
+  - production load testing
+  - long-running soak tests without explicit approval
+  - claiming performance SLO compliance (this is smoke + evidence)
+runners:
+  - command: >
+      powershell -NoProfile -ExecutionPolicy Bypass -File tasks/run_db_metrics_228370.ps1
+      -TrustServerCertificate
+      -BaselineSeconds 120 -LoadSeconds 180
+      -JmeterThreads 25 -JmeterRampUpSeconds 5 -JmeterLoops 120
+      -JmeterDistinctLoginAttempts 300 -JmeterMinRateLimitHits 50
+    working_dir: .
+inputs:
+  env_required:
+    - SQL_USER
+    - SQL_PASS
+    - ET_APP_KEY
+    - VALID_USERNAME
+    - WRONG_PASSWORD
+  env_optional:
+    - SQL_SERVER
+    - SQL_DATABASE
+    - SQL_PORT
+notes:
+  artifacts_out:
+    - tasks/db-metrics-228370/before_*.csv
+    - tasks/db-metrics-228370/after_*.csv
+    - tasks/db-metrics-228370/load_*.jtl
+    - tasks/db-metrics-228370/jmeter_*.log
+    - tasks/db-metrics-228370/summary_*.md
+  pass_fail_baseline:
+    - JMeter: Err=0% and teardown OK(hits>=MIN_RATE_LIMIT_HITS)
+    - DB: CPU avg <= 75%, LCK_M_* waits <= 5s and <= 20% of total waits delta
+safety:
+  no_secrets_in_repo: true
+  non_prod_only: true
+  burst_tests_are_opt_in: true
+evidence_basis:
+  - tasks/run_db_metrics_228370.ps1
+  - tasks/db_metrics_228370.sql
+  - tasks/summarize_db_metrics_228370.py
+  - tasks/etna_token_guard_228370.jmx
+

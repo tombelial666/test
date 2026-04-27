@@ -1,0 +1,31 @@
+# См. aiqa/task-schema.yaml
+task:
+  id: "228370"
+  title: "DDoS protection (MVC + WebApi): подготовка к тестированию и автоматизация login guard"
+  area: "ETNA_TRADER — FrontOffice LogOn/ExternalLogOn + WebApi token auth pipeline"
+  change_type: "feature_security_hardening"
+  touched_repos:
+    - "ETNA_TRADER"
+    - "qa"
+  touched_domains:
+    - authentication
+    - rate_limiting
+    - ddos_protection
+    - proxy_xff_trust
+  evidence:
+    - "ETNA_TRADER/TESTPLAN_228370_DDOS_PROTECTION.md"
+    - "qa/frontoffice_login_guard/test_frontoffice_login_guard.py"
+    - "qa/webapi_token_guard/test_webapi_token_guard.py"
+    - "ETNA_TRADER/src/Etna.Trader/Etna.Trader.WebApi.Tests/AuthenticationPipelineTests.cs"
+    - "aiqa/tasks/task-228370-ddos-protection-login-guard/EVIDENCE.md"
+    - "aiqa/tasks/task-228370-ddos-protection-login-guard/EVIDENCE_EN.md"
+    - "aiqa/tasks/task-228370-ddos-protection-login-guard/AZURE_ATTACHMENTS_EVIDENCE.md"
+    - "aiqa/tasks/task-228370-ddos-protection-login-guard/AZURE_ATTACHMENTS_EVIDENCE_EN.md"
+    - "aiqa/tasks/task-228370-ddos-protection-login-guard/AZURE_SHORT_REPORT.md"
+    - "aiqa/tasks/task-228370-ddos-protection-login-guard/AZURE_SHORT_REPORT_EN.md"
+    - "aiqa/tasks/task-228370-ddos-protection-login-guard/CHAT_SUMMARY.md"
+    - "Azure DevOps PR: https://dev.azure.com/etnasoft/ETNA_TRADER/_git/19afa09e-4f75-4f60-ad0c-b3357693c4ef/pullrequest/15797"
+  unknowns:
+    - "WebApi интеграционные прогоны требуют доступа к Azure Artifacts feed 'marketdata' (restore 401 без авторизации)."
+    - "Проверки X-Forwarded-For trust для MVC доступны только косвенно (попытка обхода лимитов через смену XFF)."
+

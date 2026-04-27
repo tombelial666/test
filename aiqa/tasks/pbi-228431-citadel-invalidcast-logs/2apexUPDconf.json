@@ -10,7 +10,7 @@
   },
   "JotForm": {
     "Host": "https://jotform.com/",
-    "ApiKey": "be1d5a10e1b303ec715bfc5f530f24aa",
+    "ApiKey": "***",
     "FormId": "260953195552463",
     "AccountTransferFormId": "232011975309352",
     "CountriesMapping": {
@@ -25,7 +25,7 @@
       "Endpoint": "api.globaldatacompany.com",
       "Demo": true,
       "UserName": "SogoTrading_Sandbox_IDV_API",
-      "Password": "Jzdy.b@Ho1"
+      "Password": "***"
     }
   },
   "Clearings": {
@@ -46,7 +46,7 @@
       "Endpoint": "https://uat-api.apexclearing.com",
       "Username": "apex_api",
       "Entity": "correspondent.STRG",
-      "SharedSecret": "ZD-e4_g3UCdiTIxseDOc4G4CizyLK7efyTK4tVI2Rt_WeCPylQ6pob5QUtkU-9F-d2v3x0WJFJMWC7Ekk6f_Mw",
+      "SharedSecret": "***",
       "Branch": "2GX",
       "DefaultRepCode": "STA",
       "Ale": {
@@ -58,7 +58,7 @@
         "Endpoint": "https://uatwebservices.apexclearing.com",
         "CustomerId": "101945",
         "Firm": "48",
-        "EncryptionKey": "78Q7PDAKsVhHNdY0"
+        "EncryptionKey": "***"
       },
       "PdfTemplateMap": {
         "w8ben": "W-8BEN.pdf"
@@ -83,7 +83,7 @@
       "Endpoint": "https://sogowebapiserver-qa.azurewebsites.net",
       "Username": "atlas_etna",
       "Entity": "correspondent_etna.wiai",
-      "SharedSecret": "pbuAaPnhbxWsUoL.iQ390aNXIh8rJ+wcUMPlnk9YIGjCLRm7.DF1dS+qYl.Y9aFh+i9",
+      "SharedSecret": "***",
       "Branch": "5FP",
       "DefaultRepCode": "ETN",
       "OptionLevel": "2",
@@ -96,7 +96,7 @@
         "Endpoint": "https://uatwebservices.apexclearing.com",
         "CustomerId": "2158",
         "Firm": "48",
-        "EncryptionKey": "4hyS03Kjqw6i8h7N"
+        "EncryptionKey": "***"
       },
       "PdfTemplateMap": {
         "w8ben": "W-8BEN.pdf"

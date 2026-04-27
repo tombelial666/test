@@ -1,0 +1,59 @@
+curl ^"https://etna-demo-ci-int-2.etnasoft.us/User/LogOn^" ^
+  -H ^"accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7^" ^
+  -H ^"accept-language: en-GB,en-US;q=0.9,en;q=0.8,ru;q=0.7^" ^
+  -H ^"cache-control: max-age=0^" ^
+  -H ^"content-type: application/x-www-form-urlencoded^" ^
+  REM Cookie header intentionally omitted (session-specific).
+  -H ^"origin: https://etna-demo-ci-int-2.etnasoft.us^" ^
+  -H ^"priority: u=0, i^" ^
+  -H ^"referer: https://etna-demo-ci-int-2.etnasoft.us/User/LogOn?ReturnUrl=^%^2f^" ^
+  -H ^"sec-ch-ua: ^\^"Google Chrome^\^";v=^\^"147^\^", ^\^"Not.A/Brand^\^";v=^\^"8^\^", ^\^"Chromium^\^";v=^\^"147^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  -H ^"sec-fetch-dest: document^" ^
+  -H ^"sec-fetch-mode: navigate^" ^
+  -H ^"sec-fetch-site: same-origin^" ^
+  -H ^"sec-fetch-user: ?1^" ^
+  -H ^"upgrade-insecure-requests: 1^" ^
+  -H ^"user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36^" ^
+  REM Do not hardcode credentials. Use env vars:
+  REM   set FO_USERNAME=...
+  REM   set FO_PASSWORD=...
+  --data-raw ^"Login=%FO_USERNAME%^&Password=%FO_PASSWORD%^&UseCaptcha=False^"
+
+
+
+curl ^"https://etna-demo-ci-int-2.etnasoft.us/UserSecurity^" ^
+  -H ^"accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7^" ^
+  -H ^"accept-language: en-GB,en-US;q=0.9,en;q=0.8,ru;q=0.7^" ^
+  -H ^"cache-control: max-age=0^" ^
+  REM Cookie header intentionally omitted (session-specific).
+  -H ^"priority: u=0, i^" ^
+  -H ^"referer: https://etna-demo-ci-int-2.etnasoft.us/User/LogOn?ReturnUrl=^%^2f^" ^
+  -H ^"sec-ch-ua: ^\^"Google Chrome^\^";v=^\^"147^\^", ^\^"Not.A/Brand^\^";v=^\^"8^\^", ^\^"Chromium^\^";v=^\^"147^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  -H ^"sec-fetch-dest: document^" ^
+  -H ^"sec-fetch-mode: navigate^" ^
+  -H ^"sec-fetch-site: same-origin^" ^
+  -H ^"sec-fetch-user: ?1^" ^
+  -H ^"upgrade-insecure-requests: 1^" ^
+  -H ^"user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36^"
+
+
+  curl ^"https://etna-demo-ci-int-2.etnasoft.us/^" ^
+  -H ^"accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7^" ^
+  -H ^"accept-language: en-GB,en-US;q=0.9,en;q=0.8,ru;q=0.7^" ^
+  -H ^"cache-control: max-age=0^" ^
+  REM Cookie header intentionally omitted (session-specific).
+  -H ^"priority: u=0, i^" ^
+  -H ^"referer: https://etna-demo-ci-int-2.etnasoft.us/User/LogOn?ReturnUrl=^%^2f^" ^
+  -H ^"sec-ch-ua: ^\^"Google Chrome^\^";v=^\^"147^\^", ^\^"Not.A/Brand^\^";v=^\^"8^\^", ^\^"Chromium^\^";v=^\^"147^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  -H ^"sec-fetch-dest: document^" ^
+  -H ^"sec-fetch-mode: navigate^" ^
+  -H ^"sec-fetch-site: same-origin^" ^
+  -H ^"sec-fetch-user: ?1^" ^
+  -H ^"upgrade-insecure-requests: 1^" ^
+  -H ^"user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36^"

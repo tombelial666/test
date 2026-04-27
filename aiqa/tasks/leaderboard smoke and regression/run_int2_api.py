@@ -1,10 +1,14 @@
 import requests
 import json
+import os
 
-TOKEN_URL = 'https://priv-api-etna-demo-ci-int-2.etnasoft.us/api/token'
-APP_KEY = 'NgA5AEEANwBFADgAQgA5AC0AMwBBAEMAQwAtADQAOQBEADQALQBCADkAMAAxAC0ANwA4ADMARgAyADYANgA4ADYARQA5AEMA'
-USERNAME = 'admin'
-PASSWORD = 'do6YtJNJCG1!'
+TOKEN_URL = os.getenv("ETNA_TOKEN_URL", "https://priv-api-etna-demo-ci-int-2.etnasoft.us/api/token")
+APP_KEY = os.getenv("ETNA_APP_KEY", "")
+USERNAME = os.getenv("ETNA_USERNAME", "")
+PASSWORD = os.getenv("ETNA_PASSWORD", "")
+
+if not (APP_KEY and USERNAME and PASSWORD):
+    raise SystemExit("Set ETNA_APP_KEY / ETNA_USERNAME / ETNA_PASSWORD (and optionally ETNA_TOKEN_URL) before running.")
 
 print('Requesting token from priv-api...')
 response = requests.post(

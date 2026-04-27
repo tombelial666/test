@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="228370 - Token Guard (rate-limit + bloom) - Pub API" enabled="true">
+      <stringProp name="TestPlan.comments">Non-prod only. Validate /api/token guard (rate-limit + bloom precheck). Configure -J variables. Do not commit secrets.</stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="PROTOCOL" elementType="Argument">
+            <stringProp name="Argument.name">PROTOCOL</stringProp>
+            <stringProp name="Argument.value">https</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="DOMAIN" elementType="Argument">
+            <stringProp name="Argument.name">DOMAIN</stringProp>
+            <stringProp name="Argument.value">pub-api-etna-demo-ci-int-2.etnasoft.us</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="BASE_PATH" elementType="Argument">
+            <stringProp name="Argument.name">BASE_PATH</stringProp>
+            <stringProp name="Argument.value">/api</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="TOKEN_PATH" elementType="Argument">
+            <stringProp name="Argument.name">TOKEN_PATH</stringProp>
+            <stringProp name="Argument.value">/token</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="ET_APP_KEY" elementType="Argument">
+            <stringProp name="Argument.name">ET_APP_KEY</stringProp>
+            <stringProp name="Argument.value">${__P(ET_APP_KEY,)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="VALID_USERNAME" elementType="Argument">
+            <stringProp name="Argument.name">VALID_USERNAME</stringProp>
+            <stringProp name="Argument.value">${__P(VALID_USERNAME,admin)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="WRONG_PASSWORD" elementType="Argument">
+            <stringProp name="Argument.name">WRONG_PASSWORD</stringProp>
+            <stringProp name="Argument.value">${__P(WRONG_PASSWORD,__wrong_password_rate_test__)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="THREADS" elementType="Argument">
+            <stringProp name="Argument.name">THREADS</stringProp>
+            <stringProp name="Argument.value">${__P(THREADS,5)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="RAMP_UP" elementType="Argument">
+            <stringProp name="Argument.name">RAMP_UP</stringProp>
+            <stringProp name="Argument.value">${__P(RAMP_UP,5)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="LOOPS" elementType="Argument">
+            <stringProp name="Argument.name">LOOPS</stringProp>
+            <stringProp name="Argument.value">${__P(LOOPS,20)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="REQUIRE_RATE_LIMIT" elementType="Argument">
+            <stringProp name="Argument.name">REQUIRE_RATE_LIMIT</stringProp>
+            <stringProp name="Argument.value">${__P(REQUIRE_RATE_LIMIT,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="RATE_LIMIT_PHRASE" elementType="Argument">
+            <stringProp name="Argument.name">RATE_LIMIT_PHRASE</stringProp>
+            <stringProp name="Argument.value">${__P(RATE_LIMIT_PHRASE,Too many login requests)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="MIN_RATE_LIMIT_HITS" elementType="Argument">
+            <stringProp name="Argument.name">MIN_RATE_LIMIT_HITS</stringProp>
+            <stringProp name="Argument.value">${__P(MIN_RATE_LIMIT_HITS,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="EXPECT_PER_IP_DISABLED" elementType="Argument">
+            <stringProp name="Argument.name">EXPECT_PER_IP_DISABLED</stringProp>
+            <stringProp name="Argument.value">${__P(EXPECT_PER_IP_DISABLED,0)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="DISTINCT_LOGIN_ATTEMPTS" elementType="Argument">
+            <stringProp name="Argument.name">DISTINCT_LOGIN_ATTEMPTS</stringProp>
+            <stringProp name="Argument.value">${__P(DISTINCT_LOGIN_ATTEMPTS,40)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
+        <stringProp name="HTTPSampler.domain">${DOMAIN}</stringProp>
+        <stringProp name="HTTPSampler.port"></stringProp>
+        <stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+        <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+        <stringProp name="HTTPSampler.path"></stringProp>
+        <stringProp name="HTTPSampler.concurrentPool">6</stringProp>
+        <stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+        <stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+      </ConfigTestElement>
+      <hashTree/>
+      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Common Headers" enabled="true">
+        <collectionProp name="HeaderManager.headers">
+          <elementProp name="Accept" elementType="Header">
+            <stringProp name="Header.name">Accept</stringProp>
+            <stringProp name="Header.value">application/json</stringProp>
+          </elementProp>
+          <elementProp name="Content-Type" elementType="Header">
+            <stringProp name="Header.name">Content-Type</stringProp>
+            <stringProp name="Header.value">application/x-www-form-urlencoded</stringProp>
+          </elementProp>
+          <elementProp name="Et-App-Key" elementType="Header">
+            <stringProp name="Header.name">Et-App-Key</stringProp>
+            <stringProp name="Header.value">${ET_APP_KEY}</stringProp>
+          </elementProp>
+        </collectionProp>
+      </HeaderManager>
+      <hashTree/>
+
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TG1 - Bloom precheck (random usernames)" enabled="true">
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">${LOOPS}</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${THREADS}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${RAMP_UP}</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Generate random Username" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="script">vars.put('CUR_USERNAME', '__no_such_user_' + java.util.UUID.randomUUID().toString().replace('-','') + '__')</stringProp>
+        </JSR223PreProcessor>
+        <hashTree/>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Token Headers (bloom)" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="Username" elementType="Header">
+              <stringProp name="Header.name">Username</stringProp>
+              <stringProp name="Header.value">${CUR_USERNAME}</stringProp>
+            </elementProp>
+            <elementProp name="Password" elementType="Header">
+              <stringProp name="Header.name">Password</stringProp>
+              <stringProp name="Header.value">x</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /api/token (bloom precheck)" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.path">${BASE_PATH}${TOKEN_PATH}</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Mark 200/202/401 as success" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">def c = prev.getResponseCode(); if (c == '200' || c == '202' || c == '401') { prev.setSuccessful(true); prev.setResponseMessage('OK'); }</stringProp>
+          </JSR223PostProcessor>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TG2 - Rate-limit (same username, wrong password)" enabled="true">
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">${LOOPS}</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${THREADS}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${RAMP_UP}</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Token Headers (rate)" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="Username" elementType="Header">
+              <stringProp name="Header.name">Username</stringProp>
+              <stringProp name="Header.value">${VALID_USERNAME}</stringProp>
+            </elementProp>
+            <elementProp name="Password" elementType="Header">
+              <stringProp name="Header.name">Password</stringProp>
+              <stringProp name="Header.value">${WRONG_PASSWORD}</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /api/token (rate-limit)" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.path">${BASE_PATH}${TOKEN_PATH}</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Detect rate-limit phrase (set global flag)" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">def phrase = vars.get('RATE_LIMIT_PHRASE') ?: 'Too many login requests'; def body = prev.getResponseDataAsString() ?: ''; if (body.contains(phrase)) { props.put('ETNA_RATE_LIMIT_SEEN','1'); def cur = (props.get('ETNA_RATE_LIMIT_HITS') ?: '0') as int; props.put('ETNA_RATE_LIMIT_HITS', String.valueOf(cur + 1)); }</stringProp>
+          </JSR223PostProcessor>
+          <hashTree/>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Mark 200/202/401 as success" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">def c = prev.getResponseCode(); if (c == '200' || c == '202' || c == '401') { prev.setSuccessful(true); prev.setResponseMessage('OK'); }</stringProp>
+          </JSR223PostProcessor>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TG3 - perIp burst (distinct usernames)" enabled="true">
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">${DISTINCT_LOGIN_ATTEMPTS}</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Generate distinct Username" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="script">vars.put('CUR_USERNAME', 'nouser_' + java.util.UUID.randomUUID().toString().replace('-','').substring(0,12))</stringProp>
+        </JSR223PreProcessor>
+        <hashTree/>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Token Headers (distinct logins)" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="Username" elementType="Header">
+              <stringProp name="Header.name">Username</stringProp>
+              <stringProp name="Header.value">${CUR_USERNAME}</stringProp>
+            </elementProp>
+            <elementProp name="Password" elementType="Header">
+              <stringProp name="Header.name">Password</stringProp>
+              <stringProp name="Header.value">x</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /api/token (distinct usernames)" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.path">${BASE_PATH}${TOKEN_PATH}</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Detect per-IP rate-limit in distinct burst (count hits)" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">def phrase = vars.get('RATE_LIMIT_PHRASE') ?: 'Too many login requests'; def body = prev.getResponseDataAsString() ?: ''; if (body.contains(phrase)) { def cur = (props.get('ETNA_PERIP_HITS') ?: '0') as int; props.put('ETNA_PERIP_HITS', String.valueOf(cur + 1)); }</stringProp>
+          </JSR223PostProcessor>
+          <hashTree/>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Mark 200/202/401 as success" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">def c = prev.getResponseCode(); if (c == '200' || c == '202' || c == '401') { prev.setSuccessful(true); prev.setResponseMessage('OK'); }</stringProp>
+          </JSR223PostProcessor>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+
+      <PostThreadGroup guiclass="PostThreadGroupGui" testclass="PostThreadGroup" testname="TearDown - Assert rate-limit observed (optional)" enabled="true">
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+      </PostThreadGroup>
+      <hashTree>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Fail run if rate-limit never triggered (REQUIRE_RATE_LIMIT=1)" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="script">def req = vars.get('REQUIRE_RATE_LIMIT') ?: '1'; if (req == '1') { def minHits = (vars.get('MIN_RATE_LIMIT_HITS') ?: '1') as int; def hits = (props.get('ETNA_RATE_LIMIT_HITS') ?: '0') as int; if (hits &lt; minHits) { SampleResult.setSuccessful(false); SampleResult.setResponseMessage('Rate-limit hits too low: ' + hits + ' &lt; ' + minHits + '. Increase THREADS/LOOPS or verify guard is enabled.'); } else { SampleResult.setSuccessful(true); SampleResult.setResponseMessage('OK (hits=' + hits + ')'); } } else { SampleResult.setSuccessful(true); SampleResult.setResponseMessage('SKIPPED'); }</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Assert per-IP disabled via distinct burst (EXPECT_PER_IP_DISABLED=1)" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="script">def expect = vars.get('EXPECT_PER_IP_DISABLED') ?: '0'; def hits = (props.get('ETNA_PERIP_HITS') ?: '0') as int; if (expect == '1') { if (hits != 0) { SampleResult.setSuccessful(false); SampleResult.setResponseMessage('Expected per-IP disabled, but distinct burst saw rate-limit hits=' + hits); } else { SampleResult.setSuccessful(true); SampleResult.setResponseMessage('OK (perIpHits=0)'); } } else { SampleResult.setSuccessful(true); SampleResult.setResponseMessage('SKIPPED'); }</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
+

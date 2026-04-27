@@ -10,7 +10,7 @@
     },
     "JotForm": {
       "Host": "https://jotform.com/",
-      "ApiKey": "be1d5a10e1b303ec715bfc5f530f24aa",
+      "ApiKey": "***",
       "FormId": "260953195552463",
       "AccountTransferFormId": "232011975309352",
       "CountriesMapping": {
@@ -25,7 +25,7 @@
         "Endpoint": "api.globaldatacompany.com",
         "Demo": true,
         "UserName": "SogoTrading_Sandbox_IDV_API",
-        "Password": "Jzdy.b@Ho1"
+        "Password": "***"
       }
     },
     "Clearings": {
@@ -38,7 +38,7 @@
         "Endpoint": "https://uat-api.apexclearing.com",
         "Username": "etna_api",
         "Entity": "correspondent.FDSC",
-      "SharedSecret": "pUhe5QkyFexJ_F1XOMqgAqed9WKVE4lN76zMssAIlA5fW1Rvt6XAfmIbl3oaI1Ttu6R-9wlEDpvz56NlYePZ-Q",
+      "SharedSecret": "***",
       "Branch": "449",
       "DefaultRepCode": "449",
         "Ale": {
@@ -51,7 +51,7 @@
           "Endpoint": "https://uatwebservices.apexclearing.com",
           "CustomerId": "101945",
           "Firm": "48",
-          "EncryptionKey": "78Q7PDAKsVhHNdY0"
+          "EncryptionKey": "***"
         },
         "PdfTemplateMap": {
           "w8ben": "W-8BEN.pdf"
@@ -91,7 +91,7 @@
      		"Form": {
         "Type":"JotForm",
         "Args": {
-          "ApiKey": "be1d5a10e1b303ec715bfc5f530f24aa",
+          "ApiKey": "***",
           "FormId": "211403803814345",
           "AccountTransferFormId": "232011975309352",
           "Host": "https://jotform.com/"

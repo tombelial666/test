@@ -1,11 +1,16 @@
-curl ^"https://priv-api-etna-demo-ci-int-2.etnasoft.us/api/token^" ^
+REM Example only. Do not paste real credentials here. Use env vars.
+REM   set ETNA_TOKEN_URL=https://priv-api-<stand>.etnasoft.us/api/token
+REM   set ETNA_USERNAME=...
+REM   set ETNA_PASSWORD=...
+REM   set ETNA_APP_KEY=...
+curl ^"%ETNA_TOKEN_URL%^" ^
   -X ^"POST^" ^
   -H ^"accept: */*^" ^
   -H ^"accept-language: en-GB,en-US;q=0.9,en;q=0.8,ru;q=0.7^" ^
   -H ^"content-length: 0^" ^
-  -H ^"et-app-key: NgA5AEEANwBFADgAQgA5AC0AMwBBAEMAQwAtADQAOQBEADQALQBCADkAMAAxAC0ANwA4ADMARgAyADYANgA4ADYARQA5AEMA^" ^
+  -H ^"et-app-key: %ETNA_APP_KEY%^" ^
   -H ^"origin: https://pub-api-etna-demo-ci-int-2.etnasoft.us^" ^
-  -H ^"password: do6YtJNJCG1^!^" ^
+  -H ^"password: %ETNA_PASSWORD%^" ^
   -H ^"priority: u=1, i^" ^
   -H ^"referer: https://pub-api-etna-demo-ci-int-2.etnasoft.us/api/reference/index^" ^
   -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
@@ -15,5 +20,5 @@ curl ^"https://priv-api-etna-demo-ci-int-2.etnasoft.us/api/token^" ^
   -H ^"sec-fetch-mode: cors^" ^
   -H ^"sec-fetch-site: same-origin^" ^
   -H ^"user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
-  -H ^"username: admin^" ^
+  -H ^"username: %ETNA_USERNAME%^" ^
   -H ^"x-requested-with: XMLHttpRequest^"

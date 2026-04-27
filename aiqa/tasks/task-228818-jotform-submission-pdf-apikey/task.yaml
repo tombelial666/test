@@ -1,0 +1,22 @@
+# Минимальная метаданная задачи (см. aiqa/task-schema.yaml)
+task:
+  id: "228818"
+  title: "JotForm — API key для скачивания PDF submission (server.php getSubmissionPDF)"
+  area: "AMS account-requests / JotForm integration"
+  change_type: "bugfix"
+  touched_repos:
+    - "AMS"
+    - "ETNA_TRADER (link/token gating for JotForm PDF download)"
+  touched_domains:
+    - account_opening
+    - account_requests
+    - external_api_jotform
+    - pdf_download
+  evidence:
+    - "AMS commit 40bc135a (PR 15808: 228818 fix pdf download)"
+    - "ETNA_TRADER PR 15819 merge commit de22bf615d0a25200befb7acdec100742283af4b (feature/228719-fix-pdf-download-auth)"
+    - "Azure DevOps pipeline run: build 176596 (ETNA_TRADER) — referenced in task description"
+  unknowns:
+    - "Какой контракт доступа ожидается: user-bound (AccountRequestOwner) или anonymous по short-lived token — сейчас токен не включает userId."
+    - "Требуется ли для JotForm PDF использовать host из options (server.php) на всех окружениях; возможны отличия host/redirect."
+    - "Нужен ли Content-Disposition/filename contract на фронте (same-tab download vs attachment) — в этом пакете только API/back-linking."

@@ -16,9 +16,9 @@ public class AccountsWithBalancesApiTests
 {
     private const string DefaultTokenUrl = "https://priv-api-etna-demo-ci-int-2.etnasoft.us/api/token";
     private const string DefaultAccountsUrl = "https://pub-api-etna-demo-ci-int-2.etnasoft.us/api/v1/accounts-with-balances";
-    private const string DefaultAppKey = "NgA5AEEANwBFADgAQgA5AC0AMwBBAEMAQwAtADQAOQBEADQALQBCADkAMAAxAC0ANwA4ADMARgAyADYANgA4ADYARQA5AEMA";
-    private const string DefaultUsername = "admin";
-    private const string DefaultPassword = "do6YtJNJCG1!";
+    private const string DefaultAppKey = "";
+    private const string DefaultUsername = "";
+    private const string DefaultPassword = "";
 
     private static readonly Uri TokenUrl = new(GetSetting("ETNA_TOKEN_URL", DefaultTokenUrl));
     private static readonly Uri AccountsUrl = new(GetSetting("ETNA_ACCOUNTS_URL", DefaultAccountsUrl));
@@ -32,6 +32,11 @@ public class AccountsWithBalancesApiTests
     [SetUp]
     public async Task SetUp()
     {
+        if (string.IsNullOrWhiteSpace(AppKey) || string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
+        {
+            Assert.Ignore("Set ETNA_APP_KEY / ETNA_USERNAME / ETNA_PASSWORD env vars to run these tests.");
+        }
+
         var token = await RequestTokenAsync();
 
         _authorizedClient = new HttpClient();

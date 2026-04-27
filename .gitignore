@@ -5,3 +5,17 @@
 
 # Local scratch (Legit/JWS experiments — do not commit)
 .cursor/tmp-legit-token.py
+
+# Local load-test artifacts / secrets (never commit)
+tasks/db-metrics-228370/
+tasks/tradier-int2-load/*.log
+tasks/tradier-int2-load/*.jtl
+tasks/tradier-int2-load/*.properties
+
+# Local / generated noise (never commit)
+aiqa/evidence/ide-chats-sync/
+ETNA_TRADER.wiki/
+_wt_*/
+Untitled-*
+jmeter.log
+cicdLOGTESTS.txt
