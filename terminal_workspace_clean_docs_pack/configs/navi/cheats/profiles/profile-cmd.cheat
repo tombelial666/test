@@ -1,0 +1,56 @@
+% profile:cmd, windows, cmd
+
+# [CMD] показать текущий профиль
+echo %AI_TERM_PROFILE%
+
+# [CMD] текущая директория
+cd
+
+# [CMD] список файлов
+dir
+
+# [CMD] список файлов включая скрытые
+dir /a
+
+# [CMD] перейти в папку
+cd /d <path>
+
+# [CMD] создать папку
+mkdir <path>
+
+# [CMD] создать пустой файл
+type nul > <file>
+
+# [CMD] копировать файл
+copy <source> <target>
+
+# [CMD] копировать папку
+xcopy <source> <target> /E /I /Y
+
+# [CMD] переместить или переименовать
+move <source> <target>
+
+# [CMD] удалить файл
+del <file>
+
+# [CMD] удалить папку (осторожно)
+rmdir /s /q <folder>
+
+# [CMD] найти файлы по имени
+dir /s /b *<name>*
+
+# [CMD] найти текст в файлах
+findstr /s /i /n "<text>" *.*
+
+# [CMD] показать PATH
+echo %PATH%
+
+# [CMD] открыть текущую папку в Explorer
+explorer .
+
+# [CMD] проверить порт
+netstat -ano | findstr :<port>
+
+# [CMD] показать путь к команде
+where <command>
+

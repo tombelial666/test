@@ -1,0 +1,47 @@
+% profile:wezterm, wezterm, hotkeys
+
+# [WezTerm] открыть меню профилей (launcher)
+F2
+
+# [WezTerm] меню профилей (fallback)
+Alt+L
+
+# [WezTerm] cheatsheet (profile-aware)
+Ctrl+Shift+/
+
+# [WezTerm] Command palette
+Ctrl+Shift+P
+
+# [WezTerm] Quick select
+Ctrl+Shift+Space
+
+# [WezTerm] PowerShell профиль
+Ctrl+Alt+1
+
+# [WezTerm] CMD профиль
+Ctrl+Alt+2
+
+# [WezTerm] Ubuntu Bash профиль
+Ctrl+Alt+3
+
+# [WezTerm] Ubuntu Zsh профиль
+Ctrl+Alt+4
+
+# [WezTerm] Ubuntu Fish профиль
+Ctrl+Alt+5
+
+# [WezTerm] split vertical
+Ctrl+A then s
+
+# [WezTerm] split horizontal
+Ctrl+A then d
+
+# [WezTerm] move pane left/down/up/right
+Ctrl+A then h/j/k/l
+
+# [WezTerm] zoom current pane
+Ctrl+A then z
+
+# [WezTerm] search scrollback
+Ctrl+Shift+F
+

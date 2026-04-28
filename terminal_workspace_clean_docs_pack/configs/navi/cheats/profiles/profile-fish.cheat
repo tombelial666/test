@@ -1,0 +1,62 @@
+% profile:fish, linux, wsl, fish
+
+# [Fish] показать текущий профиль
+echo $AI_TERM_PROFILE
+
+# [Fish] текущая директория
+pwd
+
+# [Fish] список файлов
+ls -lah
+
+# [Fish] перейти в директорию
+cd <dir>
+
+# [Fish] перейти на Windows C
+cd /mnt/c
+
+# [Fish] перейти на Windows D
+cd /mnt/d
+
+# [Fish] открыть текущую папку WSL в Windows Explorer
+explorer.exe (wslpath -w .)
+
+# [Fish] создать папку
+mkdir -p <dir>
+
+# [Fish] создать пустой файл
+touch <file>
+
+# [Fish] копировать файл/папку
+cp -r <source> <target>
+
+# [Fish] переместить/переименовать
+mv <source> <target>
+
+# [Fish] удалить файл
+rm <file>
+
+# [Fish] удалить папку (осторожно)
+rm -rf <dir>
+
+# [Fish] найти файлы по имени (fd)
+fd <name>
+
+# [Fish] найти текст в файлах (rg)
+rg "<text>" .
+
+# [Fish] показать файл (bat)
+bat <file>
+
+# [Fish] установить переменную
+set name <value>
+
+# [Fish] экспортировать переменную
+set -gx name <value>
+
+# [Fish] zoxide: умный cd
+z <name>
+
+# [Fish] zoxide: интерактивный выбор
+zi
+
