@@ -1,0 +1,59 @@
+% profile:zsh, linux, wsl, zsh
+
+# [Zsh] показать текущий профиль
+echo "$AI_TERM_PROFILE"
+
+# [Zsh] текущая директория
+pwd
+
+# [Zsh] список файлов
+ls -lah
+
+# [Zsh] перейти в директорию
+cd <dir>
+
+# [Zsh] перейти на Windows C
+cd /mnt/c
+
+# [Zsh] перейти на Windows D
+cd /mnt/d
+
+# [Zsh] открыть текущую папку WSL в Windows Explorer
+explorer.exe "$(wslpath -w .)"
+
+# [Zsh] создать папку
+mkdir -p <dir>
+
+# [Zsh] создать пустой файл
+touch <file>
+
+# [Zsh] копировать файл/папку
+cp -r <source> <target>
+
+# [Zsh] переместить/переименовать
+mv <source> <target>
+
+# [Zsh] удалить файл
+rm <file>
+
+# [Zsh] удалить папку (осторожно)
+rm -rf <dir>
+
+# [Zsh] найти файлы по имени (fd)
+fd <name>
+
+# [Zsh] найти текст в файлах (rg)
+rg "<text>" .
+
+# [Zsh] показать файл (bat)
+bat <file>
+
+# [Zsh] список markdown рекурсивно (zsh glob)
+ls **/*.md
+
+# [Zsh] zoxide: умный cd
+z <name>
+
+# [Zsh] zoxide: интерактивный выбор
+zi
+

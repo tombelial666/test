@@ -1,0 +1,56 @@
+% profile:powershell, windows, powershell
+
+# [PowerShell] показать текущий профиль
+$env:AI_TERM_PROFILE
+
+# [PowerShell] текущая директория
+Get-Location
+
+# [PowerShell] список файлов (включая скрытые)
+Get-ChildItem -Force
+
+# [PowerShell] перейти в папку
+Set-Location "C:\Users\Admin"
+
+# [PowerShell] перейти в Downloads
+Set-Location "$HOME\Downloads"
+
+# [PowerShell] перейти на Desktop
+Set-Location "$HOME\Desktop"
+
+# [PowerShell] перейти в Navi cheats
+Set-Location "$env:APPDATA\navi\cheats"
+
+# [PowerShell] создать папку
+New-Item -ItemType Directory -Force "folder-name"
+
+# [PowerShell] создать файл
+New-Item -ItemType File -Force "file.txt"
+
+# [PowerShell] удалить файл или папку (осторожно)
+Remove-Item "path-here" -Recurse -Force
+
+# [PowerShell] найти файлы по имени
+Get-ChildItem -Recurse -Filter "*name*"
+
+# [PowerShell] найти текст в файлах
+Select-String -Path ".\*" -Pattern "text" -Recurse
+
+# [PowerShell] показать PATH
+$env:Path -split ";"
+
+# [PowerShell] открыть текущую папку в Explorer
+explorer .
+
+# [PowerShell] показать путь к команде
+Get-Command command-name
+
+# [PowerShell] проверить порт
+netstat -ano | findstr :8080
+
+# [PowerShell] zoxide: умный cd
+z folder-name
+
+# [PowerShell] zoxide: интерактивный выбор
+zi
+

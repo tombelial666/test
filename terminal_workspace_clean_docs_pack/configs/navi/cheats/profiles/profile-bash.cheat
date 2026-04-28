@@ -1,0 +1,62 @@
+% profile:bash, linux, wsl, bash
+
+# [Bash] показать текущий профиль
+echo "$AI_TERM_PROFILE"
+
+# [Bash] текущая директория
+pwd
+
+# [Bash] список файлов
+ls -lah
+
+# [Bash] перейти в директорию
+cd <dir>
+
+# [Bash] перейти на Windows C
+cd /mnt/c
+
+# [Bash] перейти на Windows D
+cd /mnt/d
+
+# [Bash] перейти в Windows home пользователя
+cd /mnt/c/Users/Admin
+
+# [Bash] открыть текущую папку WSL в Windows Explorer
+explorer.exe "$(wslpath -w .)"
+
+# [Bash] создать папку
+mkdir -p <dir>
+
+# [Bash] создать пустой файл
+touch <file>
+
+# [Bash] копировать файл/папку
+cp -r <source> <target>
+
+# [Bash] переместить/переименовать
+mv <source> <target>
+
+# [Bash] удалить файл
+rm <file>
+
+# [Bash] удалить папку (осторожно)
+rm -rf <dir>
+
+# [Bash] найти файлы по имени (fd)
+fd <name>
+
+# [Bash] найти текст в файлах (rg)
+rg "<text>" .
+
+# [Bash] показать файл (bat)
+bat <file>
+
+# [Bash] tail лога
+tail -f <file>
+
+# [Bash] zoxide: умный cd
+z <name>
+
+# [Bash] zoxide: интерактивный выбор
+zi
+
