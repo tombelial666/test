@@ -52,8 +52,8 @@ public class AccountsWithBalancesApiTests
     [TearDown]
     public void TearDown()
     {
-        _authorizedClient.Dispose();
-        _appKeyOnlyClient.Dispose();
+        _authorizedClient?.Dispose();
+        _appKeyOnlyClient?.Dispose();
     }
 
     [Test]
