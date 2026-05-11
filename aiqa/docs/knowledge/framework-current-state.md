@@ -10,7 +10,7 @@
 
 The framework under `aiqa/` is a **canonical foundation** for AI-assisted QA, cross-repo impact reasoning, and structured task metadata. **Implemented now:** manifest and structure, minimal task schema, a **narrow** canonical repo index (three repo ids), a **minimal** impact map with path triggers and structured `required_checks`, an **artifact maturity policy**, Step 5.1 hard-validation evidence (bugs STEP5-001…005), and Step 5.5B **reclassification** of the former `everything/` bucket into `aiqa/docs/knowledge/`, `aiqa/docs/references/`, `aiqa/templates/`, and `aiqa/archive/everything-step-5-5b/`.
 
-Покрытие пользовательских сценариев для Wave 1 и Wave 2 также уже оформлено: канонические skill-specs в `aiqa/skills-catalog/`, привязки агентов в `aiqa/agents/agents.yaml`, evidence-манифесты в `aiqa/evidence/`, а также синхронизированные runtime-адаптеры в `.cursor/skills/` и `.claude/skills/`.
+Wave 1 and Wave 2 skill coverage is also in place: canonical skill specs in `aiqa/skills-catalog/`, agent bindings in `aiqa/agents/agents.yaml`, evidence manifests in `aiqa/evidence/`, and synchronized runtime adapters in `.cursor/skills/` and `.claude/skills/`.
 
 **Not implemented yet:** runtime orchestration, generated adapter pipeline from `aiqa/` alone, CI gates that enforce the impact map, full multi-repo contract graphs, and **AMS** (or any repo outside the three indexed ids) as part of the canonical index or impact rules.
 
@@ -42,11 +42,11 @@ Core artifacts:
 - **Artifact maturity policy** classifying `repo-index.yaml` as **review-grade** and `impact-map.yaml` as **validation-backed** (not automation-grade as a whole).
 - **Governance history** (classification Step 3, coexistence plan Step 4) for the ETNA legacy adapter stack.
 - **Step 5.5B execution:** former `everything/` content moved per plan; duplicate index copy removed after SHA256 parity + archive backup; `STRUCTURE.md` updated for `docs/knowledge/`, `archive/`, `templates/`.
-- **Канонический слой skills/agents (Wave 1 + Wave 2):**
-  - `aiqa/skills-catalog/*.yaml` задаёт нормализованные контракты скиллов для clearing INT2, leaderboard UI/API, frontoffice login guard, sub-account SFTP->S3, option-chain layout regression и leaderboard TotalCount backend regression.
-  - `aiqa/agents/agents.yaml` связывает test suites с этими skill-specs и фиксирует границы применения.
-  - `aiqa/scripts/generate_skills.py` вместе с `aiqa/templates/skill-render/*` генерирует синхронные адаптеры в `.cursor/skills/**` и `.claude/skills/**`.
-  - `aiqa/evidence/qa-suite-inventory/...` и `aiqa/evidence/agents-skills-wave2/...` фиксируют inventory, scope lock, scorecard и tasks gap report.
+- **Canonical skills/agents layer (Wave 1 + Wave 2):**
+  - `aiqa/skills-catalog/*.yaml` — normalized skill contracts for: clearing INT2, leaderboard UI/API, frontoffice login guard, sub-account SFTP→S3, option-chain layout regression, leaderboard TotalCount backend regression.
+  - `aiqa/agents/agents.yaml` — binds test suites to skill specs and fixes application boundaries.
+  - `aiqa/scripts/generate_skills.py` with `aiqa/templates/skill-render/*` — generates synchronized adapters in `.cursor/skills/**` and `.claude/skills/**`.
+  - `aiqa/evidence/qa-suite-inventory/...` and `aiqa/evidence/agents-skills-wave2/...` — inventory, scope lock, scorecard and tasks gap report.
 
 ---
 
@@ -96,7 +96,7 @@ Use `artifact-maturity-policy.md` vocabulary:
 - **Reviewer checklists** and discussion anchors: which repos and domains matter, which paths trigger broadened review, and what kinds of checks to consider (`required_checks`).
 - **Onboarding** to the **intended** separation: canon in `aiqa/` vs legacy runtime in ETNA / root adapters.
 - **Honest scoping** of MVP: three-repo index, six rules, explicit non-claims for AMS and full automation.
-- **Skill-driven QA entry points:** пользователь может выбрать готовый скилл в `.cursor/skills/README.md` или `.claude/skills/README.md`, при этом источником истины остаётся `aiqa/skills-catalog/`.
+- **Skill-driven QA entry points:** use `.cursor/skills/README.md` or `.claude/skills/README.md` to select a skill; `aiqa/skills-catalog/` remains the canonical source of truth for adapters.
 
 ---
 
@@ -106,7 +106,7 @@ Use `artifact-maturity-policy.md` vocabulary:
 - **Prove** cross-repo dependencies from naming alone (`review_only` edges).
 - **Replace** reading actual code, tests, and ops runbooks for ETNA, ServerlessIntegrations, and qa.
 - **Cover** every path or future layout change without re-validation (BUG-004 v2 limits).
-- **Гарантировать, что любая историческая цепочка коммитов пушится без блокировок**, если в старых коммитах есть секреты; push-protection может заблокировать обновление `main`, пока секрет не удалён из истории или не разблокирован мейнтейнером.
+- **Guarantee that historical commit chains push without blocking** — if old commits contain secrets, push-protection will block the `main` update until the secret is removed from history or explicitly bypassed by a maintainer.
 
 ---
 

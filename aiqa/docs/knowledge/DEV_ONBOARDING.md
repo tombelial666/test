@@ -2,6 +2,23 @@
 >
 > **Status alignment note:** this document describes the Task Carrier/Bundle operating model as a **pilot target design**. Canonical "implemented vs planned" status must be taken from `aiqa/docs/knowledge/framework-current-state.md`.
 
+## Executive Summary (English)
+
+This document describes the **Task Carrier** pilot design — a planned system, not yet implemented.
+
+**Core idea:** Introduce a `task.yaml` file (Task Carrier) per work item that accumulates context across stages: Lead → Developer → QA → RCA. An AI agent reads the carrier and produces structured artifacts (test plan, test cases, release notes, RCA report) without requiring engineers to re-explain context each time.
+
+**Key concepts:**
+- **Task Carrier** (`task.yaml`) — single YAML file per task, lives in `.aiqa/tasks/[ID]/`, filled by each role in turn
+- **Task Bundle** — ephemeral narrow context assembled per agent run (only what this specific run needs)
+- **Modes:** `qa` (test plan/cases/coverage), `dev` (release notes/impact), `rca` (root cause analysis)
+- **Roles:** Lead creates carrier → Developer enriches with code paths + hypotheses → QA fills evidence → all roles use AI agents to produce artifacts
+
+**What works TODAY:** Use `/qa`, `/ai-settings`, `/sr` skills from `.cursor/skills/`. Task Carrier is design-phase only.  
+**Quick start:** `aiqa/QUICK_START.md`
+
+---
+
 # AI QA Framework — Инструкция для лида и разработчика
 
 > Версия: V1 (пилот)

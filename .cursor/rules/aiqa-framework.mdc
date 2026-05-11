@@ -1,0 +1,39 @@
+---
+description: AI QA Framework activation rules for ETNA_TRADER workspace
+alwaysApply: true
+---
+
+# AIQA Framework — Always-On Rules
+
+## Start every task here
+
+Check `aiqa/QUICK_START.md` for the right skill. Invoke it. Don't derive from scratch.
+
+## Context load order
+
+1. `aiqa/QUICK_START.md`
+2. Skill file from `.cursor/skills/`
+3. `aiqa/docs/knowledge/framework-current-state.md` (if framework context needed)
+4. `aiqa/impact-map.yaml` + `aiqa/repo-index.yaml` (impact/regression only)
+
+## Never read by default
+
+- `aiqa/archive/` — historical, not runtime
+- `aiqa/docs/knowledge/AI_QA_Framework_V1_Architecture.md` — planned system, not implemented
+- `aiqa/docs/knowledge/IDE_Task_Carrier_Pipeline_V1.md` — pilot design, not running
+- `aiqa/docs/references/` — audit logs only
+
+## Output
+
+- Produce the artifact directly — not a description of what you'd put in it
+- Save to `tasks/[task-id]/` per the skill's output spec
+- Mark unconfirmed paths/selectors `[PSEUDOCODE]`
+- List unknowns as `[OPEN QUESTION]` at end
+
+## Critical ground truth
+
+- `repo-index.yaml`: review-grade (3 repos: ETNA_TRADER, ServerlessIntegrations, qa)
+- `impact-map.yaml`: validation-backed — **not CI-wired**
+- Task Carrier / `.aiqa/tasks/` pipeline: **design-phase only, not implemented**
+- AMS: not in canonical index — treat as ordinary engineering analysis
+- Two QA roots exist: `qa/` and `ETNA_TRADER/qa/` — identify which before any test work

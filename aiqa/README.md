@@ -43,25 +43,10 @@ Read this before any architecture doc. It tells you what is actually implemented
 |---|---|
 | `.cursor/skills/README.md` | Full skill catalog — **start here to invoke skills in Cursor** |
 | `.claude/skills/README.md` | Same catalog — **start here to invoke skills in Claude** |
-| `aiqa/skills-catalog/*.yaml` | Canonical skill contracts (source of truth) |
+| `aiqa/skills-catalog/*.yaml` | Canonical skill contracts (source of truth for adapter generation) |
 | `aiqa/agents/agents.yaml` | Agent-to-suite bindings |
 
-**Key skills:**
-
-| Skill | Purpose |
-|---|---|
-| `/qa` | Test plans, test cases, Playwright/NUnit automation, coverage review |
-| `/ai-settings` | Release notes, AC, style check, unit test gaps, pre-commit check |
-| `/sr` | Pre-merge code review (architecture + security agents) |
-| `/nf` | New feature discovery and scope shaping |
-| `/ct` | Technical decomposition with TDD-first plan |
-| `/si` | Structured implementation |
-| `/clearing-systemactions-int2` | Clearing INT2 atomic checks |
-| `/leaderboard-ui-api-tests` | Leaderboard Playwright smoke + regression |
-| `/frontoffice-login-guard` | FrontOffice login guard validation |
-| `/sub-account-sftp-to-s3-tests` | Sub-account SFTP→S3 workflow |
-| `/option-chain-layout-regression` | Option chain layout regression |
-| `/leaderboard-totalcount-backend-regression` | Leaderboard TotalCount backend invariants |
+See `.cursor/skills/README.md` for the full skill list with invocation instructions.
 
 ---
 
