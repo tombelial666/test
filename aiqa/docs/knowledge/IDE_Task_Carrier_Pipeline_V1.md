@@ -1,3 +1,6 @@
+> **RUNTIME-SKIP:** This document describes a *planned* system (Task Carrier pipeline). It is NOT an implemented running system. Do not use it as runtime guidance.  
+> For daily work: read `aiqa/QUICK_START.md`. For current state: read `aiqa/docs/knowledge/framework-current-state.md`.
+>
 > **Supporting knowledge (Step 5.5B).** Non-canonical pipeline design notes. Canonical contracts remain under `aiqa/` per `MANIFEST.md`. Migrated from `everything/AI-frame-docs/PROGRESS/`.
 >
 > **Status alignment note:** this is a V1 design proposal for Task Carrier orchestration, not a statement that orchestrator/runtime pipeline is already implemented in production.
