@@ -1,31 +1,104 @@
-# AI QA framework (`aiqa/`)
+# AI QA Framework (`aiqa/`)
 
-Canonical foundation for AI-assisted QA, cross-repo impact reasoning, and structured task metadata for the DevReps workspace slice described in `repo-index.yaml`.
+Canonical foundation for AI-assisted QA, cross-repo impact reasoning, and structured task execution across the DevReps workspace.
 
-## Start here
+---
 
-| Document | Purpose |
-|----------|---------|
-| [`MANIFEST.md`](MANIFEST.md) | Purpose, canonical truth boundary, out-of-scope for this phase. |
-| [`STRUCTURE.md`](STRUCTURE.md) | Layers: canonical vs adapters vs task artifacts vs reference/archive. |
-| [`docs/policies/artifact-maturity-policy.md`](docs/policies/artifact-maturity-policy.md) | **review-grade** vs **validation-backed** vs **automation-grade** for Step 5 artifacts. |
-| [`docs/knowledge/framework-current-state.md`](docs/knowledge/framework-current-state.md) | **Current state:** implemented vs planned, trust boundaries, MVP and next steps. |
-| [`docs/knowledge/onboarding-and-troubleshooting.md`](docs/knowledge/onboarding-and-troubleshooting.md) | Workspace map, safe rules, troubleshooting (including `.claude`/`.cursor`, `everything/` archive, AMS scope). |
-| [`docs/knowledge/indexing-and-impact-strategy.md`](docs/knowledge/indexing-and-impact-strategy.md) | Indexing scope, impact vs diff, ETNA strategy, AMS gating, testing validated vs planned. |
+## Use the framework
 
-## Canonical contracts (machine-oriented)
+**→ [`QUICK_START.md`](QUICK_START.md) — start here for daily work**
 
-- [`task-schema.yaml`](task-schema.yaml) — minimal task field names.
-- [`repo-index.yaml`](repo-index.yaml) — in-scope repos: `ETNA_TRADER`, `ServerlessIntegrations`, `qa`.
-- [`impact-map.yaml`](impact-map.yaml) — path triggers, expansion hints, structured `required_checks`.
+Copy-paste prompts, skill activation table, workflow entrypoints for: test plans, test cases, release notes, code review, RCA, impact analysis, automation, pre-commit checks.
+
+**→ [`ACTIVATION_CONTRACT.md`](ACTIVATION_CONTRACT.md) — behavioral rules for AI models**
+
+Context loading order, document trust hierarchy, what to skip, artifact quality standards, hallucination guards. Apply at the start of any framework-assisted task.
+
+---
+
+## Current state — what's built vs planned
+
+**→ [`docs/knowledge/framework-current-state.md`](docs/knowledge/framework-current-state.md)**
+
+Read this before any architecture doc. It tells you what is actually implemented today.
+
+**Implemented:**
+- Skills catalog: 8 skill specs in `aiqa/skills-catalog/`, runtime adapters in `.cursor/skills/` and `.claude/skills/`
+- Agent bindings: `aiqa/agents/agents.yaml`
+- Impact map with 6 rules and structured required_checks: `aiqa/impact-map.yaml`
+- Canonical repo index (3 repos): `aiqa/repo-index.yaml`
+- Artifact maturity policy: `aiqa/docs/policies/artifact-maturity-policy.md`
+- Secrets policy: `aiqa/docs/policies/secrets-and-sensitive-config-policy.md`
+
+**Not implemented (design phase only):**
+- Task Carrier / Task Bundle runtime pipeline
+- Orchestrator and CI-wired gates
+- Automation-grade impact map enforcement
+
+---
+
+## Skills and agents
+
+| Location | What it is |
+|---|---|
+| `.cursor/skills/README.md` | Full skill catalog — **start here to invoke skills in Cursor** |
+| `.claude/skills/README.md` | Same catalog — **start here to invoke skills in Claude** |
+| `aiqa/skills-catalog/*.yaml` | Canonical skill contracts (source of truth) |
+| `aiqa/agents/agents.yaml` | Agent-to-suite bindings |
+
+**Key skills:**
+
+| Skill | Purpose |
+|---|---|
+| `/qa` | Test plans, test cases, Playwright/NUnit automation, coverage review |
+| `/ai-settings` | Release notes, AC, style check, unit test gaps, pre-commit check |
+| `/sr` | Pre-merge code review (architecture + security agents) |
+| `/nf` | New feature discovery and scope shaping |
+| `/ct` | Technical decomposition with TDD-first plan |
+| `/si` | Structured implementation |
+| `/clearing-systemactions-int2` | Clearing INT2 atomic checks |
+| `/leaderboard-ui-api-tests` | Leaderboard Playwright smoke + regression |
+| `/frontoffice-login-guard` | FrontOffice login guard validation |
+| `/sub-account-sftp-to-s3-tests` | Sub-account SFTP→S3 workflow |
+| `/option-chain-layout-regression` | Option chain layout regression |
+| `/leaderboard-totalcount-backend-regression` | Leaderboard TotalCount backend invariants |
+
+---
+
+## Canonical contracts
+
+| File | Role |
+|---|---|
+| `MANIFEST.md` | Framework purpose and canonical truth boundary |
+| `STRUCTURE.md` | Layer definitions: canonical / adapters / artifacts / archive |
+| `task-schema.yaml` | Minimal task field names |
+| `repo-index.yaml` | In-scope repos: ETNA_TRADER, ServerlessIntegrations, qa |
+| `impact-map.yaml` | Path triggers, expansion hints, required_checks |
+
+---
+
+## Context boundaries — what to read for what
+
+| If you need to… | Read |
+|---|---|
+| Do actual QA work | `QUICK_START.md` |
+| Understand model behavior rules | `ACTIVATION_CONTRACT.md` |
+| Know what's implemented vs planned | `docs/knowledge/framework-current-state.md` |
+| Onboard to the workspace | `docs/knowledge/onboarding-and-troubleshooting.md` |
+| Understand impact / indexing strategy | `docs/knowledge/indexing-and-impact-strategy.md` |
+| Check trust levels of artifacts | `docs/policies/artifact-maturity-policy.md` |
+| Understand framework structure theory | `MANIFEST.md`, `STRUCTURE.md` |
+
+**Do not read by default:**
+- `archive/` — historical migration bundle, not runtime guidance
+- `docs/knowledge/AI_QA_Framework_V1_Architecture.md` — target-state design, not implemented system
+- `docs/knowledge/IDE_Task_Carrier_Pipeline_V1.md` — pilot design doc, not running system
+- `docs/references/` — step audit logs and migration plans, reference only
+
+---
 
 ## Evidence and history
 
-- Step 5 assumptions: [`docs/references/step-5-assumptions.md`](docs/references/step-5-assumptions.md)
-- Step 5.1 bugs: [`docs/references/bug-step5-001-inferred-repo-links.md`](docs/references/bug-step5-001-inferred-repo-links.md) … [`bug-step5-005-yaml-validation.md`](docs/references/bug-step5-005-yaml-validation.md)
-- `everything/` migration: [`docs/references/everything-reclassification-execution-step-5-5b.md`](docs/references/everything-reclassification-execution-step-5-5b.md) — archive at [`archive/everything-step-5-5b/`](archive/everything-step-5-5b/)
-- This documentation refresh summary: [`docs/references/foundation-chat-summary.md`](docs/references/foundation-chat-summary.md)
-
-## Templates
-
-- [`templates/AI_Settings.md`](templates/AI_Settings.md), [`templates/I-AM.txt`](templates/I-AM.txt) — operational prompts (non-canonical policy; see preambles in files).
+Step 5 bug records: `docs/references/bug-step5-001-*.md` through `bug-step5-005-*.md`  
+Step 5.5B migration: `docs/references/everything-reclassification-execution-step-5-5b.md`  
+Archive: `archive/everything-step-5-5b/` — preserved historical bundle, not canonical

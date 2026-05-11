@@ -1,3 +1,6 @@
+> **RUNTIME-SKIP:** This document describes a *target-state* architecture — a planned system, not what is implemented today. Reading it during task execution will mislead you about current capabilities.  
+> For daily work: read `aiqa/QUICK_START.md`. For current state: read `aiqa/docs/knowledge/framework-current-state.md`.
+>
 > **Supporting knowledge (Step 5.5B).** Non-canonical design narrative; may contain LLM citation artifacts. Not automation-grade unless separately evidenced. Migrated from `everything/AI-frame-docs/PROGRESS/`.
 >
 > **Status alignment note:** architecture sections here are target-state design. For current implementation status and non-claims, rely on `aiqa/docs/knowledge/framework-current-state.md` and `aiqa/docs/policies/artifact-maturity-policy.md`.

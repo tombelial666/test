@@ -17,16 +17,26 @@ Canonical truth lives only under `aiqa/`.
 - `.cursor/` and `.claude/` are generated adapter layers, not source of truth.
 - External/reference repositories are inspiration or diagnostics, not production dependencies.
 
-## Out of Scope for This Phase
+## Implementation Status
 
-- Runtime adapter implementation
-- Orchestrator logic
-- Script automation
+**Implemented (canonical layer + adapters):**
+- Canonical foundation: `aiqa/MANIFEST.md`, `aiqa/STRUCTURE.md`, `aiqa/task-schema.yaml`, `aiqa/repo-index.yaml`, `aiqa/impact-map.yaml`, `aiqa/docs/policies/`
+- Skills catalog: `aiqa/skills-catalog/*.yaml` — 8 skill specs
+- Agent bindings: `aiqa/agents/agents.yaml`
+- Runtime adapters: `.cursor/skills/` and `.claude/skills/` (generated from canonical; see `aiqa/scripts/generate_skills.py`)
+- Artifact maturity policy and secrets policy
+
+**Not yet implemented (design phase only):**
+- Task Carrier / Task Bundle runtime pipeline (see `aiqa/docs/knowledge/DEV_ONBOARDING.md` — pilot design)
+- Orchestrator logic and script automation for the full pipeline
+- CI-wired enforcement of impact map gates (map is validation-backed, not automation-grade)
 - Speculative artifacts not required by the approved foundation plan
+
+**Quick activation:** Read `aiqa/QUICK_START.md` first.
 
 ## Implementation Order
 
-1. Establish canonical foundation files and folder boundaries under `aiqa/`.
-2. Define and stabilize canonical indexing artifacts (e.g., repo index and impact map) in later steps.
-3. Add deterministic pipeline logic only after canonical data contracts are finalized.
-4. Build generated runtime adapters after canonical layer is stable.
+1. Establish canonical foundation files and folder boundaries under `aiqa/`. ✓ Done
+2. Define and stabilize canonical indexing artifacts (`repo-index.yaml`, `impact-map.yaml`). ✓ Done
+3. Build skills catalog and generate runtime adapters. ✓ Done
+4. Add deterministic pipeline logic and CI wiring. → Next phase
