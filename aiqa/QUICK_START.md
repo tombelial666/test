@@ -30,12 +30,13 @@
 | SFTP→S3 sub-account tests | `/sub-account-sftp-to-s3-tests` | `.cursor/skills/sub-account-sftp-to-s3-tests/SKILL.md` |
 | Option chain layout regression | `/option-chain-layout-regression` | `.cursor/skills/option-chain-layout-regression/SKILL.md` |
 
-### Analysis skills
+### Analysis & learning skills
 
 | I want to… | Skill | File |
 |---|---|---|
 | Impact analysis for changed paths | `/impact` | `.cursor/skills/impact/skill.md` |
 | RCA for an incident | `/rca` | `.cursor/skills/rca/skill.md` |
+| Capture discoveries before closing session | `/learn` | `.cursor/skills/learn/skill.md` |
 
 ---
 
@@ -176,14 +177,16 @@ If adapter and canonical disagree → canonical wins. Regenerate adapter via `ai
 3. /qa [feature]              → test-plan-[feature].md
 4. /qa → "write test cases"   → test-cases-[feature].md
 5. После прогонов: /qa → "coverage review" → coverage-review-[feature].md
+6. Перед закрытием: /learn   → discoveries.md (не теряй что нашёл)
 ```
 
 ### Developer — before PR
 
 ```
-1. Run: /ai-settings PRE_COMMIT_CHECK
-2. Run: /ai-settings RELEASE_NOTES
-3. Run: /sr [task-path]
+1. /ai-settings PRE_COMMIT_CHECK
+2. /ai-settings RELEASE_NOTES
+3. /sr [task-path]
+4. /learn   → зафиксировать что нашёл в ходе реализации
 ```
 
 ### Team Lead — new feature
@@ -201,7 +204,7 @@ If adapter and canonical disagree → canonical wins. Regenerate adapter via `ai
 2. Положи логи и SQL-результаты в эту папку
 3. /rca tasks/rca-[дата]-[short-name]/
 4. Проверь rca-report.md
-5. Если root cause в известно нестабильной зоне — добавь hotspot в repo-index.yaml
+5. /learn   → зафиксирует hotspot и предложит правило для impact-map
 ```
 
 ---
@@ -212,15 +215,21 @@ Skill-produced files go to the task directory (see each skill's output spec):
 
 ```
 tasks/task-[date]-[feature]/
+  task.yaml                          ← контекст задачи (заполняется командой)
   tech-decomposition-[feature].md    ← /ct output; input to /qa
   test-plan-[feature].md             ← /qa FULL mode
   test-cases-[feature].md            ← /qa TCs only or FULL
   coverage-review-[feature].md       ← /qa coverage review
   Code Review - [task].md            ← /sr output
+  discoveries.md                     ← /learn: что нашли за сессию
 
-tasks/[incident-folder]/
-  rca-report.md                      ← RCA free-form prompt
+tasks/rca-[date]-[name]/
+  task.yaml
+  rca-report.md                      ← /rca output
+  discoveries.md                     ← /learn: hotspots и правила для промоции
 ```
+
+Промоции из discoveries.md логируются в `aiqa/docs/knowledge/knowledge-journal.md`.
 
 > **tasks/ convention:** шаблон в `tasks/_template/task.yaml`. Скопировать → заполнить → запустить скилл.
 > Полное описание конвенции: `tasks/README.md`.
