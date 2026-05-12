@@ -1,0 +1,52 @@
+# Task context file — fill this before running /qa, /impact, /rca, /ai-settings
+# Copy this folder to: tasks/task-[YYYY-MM-DD]-[feature-name]/
+# Rename to task.yaml (already done)
+
+task:
+  id:                        # e.g. EXT-12345 or BUG-228299
+  title:                     # Short human title: "Margin call auto-close"
+  area:                      # Domain: oms / trading / notification / leaderboard / clearing / auth
+  change_type:               # feature / bugfix / regression / rca / refactor
+  touched_repos:             # e.g. [ETNA_TRADER, qa]
+  touched_domains:           # e.g. [oms, trading-api]
+
+intent:
+  goal: >
+    # One clear sentence: what this task achieves when done
+
+  done_definition:
+    # Concrete, testable criteria. /qa uses these to generate test cases.
+    # BAD:  "Everything works"
+    # GOOD: "MarginCallService returns 0 for zero-balance account without throwing"
+    - ""
+    - ""
+    - ""
+
+scope:
+  services: []               # e.g. [oms-service, notification-service]
+  qa_root:                   # qa/ OR ETNA_TRADER/qa/  — pick one, they have different impact rules
+
+context:
+  provided_by_lead:
+    notes: []                # Links to ADO ticket, Slack thread, relevant docs
+
+  discovered_in_dev:
+    code_paths: []           # Specific files changed, e.g.:
+                             #   - src/Etna.Trading.Oms/Services/MarginCallService.cs
+    hypotheses: []           # Dev's understanding of what/why
+    config_changes: []       # appsettings keys added/changed
+    limitations: []          # What dev did NOT test / check
+
+  qa_evidence:
+    test_runs: []            # e.g. ["Run #1247 — FAIL: MarginCalculator_ZeroBalance_Test"]
+    logs: []                 # Paths to relevant log files
+    sql: []                  # SQL queries run during investigation
+    verdict:                 # passed / failed / blocked / null
+
+evidence:
+  unknowns: []               # Open questions that block progress
+
+ownership:
+  lead:                      # Name
+  dev: []                    # Names
+  qa: []                     # Names

@@ -30,12 +30,12 @@
 | SFTP→S3 sub-account tests | `/sub-account-sftp-to-s3-tests` | `.cursor/skills/sub-account-sftp-to-s3-tests/SKILL.md` |
 | Option chain layout regression | `/option-chain-layout-regression` | `.cursor/skills/option-chain-layout-regression/SKILL.md` |
 
-### Free-form prompts (no dedicated slash skill — use as plain chat prompt)
+### Analysis skills
 
-| I want to… | Use this prompt template |
-|---|---|
-| Impact analysis for changed paths | See §2 Impact Analysis below |
-| RCA for an incident | See §2 RCA below |
+| I want to… | Skill | File |
+|---|---|---|
+| Impact analysis for changed paths | `/impact` | `.cursor/skills/impact/skill.md` |
+| RCA for an incident | `/rca` | `.cursor/skills/rca/skill.md` |
 
 ---
 
@@ -104,24 +104,19 @@ LEAN review. Required: architecture + security.
 Add db-migration reviewer if any db/ files changed.
 ```
 
-### Impact Analysis (free-form — no slash skill)
+### Impact Analysis
 
 ```
-Read aiqa/impact-map.yaml.
-Which rules match these changed paths: [list paths]?
-What required_checks apply? Which repos are potentially affected?
-Note: impact-map is validation-backed, not CI-enforced.
+/impact [список изменённых путей]
 ```
+Или без аргумента — возьмёт пути из `git diff` автоматически.
 
-### RCA (free-form — no slash skill)
+### RCA
 
 ```
-Analyze logs at [path] and SQL query results at [path].
-Incident date/time: [datetime].
-Build a hypothesis tree. Rank each hypothesis by supporting vs contradicting evidence.
-Identify the most probable root cause with explicit evidence references.
-Save output as: tasks/[incident-folder]/rca-report.md
+/rca tasks/rca-[дата]-[инцидент]/
 ```
+Или с описанием инцидента — скилл сам попросит нужные детали.
 
 ### Coverage Review
 
@@ -173,13 +168,14 @@ If adapter and canonical disagree → canonical wins. Regenerate adapter via `ai
 
 ## Daily flows — what actually works today
 
-### QA Engineer — new task
+### QA Engineer — новая задача
 
 ```
-1. Get feature spec (tech-decomposition or AC doc) from tasks/task-[date]-[feature]/
-2. Run: /qa [feature-name]      → produces test-plan-[feature].md
-3. Run: /qa → "write test cases" → produces test-cases-[feature].md
-4. After test runs: /qa → "coverage review" → produces coverage-review-[feature].md
+1. cp -r tasks/_template tasks/task-$(date +%Y-%m-%d)-[feature]
+2. Заполни task.yaml: id, goal, done_definition, scope.qa_root
+3. /qa [feature]              → test-plan-[feature].md
+4. /qa → "write test cases"   → test-cases-[feature].md
+5. После прогонов: /qa → "coverage review" → coverage-review-[feature].md
 ```
 
 ### Developer — before PR
@@ -201,10 +197,11 @@ If adapter and canonical disagree → canonical wins. Regenerate adapter via `ai
 ### Incident / RCA
 
 ```
-1. Collect logs + SQL results into tasks/[incident-folder]/
-2. Run RCA free-form prompt above
-3. Review and correct rca-report.md
-4. If root cause is in a known-unstable area: consider adding a hotspot to repo-index
+1. cp -r tasks/_template tasks/rca-$(date +%Y-%m-%d)-[short-name]
+2. Положи логи и SQL-результаты в эту папку
+3. /rca tasks/rca-[дата]-[short-name]/
+4. Проверь rca-report.md
+5. Если root cause в известно нестабильной зоне — добавь hotspot в repo-index.yaml
 ```
 
 ---
@@ -225,6 +222,5 @@ tasks/[incident-folder]/
   rca-report.md                      ← RCA free-form prompt
 ```
 
-> **Note:** The `.aiqa/tasks/[ID]/task.yaml` Task Carrier structure described in
-> `docs/knowledge/DEV_ONBOARDING.md` is a **pilot design, not an implemented system**.
-> Use the `tasks/` directory pattern above for current work.
+> **tasks/ convention:** шаблон в `tasks/_template/task.yaml`. Скопировать → заполнить → запустить скилл.
+> Полное описание конвенции: `tasks/README.md`.

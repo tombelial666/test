@@ -22,6 +22,8 @@ AI workflow skills for ETNA_TRADER — a C# / .NET + TypeScript trading system w
 | Skill | Purpose |
 |---|---|
 | `/qa` | Senior QA workflow: test plans, test cases, Playwright/Pytest E2E automation, C# NUnit/xUnit backend tests, coverage review |
+| `/impact` | Cross-repo impact analysis: match changed paths against `aiqa/impact-map.yaml`, surface required checks and regression scope |
+| `/rca` | Root cause analysis: hypothesis tree, evidence mapping, root cause verdict, prevention notes |
 
 Invoke `/qa` with a feature name or task path:
 ```
