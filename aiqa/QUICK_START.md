@@ -37,6 +37,7 @@
 | Impact analysis for changed paths | `/impact` | `.cursor/skills/impact/skill.md` |
 | RCA for an incident | `/rca` | `.cursor/skills/rca/skill.md` |
 | Capture discoveries before closing session | `/learn` | `.cursor/skills/learn/skill.md` |
+| Enrich canonical index from a PR | `/pr-enrich` | `.cursor/skills/pr-enrich/skill.md` |
 
 ---
 
@@ -129,6 +130,21 @@ Check which ACs from the tech-decomposition are covered, partial, or missing.
 Output: tasks/task-[date]-[feature]/coverage-review-[feature].md
 ```
 
+### PR Enrichment (works without local clone)
+
+```
+/pr-enrich [PR number or description]
+```
+
+With local clone — auto-reads `git diff origin/main...HEAD`.  
+Without clone — paste the PR file list when prompted:
+```
+/pr-enrich
+
+[paste GitHub Files Changed list here]
+```
+Output: `tasks/pr-enrich-[pr-number]/pr-enrichment.md` with ready-to-copy YAML proposals.
+
 ---
 
 ## Step 3 — Where skill files live
@@ -188,6 +204,16 @@ If adapter and canonical disagree → canonical wins. Regenerate adapter via `ai
 3. /sr [task-path]
 4. /learn   → зафиксировать что нашёл в ходе реализации
 ```
+
+### After any PR — canonical index enrichment
+
+```
+1. /pr-enrich [PR number]               → pr-enrichment.md with YAML proposals
+2. Review proposals in pr-enrichment.md
+3. Copy validated YAML to aiqa/impact-map.yaml or aiqa/repo-index.yaml
+4. Log promotion in aiqa/docs/knowledge/knowledge-journal.md
+```
+Note: works without local clone — paste GitHub file list when prompted.
 
 ### Team Lead — new feature
 

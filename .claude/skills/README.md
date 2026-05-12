@@ -25,6 +25,7 @@ AI workflow skills for ETNA_TRADER — a C# / .NET + TypeScript trading system w
 | `/impact` | Cross-repo impact analysis: match changed paths against `aiqa/impact-map.yaml`, surface required checks and regression scope |
 | `/rca` | Root cause analysis: hypothesis tree, evidence mapping, root cause verdict, prevention notes |
 | `/learn` | Capture session discoveries before closing: hotspots, hidden deps, test gaps, domain patterns. Generates promotion-ready YAML for impact-map and repo-index |
+| `/pr-enrich` | Canonical index gap analysis from a PR. Works without local clone — paste PR file list or diff. Identifies uncovered paths and proposes new impact-map rules and repo-index entries |
 
 Invoke `/qa` with a feature name or task path:
 ```
