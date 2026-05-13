@@ -37,3 +37,10 @@ Check `aiqa/QUICK_START.md` for the right skill. Invoke it. Don't derive from sc
 - Task Carrier / `.aiqa/tasks/` pipeline: **design-phase only, not implemented**
 - AMS: not in canonical index — treat as ordinary engineering analysis
 - Two QA roots exist: `qa/` and `ETNA_TRADER/qa/` — identify which before any test work
+
+## Repository layout — do not confuse paths
+
+- **Git root / primary workspace:** this repo is `test/` (path like `D:\RepositoryAIQA\test`). All framework work, commits, and pushes you own here start from that root.
+- **`aiqa/` (framework):** `test/aiqa/` — scripts, docs, pipeline YAML for QA metrics, skills, tests. Treat as **canonical** for AIQA automation that lives in this monorepo.
+- **`qa/` nested under `test/`:** `test/qa/` is the **ETNA_TRADER tests** tree (C#/Python tools, `qa/Tools/AccountCreating`, etc.). It is **not** the ADO dashboard package path `Tools/aiqa-dashboard/` from the separate Azure DevOps repo `ETNA_TRADER/_git/qa`. Do **not** expect `aiqa-dashboard` inside `test/qa/Tools/`.
+- **ADO repo `qa` (dashboard package):** lives only on Azure DevOps at `Tools/aiqa-dashboard/...`. Sync via **`git remote`** / `fetch` / targeted push to that repo — **never** create a second full clone at `D:\RepositoryAIQA\qa` beside `test/` unless the user explicitly asks for a standalone working copy.
