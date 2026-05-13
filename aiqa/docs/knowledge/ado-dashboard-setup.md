@@ -46,6 +46,12 @@
 - Еженедельно: смотреть executive-дашборд (динамика риска и backlog).
 - Ежемесячно: сверять тренд и корректировать цели по legacy/quality gates.
 
+## См. также (визуализация и приёмка)
+
+- [dashboard-widget-map.md](dashboard-widget-map.md) — карта виджетов MVP / Executive
+- [dashboard-acceptance-checklist.md](dashboard-acceptance-checklist.md) — чеклист приёмки дашборда и pipeline
+- [dashboard-metric-fallbacks.md](dashboard-metric-fallbacks.md) — fallback при неполных полях и данных
+
 ---
 
 ## План завершения всех настроек
