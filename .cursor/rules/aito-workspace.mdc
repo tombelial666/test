@@ -1,0 +1,41 @@
+---
+description: AITO / AI QA workspace context and trust boundaries
+alwaysApply: true
+---
+
+# AITO workspace context
+
+Use `aiqa/` as the canonical source of truth for the AITO / AI QA framework in this workspace.
+
+## Start points
+
+- `aiqa/README.md` - framework entry point.
+- `aiqa/MANIFEST.md` - purpose, killer feature, canonical truth boundary, out-of-scope items.
+- `aiqa/STRUCTURE.md` - canonical vs generated adapter vs task artifact layers.
+- `aiqa/docs/knowledge/framework-current-state.md` - current implemented vs planned state.
+- `aiqa/docs/knowledge/indexing-and-impact-strategy.md` - repo indexing, impact reasoning, and limitations.
+- `aiqa/docs/policies/artifact-maturity-policy.md` - review-grade, validation-backed, automation-grade vocabulary.
+- `aiqa/repo-index.yaml` - current canonical repo scope.
+- `aiqa/impact-map.yaml` - impact triggers and required checks.
+- `aiqa/task-schema.yaml` - minimal task metadata contract.
+
+## Trust boundaries
+
+- Treat `aiqa/` as canonical for framework definitions and future contracts.
+- Treat `.cursor/skills/` and `.claude/skills/` as generated or runtime adapter layers.
+- Do not promote task artifacts, archives, or reference docs into canonical truth unless the task explicitly asks for that promotion and evidence is recorded.
+- Do not claim automation-grade enforcement unless a reproducible CI or equivalent gate exists and is documented.
+
+## How to reason with AITO
+
+- Prefer cross-repo legacy impact reasoning over flat diff listing.
+- Use `impact-map.yaml` to decide which repos, domains, hotspots, and checks need attention.
+- Use `repo-index.yaml` only for its current explicit scope; do not infer full workspace coverage from broader narrative docs.
+- Keep uncertainty explicit with evidence, confidence, and review-only language.
+- Build task-level evidence first; promote reusable findings into canonical artifacts only when scope and validation are clear.
+
+## Cursor usage
+
+- When a user asks about AITO, AI QA, framework context, impact analysis, task metadata, skills, agents, or workspace QA rules, read the relevant `aiqa/` canonical files before answering or editing.
+- When a user asks to run a specific workflow, use the matching `.cursor/skills/` skill if one exists.
+- When editing generated adapters, check whether the source should be updated in `aiqa/skills-catalog/` or templates instead of only editing the adapter output.
