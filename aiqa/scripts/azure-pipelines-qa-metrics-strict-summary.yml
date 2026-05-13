@@ -1,0 +1,127 @@
+trigger: none
+pr: none
+
+schedules:
+  - cron: "0 3 * * 1-5"
+    displayName: Weekdays 03:00 UTC strict QA summary
+    branches:
+      include:
+        - main
+    always: true
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - group: qa-metrics-strict-summary
+
+jobs:
+  - job: strict_summary
+    displayName: Publish strict summary to Run Summary
+    steps:
+      - checkout: self
+
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: "3.11"
+        displayName: Use Python 3.11
+
+      - script: |
+          python -m pip install --upgrade pip
+          python -m pip install requests
+        displayName: Install dependencies
+
+      - script: |
+          python "test/aiqa/scripts/publish_strict_bugs_per_pbi_summary.py" --since "$(date -u +%Y-%m-01)" --until "$(date -u +%Y-%m-%d)"
+        env:
+          ADO_PAT: $(System.AccessToken)
+        displayName: Publish strict Bugs per PBI summary
+
+  - job: strict_artifact_and_notify
+    displayName: Publish artifact and send notifications
+    dependsOn: strict_summary
+    steps:
+      - checkout: self
+
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: "3.11"
+        displayName: Use Python 3.11
+
+      - script: |
+          python -m pip install --upgrade pip
+          python -m pip install requests
+        displayName: Install dependencies
+
+      - script: |
+          python "test/aiqa/scripts/publish_strict_bugs_per_pbi_summary.py" \
+            --since "$(date -u +%Y-%m-01)" \
+            --until "$(date -u +%Y-%m-%d)" \
+            --output "$(Build.ArtifactStagingDirectory)/strict-bugs-per-pbi-summary.md" \
+            --no-upload
+        env:
+          ADO_PAT: $(System.AccessToken)
+        displayName: Generate strict summary markdown artifact
+
+      - task: PublishPipelineArtifact@1
+        inputs:
+          targetPath: "$(Build.ArtifactStagingDirectory)/strict-bugs-per-pbi-summary.md"
+          artifact: "qa-strict-summary"
+        displayName: Publish strict summary artifact
+
+      - script: |
+          python - <<'PY'
+          import json
+          import os
+          import re
+          import requests
+
+          path = os.path.join(
+              os.environ["BUILD_ARTIFACTSTAGINGDIRECTORY"],
+              "strict-bugs-per-pbi-summary.md",
+          )
+          md = open(path, "r", encoding="utf-8").read()
+
+          def get(pattern: str, default: str) -> str:
+              match = re.search(pattern, md)
+              return match.group(1).strip() if match else default
+
+          period = get(r"- Period:\s*`([^`]+)`", "unknown")
+          value = get(r"- Value:\s*`([^`]+)`", "N/A bugs/PBI")
+          numerator = get(r"- Numerator:\s*`([^`]+)`", "N/A")
+          denominator = get(r"- Denominator:\s*`([^`]+)`", "N/A")
+          status = get(r"- DataStatus:\s*`([^`]+)`", "UNKNOWN")
+
+          message = (
+              f"QA strict summary: Bugs per PBI = {value} "
+              f"({numerator}/{denominator}), period {period}, status {status}"
+          )
+
+          slack_url = os.getenv("SLACK_WEBHOOK_URL", "").strip()
+          slack_user_ids = os.getenv("SLACK_USER_IDS", "").strip()
+
+          if not slack_url:
+              print("No webhook configured; skip notification.")
+              print(message)
+              raise SystemExit(0)
+
+          if slack_url:
+              mentions = ""
+              if slack_user_ids:
+                  users = [u.strip() for u in slack_user_ids.split(",") if u.strip()]
+                  if users:
+                      mentions = " ".join(f"<@{uid}>" for uid in users)
+              slack_text = f"{mentions}\n{message}".strip()
+              resp = requests.post(
+                  slack_url,
+                  json={"text": slack_text},
+                  timeout=15,
+              )
+              resp.raise_for_status()
+              print("Slack notification sent.")
+          PY
+        displayName: Send Slack status notification
+        env:
+          SLACK_WEBHOOK_URL: $(SLACK_WEBHOOK_URL)
+          SLACK_USER_IDS: $(SLACK_USER_IDS)
+
