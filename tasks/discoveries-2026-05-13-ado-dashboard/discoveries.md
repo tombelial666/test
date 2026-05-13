@@ -17,7 +17,7 @@
 ADO REST API enforces a strict ordering constraint when adding widgets via POST (one widget at a time). Each new widget must have `col > previous_widget_col` AND `row >= previous_widget_row`. The first widget must be at `col=0`. This is NOT documented in the ADO REST API reference — discovered only through trial and error (error `VS402432: Row is not within the acceptable range [0,200]`).
 
 **Evidence:**
-- `test/aiqa/scripts/create_ado_dashboard.py:44` — LAYOUT with staircase positions (0,0)→(1,1-4)→(2,5-6)→(3,7-8)→(4,9)
+- `qa/Tools/aiqa-dashboard/scripts/create_ado_dashboard.py:44` — LAYOUT with staircase positions (0,0)→(1,1-4)→(2,5-6)→(3,7-8)→(4,9)
 - Error `VS402432` appeared when attempting to add widgets at same-row positions with equal or lower column values
 
 **Why it matters:**
@@ -58,7 +58,7 @@ Dashboard layout must be planned around 1×1 count widgets only. To show related
 The contribution ID `ms.vss-dashboards-web...QueryResultWidget` does not exist in ADO — returns `VS402507: No widget of this type could be found`. The correct ID for a "Query Results" list widget is `ms.vss-mywork-web.Microsoft.VisualStudioOnline.MyWork.WitViewWidget`. Settings format differs: it uses `"query": {"queryId": ..., "queryName": ...}` instead of `"queryId"` at the top level.
 
 **Evidence:**
-- `test/aiqa/scripts/create_ado_dashboard.py:35-36` — WIDGET_QUERY_RESULTS constant
+- `qa/Tools/aiqa-dashboard/scripts/create_ado_dashboard.py:35-36` — WIDGET_QUERY_RESULTS constant
 - `add_widget()` method uses different settings format for WitViewWidget
 
 **Why it matters:**
@@ -78,7 +78,7 @@ If adding a query results list widget with the wrong contribution ID, the widget
 ADO REST API GET `/dashboards` returns `{ "value": [...] }`. The code initially used `.get("dashboardEntries", [])` which always returned empty, making every run try to create a new dashboard and fail with 500 (duplicate name).
 
 **Evidence:**
-- `test/aiqa/scripts/create_ado_dashboard.py:148-154` — fixed `find_dashboard()` method
+- `qa/Tools/aiqa-dashboard/scripts/create_ado_dashboard.py:148-154` — fixed `find_dashboard()` method
 
 **Why it matters:**
 The script is idempotent only because `find_dashboard()` correctly detects existing dashboards. If the field name is wrong, every run creates a new dashboard or fails.
@@ -98,7 +98,7 @@ This project stores AI skills in `.claude/skills/<name>/skill.md` following a cu
 
 **Evidence:**
 - `test/.claude/commands/` did not exist before this session
-- `test/aiqa/scripts/generate_skills.py` only wrote to `.claude/skills/` — never to `.claude/commands/`
+- `aiqa/scripts/generate_skills.py` only wrote to `.claude/skills/` — never to `.claude/commands/`
 - 23 skills synced in this session + 1 new `ado-dashboard` skill
 
 **Why it matters:**
@@ -129,7 +129,7 @@ Metrics 3 (Containment/DRE), 4 (Escape Rate), and 5 (ALM sign-off) are completel
 - [ ] Create `Custom.FoundStage` (Picklist: dev/qa/preprod/prod) on Bug work item type
 - [ ] Create `Custom.QaDecision` (Picklist: Ready/Not Ready/Accepted with Risks/Blocked) on Feature work item type
 - [ ] Via: Organization Settings → Boards → Process → [Process Name] → Work Item Types
-- [ ] Then re-run: `python aiqa/scripts/create_ado_queries.py` + `python aiqa/scripts/create_ado_dashboard.py --team "QA"`
+- [ ] Then re-run: `python qa/Tools/aiqa-dashboard/scripts/create_ado_queries.py` + `python qa/Tools/aiqa-dashboard/scripts/create_ado_dashboard.py --team "QA"`
 
 ---
 
@@ -149,12 +149,12 @@ Metrics 3 (Containment/DRE), 4 (Escape Rate), and 5 (ALM sign-off) are completel
 
 | Artifact | Status |
 |----------|--------|
-| `test/aiqa/scripts/create_ado_queries.py` | ✅ Created — 5/10 queries in ADO |
-| `test/aiqa/scripts/create_ado_dashboard.py` | ✅ Created — dashboard + 5/10 widgets |
-| `test/aiqa/scripts/check_bug_fields.py` | ✅ Created |
-| `test/aiqa/scripts/collect_q1_metrics.py` | ✅ Migrated from Tags to Custom fields |
+| `qa/Tools/aiqa-dashboard/scripts/create_ado_queries.py` | ✅ Created — 5/10 queries in ADO |
+| `qa/Tools/aiqa-dashboard/scripts/create_ado_dashboard.py` | ✅ Created — dashboard + 5/10 widgets |
+| `qa/Tools/aiqa-dashboard/scripts/check_bug_fields.py` | ✅ Created |
+| `qa/Tools/aiqa-dashboard/scripts/collect_q1_metrics.py` | ✅ Migrated from Tags to Custom fields |
 | `test/.claude/skills/ado-dashboard/skill.md` | ✅ New skill for ADO dashboard work |
 | `test/.cursor/skills/ado-dashboard/SKILL.md` | ✅ Cursor version |
 | `test/.claude/commands/*.md` | ✅ 24 skills synced (was 0) |
-| `test/aiqa/scripts/generate_skills.py` | ✅ Updated — now syncs to .claude/commands/ |
+| `aiqa/scripts/generate_skills.py` | ✅ Updated — now syncs to .claude/commands/ |
 | Dashboard "QA Metrics MVP" | ✅ Live in ADO, team QA, 5 widgets active |

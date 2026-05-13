@@ -16,7 +16,7 @@ user-invocable: true
 **Org:** `etnasoft` · **Project:** `ETNA_TRADER` · **Team:** `QA`  
 **Dashboard:** `QA Metrics MVP` (id: `6ae602d6-1573-4832-9f83-1155a5165fef`)  
 **Queries folder:** `Shared Queries / QA Metrics`  
-**Scripts:** `test/aiqa/scripts/`
+**Scripts:** `qa/Tools/aiqa-dashboard/scripts/`
 
 **Auth:** `$env:ADO_PAT` — Personal Access Token with Read+Write on Work Items, Queries, Dashboards.
 
@@ -26,8 +26,8 @@ user-invocable: true
 
 ### `status` — show what's done and what's pending
 
-1. Read `test/aiqa/scripts/create_ado_queries.py` → list all 10 queries
-2. Read `test/aiqa/scripts/create_ado_dashboard.py` → list all 10 widgets in LAYOUT
+1. Read `qa/Tools/aiqa-dashboard/scripts/create_ado_queries.py` → list all 10 queries
+2. Read `qa/Tools/aiqa-dashboard/scripts/create_ado_dashboard.py` → list all 10 widgets in LAYOUT
 3. Report:
    - Which queries are in ADO (can be verified via dry-run)
    - Which widgets are on the dashboard (infer from which queries exist)
@@ -38,9 +38,9 @@ user-invocable: true
 ```powershell
 cd "d:\RepositoryAIQA\test"
 # Dry-run first:
-$env:ADO_PAT = "<token>"; python aiqa/scripts/create_ado_queries.py --dry-run
+$env:ADO_PAT = "<token>"; python qa/Tools/aiqa-dashboard/scripts/create_ado_queries.py --dry-run
 # Apply:
-$env:ADO_PAT = "<token>"; python aiqa/scripts/create_ado_queries.py
+$env:ADO_PAT = "<token>"; python qa/Tools/aiqa-dashboard/scripts/create_ado_queries.py
 ```
 
 **Expected output:**
@@ -53,9 +53,9 @@ $env:ADO_PAT = "<token>"; python aiqa/scripts/create_ado_queries.py
 ```powershell
 cd "d:\RepositoryAIQA\test"
 # Dry-run:
-$env:ADO_PAT = "<token>"; python aiqa/scripts/create_ado_dashboard.py --team "QA" --dry-run
+$env:ADO_PAT = "<token>"; python qa/Tools/aiqa-dashboard/scripts/create_ado_dashboard.py --team "QA" --dry-run
 # Apply:
-$env:ADO_PAT = "<token>"; python aiqa/scripts/create_ado_dashboard.py --team "QA"
+$env:ADO_PAT = "<token>"; python qa/Tools/aiqa-dashboard/scripts/create_ado_dashboard.py --team "QA"
 ```
 
 **Expected output:**
@@ -80,8 +80,8 @@ After creating fields: re-run `queries` then `widgets` actions above.
 ### `dry-run` — preview without API calls
 
 ```powershell
-$env:ADO_PAT = "<token>"; python aiqa/scripts/create_ado_queries.py --dry-run
-$env:ADO_PAT = "<token>"; python aiqa/scripts/create_ado_dashboard.py --team "QA" --dry-run
+$env:ADO_PAT = "<token>"; python qa/Tools/aiqa-dashboard/scripts/create_ado_queries.py --dry-run
+$env:ADO_PAT = "<token>"; python qa/Tools/aiqa-dashboard/scripts/create_ado_dashboard.py --team "QA" --dry-run
 ```
 
 ---
@@ -149,10 +149,10 @@ Script uses `find_dashboard()` to reuse existing dashboard by name instead of cr
 
 | File | Purpose |
 |------|---------|
-| `test/aiqa/scripts/create_ado_queries.py` | Create 10 WIQL queries in Shared Queries/QA Metrics |
-| `test/aiqa/scripts/create_ado_dashboard.py` | Create dashboard + add widgets (idempotent) |
-| `test/aiqa/scripts/collect_q1_metrics.py` | Collect Q1 metrics (defines ADO_ORG, ADO_PROJECT, ADO_API_VERSION) |
-| `test/aiqa/scripts/check_bug_fields.py` | Check which custom fields exist on Bugs |
+| `qa/Tools/aiqa-dashboard/scripts/create_ado_queries.py` | Create 10 WIQL queries in Shared Queries/QA Metrics |
+| `qa/Tools/aiqa-dashboard/scripts/create_ado_dashboard.py` | Create dashboard + add widgets (idempotent) |
+| `qa/Tools/aiqa-dashboard/scripts/collect_q1_metrics.py` | Collect Q1 metrics (defines ADO_ORG, ADO_PROJECT, ADO_API_VERSION) |
+| `qa/Tools/aiqa-dashboard/scripts/check_bug_fields.py` | Check which custom fields exist on Bugs |
 | `test/aiqa/docs/knowledge/ado-dashboard-setup.md` | Manual setup guide (WIQL queries, widget config) |
 
 ---
@@ -163,8 +163,8 @@ Script uses `find_dashboard()` to reuse existing dashboard by name instead of cr
    - Picklist values: `dev`, `qa`, `preprod`, `prod`
 2. **Create `Custom.QaDecision`** in ADO (Organization Settings → Process → Feature → Fields)
    - Picklist values: `Ready`, `Not Ready`, `Accepted with Risks`, `Blocked`
-3. **Re-run queries:** `python aiqa/scripts/create_ado_queries.py` → adds 5 remaining queries
-4. **Re-run dashboard:** `python aiqa/scripts/create_ado_dashboard.py --team "QA"` → adds 5 remaining widgets
+3. **Re-run queries:** `python qa/Tools/aiqa-dashboard/scripts/create_ado_queries.py` → adds 5 remaining queries
+4. **Re-run dashboard:** `python qa/Tools/aiqa-dashboard/scripts/create_ado_dashboard.py --team "QA"` → adds 5 remaining widgets
 
 ---
 

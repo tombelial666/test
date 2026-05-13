@@ -17,9 +17,9 @@
 The execution path for all three operational scripts is blocked when `ADO_PAT` is missing. During dry-run and bounded metrics run, every script returned the same failure condition, so the workflow cannot even reach validation logic without token bootstrap.
 
 **Evidence:**
-- `test/aiqa/scripts/create_ado_dashboard.py:12` documents required PAT scopes; `test/aiqa/scripts/create_ado_dashboard.py:279` prints `Error: ADO_PAT environment variable not set`.
-- `test/aiqa/scripts/create_ado_queries.py:11` documents required PAT scopes; `test/aiqa/scripts/create_ado_queries.py:314` prints `Error: ADO_PAT environment variable not set`.
-- `test/aiqa/scripts/collect_q1_metrics.py:383` reads `ADO_PAT`; `test/aiqa/scripts/collect_q1_metrics.py:385` exits with `Error: ADO_PAT environment variable not set`.
+- `qa/Tools/aiqa-dashboard/scripts/create_ado_dashboard.py:12` documents required PAT scopes; `qa/Tools/aiqa-dashboard/scripts/create_ado_dashboard.py:279` prints `Error: ADO_PAT environment variable not set`.
+- `qa/Tools/aiqa-dashboard/scripts/create_ado_queries.py:11` documents required PAT scopes; `qa/Tools/aiqa-dashboard/scripts/create_ado_queries.py:314` prints `Error: ADO_PAT environment variable not set`.
+- `qa/Tools/aiqa-dashboard/scripts/collect_q1_metrics.py:383` reads `ADO_PAT`; `qa/Tools/aiqa-dashboard/scripts/collect_q1_metrics.py:385` exits with `Error: ADO_PAT environment variable not set`.
 - Runtime behavior in this session: all three commands failed with `Error: ADO_PAT environment variable not set`.
 
 **Why it matters:**  
@@ -39,8 +39,8 @@ If token prechecks are skipped before running these scripts, the team gets repet
 `create_ado_dashboard.py` performs remote dashboard mutations and depends on query/widget assumptions (team context, query folder, widget placement constraints). A small script change can silently affect dashboard composition or fail after partial operations.
 
 **Evidence:**
-- `test/aiqa/scripts/create_ado_dashboard.py:2` states dashboard creation target (`QA Metrics MVP` in ADO).
-- `test/aiqa/scripts/create_ado_dashboard.py:39` starts layout constraints used for widget placement and ordering assumptions.
+- `qa/Tools/aiqa-dashboard/scripts/create_ado_dashboard.py:2` states dashboard creation target (`QA Metrics MVP` in ADO).
+- `qa/Tools/aiqa-dashboard/scripts/create_ado_dashboard.py:39` starts layout constraints used for widget placement and ordering assumptions.
 - Runtime behavior in this session: script entrypoint executed but blocked by missing `ADO_PAT`, confirming this file is the mutation gateway once token is set.
 
 **Why it matters:**  
@@ -81,7 +81,7 @@ The QA metrics flow depends on exact custom field reference names and value dict
 
 **Evidence:**
 - `test/aiqa/docs/knowledge/alm-required-fields.md:91` states reference names are fixed after creation and scripts depend on exact names.
-- `test/aiqa/scripts/collect_q1_metrics.py:35`, `test/aiqa/scripts/collect_q1_metrics.py:36`, `test/aiqa/scripts/collect_q1_metrics.py:42` hardcode `Custom.FoundStage`, `Custom.BugType`, `Custom.QaDecision`.
+- `qa/Tools/aiqa-dashboard/scripts/collect_q1_metrics.py:35`, `qa/Tools/aiqa-dashboard/scripts/collect_q1_metrics.py:36`, `qa/Tools/aiqa-dashboard/scripts/collect_q1_metrics.py:42` hardcode `Custom.FoundStage`, `Custom.BugType`, `Custom.QaDecision`.
 
 **Why it matters:**  
 If process customization drifts (renamed/alternate fields), metrics collection and query logic will silently degrade or miscount, producing invalid QA KPIs.
@@ -101,7 +101,7 @@ Current execution validation is mostly runtime-fail-based. There is no dedicated
 
 **Evidence:**
 - Runtime behavior in this session: scripts fail only at execution start with missing token, no preflight report.
-- Script headers define required PAT scopes (`test/aiqa/scripts/create_ado_dashboard.py:12`, `test/aiqa/scripts/create_ado_queries.py:11`), but there is no unified readiness command documented inside script entrypoints.
+- Script headers define required PAT scopes (`qa/Tools/aiqa-dashboard/scripts/create_ado_dashboard.py:12`, `qa/Tools/aiqa-dashboard/scripts/create_ado_queries.py:11`), but there is no unified readiness command documented inside script entrypoints.
 
 **Why it matters:**  
 The operator discovers readiness issues late (after invoking business scripts), increasing cycle time and risk of partial/manual retries.
@@ -157,7 +157,7 @@ If command root is ambiguous, coding-agent bootstrap can be applied in wrong loc
 ```yaml
 # Add under repos.aiqa.hotspots:
 hotspots:
-  - path: test/aiqa/scripts/create_ado_dashboard.py
+  - path: qa/Tools/aiqa-dashboard/scripts/create_ado_dashboard.py
     label: ado-dashboard-mutation-gateway
     risk_level: high
     reason: Remote dashboard mutations and layout assumptions can break KPI visibility if changed without focused review.
@@ -175,9 +175,9 @@ hotspots:
     - task_discovery
   when:
     any_paths:
-      - test/aiqa/scripts/create_ado_queries.py
-      - test/aiqa/scripts/create_ado_dashboard.py
-      - test/aiqa/scripts/collect_q1_metrics.py
+      - qa/Tools/aiqa-dashboard/scripts/create_ado_queries.py
+      - qa/Tools/aiqa-dashboard/scripts/create_ado_dashboard.py
+      - qa/Tools/aiqa-dashboard/scripts/collect_q1_metrics.py
   expand:
     repos:
       - aiqa
