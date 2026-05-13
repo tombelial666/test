@@ -1,0 +1,3 @@
+[submodule "qa"]
+	path = qa
+	url = https://dev.azure.com/etnasoft/ETNA_TRADER/_git/qa
