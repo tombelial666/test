@@ -71,7 +71,6 @@ jobs:
 
       - script: |
           python - <<'PY'
-          import json
           import os
           import re
           import requests
@@ -86,15 +85,70 @@ jobs:
               match = re.search(pattern, md)
               return match.group(1).strip() if match else default
 
-          period = get(r"- Period:\s*`([^`]+)`", "unknown")
-          value = get(r"- Value:\s*`([^`]+)`", "N/A bugs/PBI")
-          numerator = get(r"- Numerator:\s*`([^`]+)`", "N/A")
-          denominator = get(r"- Denominator:\s*`([^`]+)`", "N/A")
-          status = get(r"- DataStatus:\s*`([^`]+)`", "UNKNOWN")
+          def get_int(pattern: str, default: int = 0) -> int:
+              value = get(pattern, str(default))
+              try:
+                  return int(value)
+              except ValueError:
+                  return default
 
-          message = (
-              f"QA strict summary: Bugs per PBI = {value} "
-              f"({numerator}/{denominator}), period {period}, status {status}"
+          period = get(r"- Period:\s*`([^`]+)`", "unknown")
+          metric = get(r"- Metric:\s*`([^`]+)`", "Bugs per PBI (strict linked)")
+          value = get(r"- Value:\s*`([^`]+)`", "N/A bugs/PBI")
+          numerator = get_int(r"- Numerator:\s*`([^`]+)`", 0)
+          denominator = get_int(r"- Denominator:\s*`([^`]+)`", 0)
+          status = get(r"- DataStatus:\s*`([^`]+)`", "UNKNOWN")
+          signal = get(r"- Signal:\s*`([^`]+)`", "NORMAL")
+          trend_health = get(r"- TrendHealth:\s*`([^`]+)`", "n/a")
+          trend_value = get(r"- TrendValueDelta:\s*`([^`]+)`", "n/a")
+          trend_linked = get(r"- TrendLinkedDelta:\s*`([^`]+)`", "n/a")
+          trend_no_parent = get(r"- TrendNoParentDelta:\s*`([^`]+)`", "n/a")
+          trend_prod = get(r"- TrendProdDelta:\s*`([^`]+)`", "n/a")
+
+          new_total = get_int(r"- NewBugsTotal:\s*`([^`]+)`", 0)
+          linked = get_int(r"- LinkedNewBugs:\s*`([^`]+)`", 0)
+          no_parent = get_int(r"- NewBugsNoParent:\s*`([^`]+)`", 0)
+          parent_not_closed = get_int(r"- NewBugsParentNotClosed:\s*`([^`]+)`", 0)
+          found_prod = get_int(r"- NewBugsFoundProd:\s*`([^`]+)`", 0)
+          found_preprod = get_int(r"- NewBugsFoundPreProd:\s*`([^`]+)`", 0)
+          top_no_parent = get(r"- TopNoParentIDs:\s*`([^`]+)`", "none")
+          top_parent_not_closed = get(r"- TopParentNotClosedIDs:\s*`([^`]+)`", "none")
+
+          if found_prod > 0:
+              action_today = (
+                  f"Escalate {found_prod} New bug(s) found in prod and triage ownership today."
+              )
+          elif no_parent > 0 or parent_not_closed > 0:
+              action_today = "Prioritize linkage cleanup for unlinked New bugs today."
+          else:
+              action_today = "No critical blockers. Keep daily monitoring cadence."
+
+          status_emoji = "🟢" if status == "OK" else "🟡"
+          signal_emoji = "🚨" if signal == "ATTENTION" else "✅"
+
+          message = "\n".join(
+              [
+                  f"*QA Daily Health Brief* {status_emoji} {signal_emoji}",
+                  f"*Strict KPI:* `{metric}` = `{value}` ({numerator}/{denominator})",
+                  f"*Period:* `{period}` | *Status:* `{status}`",
+                  (
+                      "*Data quality:* "
+                      f"new total `{new_total}` | linked `{linked}` | "
+                      f"no parent `{no_parent}` | parent not closed `{parent_not_closed}`"
+                  ),
+                  (
+                      "*Risk lens:* "
+                      f"new bugs found in prod `{found_prod}`, pre-prod `{found_preprod}`"
+                  ),
+                  (
+                      "*Trend vs yesterday:* "
+                      f"health `{trend_health}` | KPI `{trend_value}` | "
+                      f"linked `{trend_linked}` | no parent `{trend_no_parent}` | prod `{trend_prod}`"
+                  ),
+                  f"*Top IDs (no parent):* `{top_no_parent}`",
+                  f"*Top IDs (parent not closed):* `{top_parent_not_closed}`",
+                  f"*Action today:* {action_today}",
+              ]
           )
 
           slack_url = os.getenv("SLACK_WEBHOOK_URL", "").strip()
@@ -106,12 +160,13 @@ jobs:
               raise SystemExit(0)
 
           if slack_url:
-              mentions = ""
+              mentions = []
               if slack_user_ids:
                   users = [u.strip() for u in slack_user_ids.split(",") if u.strip()]
                   if users:
-                      mentions = " ".join(f"<@{uid}>" for uid in users)
-              slack_text = f"{mentions}\n{message}".strip()
+                      mentions = [f"<@{uid}>" for uid in users]
+              mention_text = " ".join(mentions)
+              slack_text = "\n".join([mention_text, message]).strip()
               resp = requests.post(
                   slack_url,
                   json={"text": slack_text},

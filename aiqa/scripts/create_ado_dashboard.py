@@ -38,12 +38,12 @@ WIDGET_QUERY_RESULTS = (
 )
 
 MVP_DESCRIPTION = (
-    "Operational QA dashboard (monthly). Definitions: Legacy = BugType=Legacy; "
-    "Escaped defects = FoundStage=prod; period = @StartOfMonth..@Today."
+    "Operational QA dashboard (monthly): legacy backlog, escaped defects, and "
+    "throughput for @StartOfMonth..@Today."
 )
 EXEC_DESCRIPTION = (
-    "Executive QA dashboard (rolling 30 days). Focus: escaped defects, "
-    "delivery throughput, and legacy backlog reduction."
+    "Executive QA dashboard (30 days): escaped defects, delivery throughput, "
+    "and legacy backlog trend."
 )
 
 # Dashboard grid layout — (name_substring, widget_type, row, col, rowSpan, colSpan, title)
