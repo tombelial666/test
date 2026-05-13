@@ -1,0 +1,16 @@
+.siebert-documents,
+.siebert-documents__iframe {
+  width: 100%;
+  height: 100%;
+}
+
+.siebert-documents__spinner-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.siebert-documents__iframe {
+  border: none !important;
+  border-radius: 10px;
+  min-height: 600px;
+}

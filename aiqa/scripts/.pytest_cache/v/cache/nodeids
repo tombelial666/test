@@ -1,7 +1,9 @@
 [
   "tests/test_collect_q1_metrics.py::TestADOClientGetRelations::test_no_relations",
   "tests/test_collect_q1_metrics.py::TestADOClientGetRelations::test_returns_relations",
+  "tests/test_collect_q1_metrics.py::TestADOClientGetWorkItems::test_batches_requests_above_api_limit",
   "tests/test_collect_q1_metrics.py::TestADOClientGetWorkItems::test_empty_ids_returns_empty",
+  "tests/test_collect_q1_metrics.py::TestADOClientGetWorkItems::test_retries_without_missing_custom_field",
   "tests/test_collect_q1_metrics.py::TestADOClientGetWorkItems::test_returns_fields",
   "tests/test_collect_q1_metrics.py::TestADOClientWiql::test_empty_result",
   "tests/test_collect_q1_metrics.py::TestADOClientWiql::test_returns_ids",
@@ -12,6 +14,9 @@
   "tests/test_collect_q1_metrics.py::TestBugsPerPbi::test_normal",
   "tests/test_collect_q1_metrics.py::TestCaughtBeforeProdRate::test_mixed",
   "tests/test_collect_q1_metrics.py::TestCaughtBeforeProdRate::test_no_pbis",
+  "tests/test_collect_q1_metrics.py::TestChunked::test_empty_input",
+  "tests/test_collect_q1_metrics.py::TestChunked::test_invalid_chunk_size",
+  "tests/test_collect_q1_metrics.py::TestChunked::test_splits_into_equal_chunks",
   "tests/test_collect_q1_metrics.py::TestCollectAll::test_all_names_unique",
   "tests/test_collect_q1_metrics.py::TestCollectAll::test_returns_ten_metrics",
   "tests/test_collect_q1_metrics.py::TestDefectRemovalEfficiency::test_all_prod",
@@ -37,6 +42,8 @@
   "tests/test_collect_q1_metrics.py::TestMetricResult::test_str_bugs_per_pbi_unit",
   "tests/test_collect_q1_metrics.py::TestMetricResult::test_str_no_data",
   "tests/test_collect_q1_metrics.py::TestMetricResult::test_str_with_data",
+  "tests/test_collect_q1_metrics.py::TestMissingFieldFromError::test_extracts_field_name",
+  "tests/test_collect_q1_metrics.py::TestMissingFieldFromError::test_returns_none_for_unrelated_error",
   "tests/test_collect_q1_metrics.py::TestParseArgs::test_custom_dates",
   "tests/test_collect_q1_metrics.py::TestParseArgs::test_defaults_are_current_month",
   "tests/test_collect_q1_metrics.py::TestPeriodStr::test_format",
@@ -51,6 +58,9 @@
   "tests/test_collect_q1_metrics.py::TestTraceabilityCompleteness::test_no_pbis",
   "tests/test_collect_q1_metrics.py::TestTraceabilityCompleteness::test_with_links",
   "tests/test_collect_q1_metrics.py::TestVerifiedConstants::test_bug_states_match_ado",
+  "tests/test_collect_q1_metrics.py::TestVerifiedConstants::test_bug_type_legacy_value",
+  "tests/test_collect_q1_metrics.py::TestVerifiedConstants::test_found_stage_pre_prod_values",
+  "tests/test_collect_q1_metrics.py::TestVerifiedConstants::test_found_stage_prod_value",
   "tests/test_collect_q1_metrics.py::TestVerifiedConstants::test_pbi_closed_states",
   "tests/test_collect_q1_metrics.py::TestVerifiedConstants::test_pbi_type_is_feature"
 ]

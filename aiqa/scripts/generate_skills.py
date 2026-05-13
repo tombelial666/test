@@ -17,6 +17,7 @@ TEMPLATES_DIR = ROOT / "aiqa" / "templates" / "skill-render"
 
 CURSOR_ROOT = ROOT / ".cursor" / "skills"
 CLAUDE_ROOT = ROOT / ".claude" / "skills"
+COMMANDS_ROOT = ROOT / ".claude" / "commands"
 
 
 def load_template(name: str) -> str:
@@ -136,6 +137,20 @@ def render_claude(spec: dict[str, Any]) -> str:
     )
 
 
+def sync_all_to_commands() -> None:
+    """Sync .claude/skills/*/skill.md → .claude/commands/<name>.md for Claude Code slash commands."""
+    COMMANDS_ROOT.mkdir(parents=True, exist_ok=True)
+    synced = 0
+    for skill_dir in sorted(CLAUDE_ROOT.iterdir()):
+        if skill_dir.is_dir():
+            skill_file = skill_dir / "skill.md"
+            if skill_file.exists():
+                content = skill_file.read_text(encoding="utf-8")
+                (COMMANDS_ROOT / f"{skill_dir.name}.md").write_text(content, encoding="utf-8")
+                synced += 1
+    print(f"Commands synced: {synced} skills → .claude/commands/")
+
+
 def write_outputs() -> None:
     for spec_path, spec in load_specs():
         skill_name = spec["name"]
@@ -150,6 +165,8 @@ def write_outputs() -> None:
         claude_dir.mkdir(parents=True, exist_ok=True)
         claude_skill = render_claude(spec)
         (claude_dir / "skill.md").write_text(claude_skill, encoding="utf-8")
+
+    sync_all_to_commands()
 
 
 if __name__ == "__main__":

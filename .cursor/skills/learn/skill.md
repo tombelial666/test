@@ -216,6 +216,58 @@ No pressure to promote now. discoveries.md stays in git — you can do it later.
 
 ---
 
+## GATE 7 (optional): BEAST MODE — self-evaluation
+
+Run **after** GATE 0–6 when the engineer wants strict quality, says **beast**, or pastes the BEAST protocol.
+
+### Purpose
+
+Audit `discoveries.md` (and the `discoveries` section in `task.yaml` if that file exists) before treating the session as closed.
+
+### Scoring (0–12 per criterion)
+
+| # | Criterion | PASS at 12 when |
+|---|-----------|-----------------|
+| 1 | **Evidence** | Every finding cites file:line, log, failing test, or reproducible behavior |
+| 2 | **Actionability** | Every finding has ≥1 concrete checklist next step |
+| 3 | **Coverage** | Non-trivial session facts captured (diffs, errors, reversals, decisions) |
+| 4 | **Classification accuracy** | Types match GATE 3 definitions, not lazy defaults |
+| 5 | **Risk articulation** | "Why it matters" states what breaks if ignored |
+| 6 | **YAML promotion readiness** | Each hotspot/impact_rule has complete copy-paste YAML **or** an explicit one-liner: no promotion candidates this session |
+| 7 | **Domain specificity** | Concrete repo paths, symbols, config keys — not generic advice |
+| 8 | **No invented findings** | Only engineer input plus artifacts (diff, output, file reads) |
+| 9 | **Ordering** | Findings ordered most critical → least |
+| 10 | **Conciseness** | No vague filler ("code is messy" without proof) |
+| 11 | **task.yaml updated** | `discoveries` block present when `task.yaml` exists in the task folder |
+| 12 | **Promotion status accuracy** | draft / ready / promoted matches what was validated |
+
+**N/A:** If a criterion does not apply, score **12** only after a one-line justification (e.g. no hotspots → criterion 6 N/A by design).
+
+### Workflow
+
+1. Fill a table: Score (0–12) and "What's wrong" for any score <12.
+2. For each <12: name the **exact** edit → apply it to `discoveries.md` (and `task.yaml` if needed) → re-score.
+3. **Cap:** at most **2** refactor passes unless the engineer asks for more (avoids infinite polish).
+4. Print the final table with PASS/FAIL per row.
+5. Optional: list **[QUICK WIN]** ideas — **do not implement** unless the engineer opts in.
+
+### Appendix in discoveries.md
+
+When GATE 7 runs, append:
+
+```markdown
+## BEAST MODE — self-evaluation (GATE 7)
+
+| # | Criterion | Score | PASS | Notes |
+|---|-----------|-------|------|-------|
+| 1 | Evidence | … | Y/N | … |
+| … | … | … | … | … |
+
+**Overall:** PASS | NEEDS_WORK
+```
+
+---
+
 ## RULES
 
 - Do not invent findings — only capture what the engineer actually reported or what is visible in git diff

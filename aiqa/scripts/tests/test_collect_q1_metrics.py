@@ -10,18 +10,26 @@ import pytest
 
 # Script lives one level up; add parent dir to path so pytest can import it.
 import os
+import requests
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from collect_q1_metrics import (
     ADOClient,
     MetricResult,
     Q1MetricsCollector,
-    _has_tag,
+    WORK_ITEMS_BATCH_SIZE,
+    _chunked,
     _in_clause,
+    _missing_field_from_error,
     _period_str,
     _ratio,
     main,
     _parse_args,
+    FIELD_FOUND_STAGE,
+    FIELD_BUG_TYPE,
+    FOUND_STAGE_PROD,
+    FOUND_STAGE_PRE_PROD,
+    BUG_TYPE_LEGACY,
     FIELD_DEP_MAP_COMPLETED,
     FIELD_DEP_MAP_REQUIRED,
     FIELD_QA_DECISION,
@@ -41,8 +49,18 @@ SINCE = datetime(2026, 4, 1, tzinfo=timezone.utc)
 UNTIL = datetime(2026, 4, 30, tzinfo=timezone.utc)
 
 
-def _bug(id: int, tags: str = "", parent: int | None = None) -> dict:
-    return {"System.Id": id, "System.Tags": tags, "System.Parent": parent}
+def _bug(
+    id: int,
+    found_stage: str | None = None,
+    bug_type: str | None = None,
+    parent: int | None = None,
+) -> dict:
+    return {
+        "System.Id": id,
+        "System.Parent": parent,
+        FIELD_FOUND_STAGE: found_stage,
+        FIELD_BUG_TYPE: bug_type,
+    }
 
 
 def _pbi(
@@ -112,26 +130,6 @@ class TestRatio:
         assert _ratio(1, 3) == 33.3
 
 
-class TestHasTag:
-    def test_none(self):
-        assert _has_tag(None, "Prod") is False
-
-    def test_empty_string(self):
-        assert _has_tag("", "Prod") is False
-
-    def test_match(self):
-        assert _has_tag("Prod; legacy", "Prod") is True
-
-    def test_case_insensitive(self):
-        assert _has_tag("PROD; legacy", "prod") is True
-
-    def test_no_match(self):
-        assert _has_tag("QA; Staging", "Prod") is False
-
-    def test_single_tag(self):
-        assert _has_tag("legacy", "legacy") is True
-
-
 class TestPeriodStr:
     def test_format(self):
         result = _period_str(SINCE, UNTIL)
@@ -145,6 +143,28 @@ class TestInClause:
 
     def test_single(self):
         assert _in_clause(("Resolved",)) == "'Resolved'"
+
+
+class TestChunked:
+    def test_splits_into_equal_chunks(self):
+        data = [1, 2, 3, 4, 5]
+        assert _chunked(data, 2) == [[1, 2], [3, 4], [5]]
+
+    def test_empty_input(self):
+        assert _chunked([], 3) == []
+
+    def test_invalid_chunk_size(self):
+        with pytest.raises(ValueError):
+            _chunked([1], 0)
+
+
+class TestMissingFieldFromError:
+    def test_extracts_field_name(self):
+        text = '{"message":"TF51535: Cannot find field Custom.FoundStage."}'
+        assert _missing_field_from_error(text) == "Custom.FoundStage"
+
+    def test_returns_none_for_unrelated_error(self):
+        assert _missing_field_from_error("Some other error") is None
 
 
 class TestVerifiedConstants:
@@ -164,6 +184,18 @@ class TestVerifiedConstants:
     def test_pbi_closed_states(self):
         assert "Completed" in PBI_CLOSED_STATES
         assert "Done" in PBI_CLOSED_STATES
+
+    def test_found_stage_prod_value(self):
+        assert FOUND_STAGE_PROD == "prod"
+
+    def test_found_stage_pre_prod_values(self):
+        assert "dev" in FOUND_STAGE_PRE_PROD
+        assert "qa" in FOUND_STAGE_PRE_PROD
+        assert "preprod" in FOUND_STAGE_PRE_PROD
+        assert "prod" not in FOUND_STAGE_PRE_PROD
+
+    def test_bug_type_legacy_value(self):
+        assert BUG_TYPE_LEGACY == "Legacy"
 
 
 # ---------------------------------------------------------------------------
@@ -210,18 +242,43 @@ class TestADOClientWiql:
 class TestADOClientGetWorkItems:
     def test_empty_ids_returns_empty(self):
         client = ADOClient("token")
-        # No HTTP call should be made for empty ids
         assert client.get_work_items([], ["System.Id"]) == []
 
     def test_returns_fields(self):
         mock_resp = MagicMock()
         mock_resp.json.return_value = {
-            "value": [{"fields": {"System.Id": 1, "System.Tags": "Prod"}}]
+            "value": [{"fields": {"System.Id": 1, "Custom.FoundStage": "prod"}}]
         }
         with patch("collect_q1_metrics.requests.post", return_value=mock_resp):
             client = ADOClient("token")
-            result = client.get_work_items([1], ["System.Id", "System.Tags"])
-        assert result == [{"System.Id": 1, "System.Tags": "Prod"}]
+            result = client.get_work_items([1], ["System.Id", "Custom.FoundStage"])
+        assert result == [{"System.Id": 1, "Custom.FoundStage": "prod"}]
+
+    def test_batches_requests_above_api_limit(self):
+        mock_resp = MagicMock()
+        mock_resp.json.return_value = {"value": [{"fields": {"System.Id": 1}}]}
+        ids = list(range(1, WORK_ITEMS_BATCH_SIZE + 2))
+        with patch("collect_q1_metrics.requests.post", return_value=mock_resp) as mock_post:
+            client = ADOClient("token")
+            client.get_work_items(ids, ["System.Id"])
+        assert mock_post.call_count == 2
+
+    def test_retries_without_missing_custom_field(self):
+        bad_resp = MagicMock()
+        bad_resp.status_code = 400
+        bad_resp.text = '{"message":"TF51535: Cannot find field Custom.FoundStage."}'
+        bad_resp.raise_for_status.side_effect = requests.exceptions.HTTPError(response=bad_resp)
+
+        ok_resp = MagicMock()
+        ok_resp.raise_for_status.return_value = None
+        ok_resp.json.return_value = {"value": [{"fields": {"System.Id": 1}}]}
+
+        with patch("collect_q1_metrics.requests.post", side_effect=[bad_resp, ok_resp]) as mock_post:
+            client = ADOClient("token")
+            result = client.get_work_items([1], ["System.Id", "Custom.FoundStage"])
+
+        assert mock_post.call_count == 2
+        assert result == [{"System.Id": 1, "Custom.FoundStage": None}]
 
 
 class TestADOClientGetRelations:
@@ -251,16 +308,23 @@ class TestADOClientGetRelations:
 
 class TestBugsPerPbi:
     def test_normal(self):
-        bugs = [_bug(101, "QA"), _bug(102, "Prod"), _bug(103, "QA")]
+        bugs = [
+            _bug(101, "qa", bug_type="New", parent=201),
+            _bug(102, "prod", bug_type="New", parent=202),
+            _bug(103, "qa", bug_type="Legacy", parent=201),  # excluded by BugType
+            _bug(104, "qa", bug_type="New", parent=999),     # excluded (parent not in closed pbis)
+            _bug(105, "qa", bug_type="New", parent=None),    # excluded (no explicit planning link)
+        ]
         pbis = [_pbi(201), _pbi(202)]
         c = Q1MetricsCollector(FakeADOClient(bugs, pbis))
         r = c.bugs_per_pbi(SINCE, UNTIL)
-        assert r.numerator == 3
+        assert r.name == "Bugs per PBI (strict linked)"
+        assert r.numerator == 2
         assert r.denominator == 2
-        assert r.value == 1.5
+        assert r.value == 1.0
 
     def test_no_pbis(self):
-        bugs = [_bug(101, "QA")]
+        bugs = [_bug(101, "qa", bug_type="New", parent=201)]
         c = Q1MetricsCollector(FakeADOClient(bugs, []))
         r = c.bugs_per_pbi(SINCE, UNTIL)
         assert r.denominator == 0
@@ -274,7 +338,11 @@ class TestBugsPerPbi:
 
 class TestLegacyBugsPerMonth:
     def test_some_legacy(self):
-        bugs = [_bug(101, "legacy; QA"), _bug(102, "QA"), _bug(103, "legacy; Prod")]
+        bugs = [
+            _bug(101, found_stage="qa", bug_type="Legacy"),
+            _bug(102, found_stage="qa", bug_type="New"),
+            _bug(103, found_stage="prod", bug_type="Legacy"),
+        ]
         c = Q1MetricsCollector(FakeADOClient(bugs, []))
         r = c.legacy_bugs_per_month(SINCE, UNTIL)
         assert r.numerator == 2
@@ -282,7 +350,7 @@ class TestLegacyBugsPerMonth:
         assert r.value == pytest.approx(66.7, abs=0.1)
 
     def test_none_legacy(self):
-        bugs = [_bug(101, "QA"), _bug(102, "Prod")]
+        bugs = [_bug(101, bug_type="New"), _bug(102, bug_type="New")]
         c = Q1MetricsCollector(FakeADOClient(bugs, []))
         r = c.legacy_bugs_per_month(SINCE, UNTIL)
         assert r.numerator == 0
@@ -296,7 +364,7 @@ class TestLegacyBugsPerMonth:
 
 class TestProductionBugRate:
     def test_some_prod(self):
-        bugs = [_bug(101, "Prod"), _bug(102, "QA")]
+        bugs = [_bug(101, found_stage="prod"), _bug(102, found_stage="qa")]
         pbis = [_pbi(201), _pbi(202), _pbi(203), _pbi(204)]
         c = Q1MetricsCollector(FakeADOClient(bugs, pbis))
         r = c.production_bug_rate(SINCE, UNTIL)
@@ -305,7 +373,7 @@ class TestProductionBugRate:
         assert r.value == 25.0
 
     def test_no_pbis(self):
-        bugs = [_bug(101, "Prod")]
+        bugs = [_bug(101, found_stage="prod")]
         c = Q1MetricsCollector(FakeADOClient(bugs, []))
         r = c.production_bug_rate(SINCE, UNTIL)
         assert r.value == 0.0
@@ -313,16 +381,20 @@ class TestProductionBugRate:
 
 class TestCaughtBeforeProdRate:
     def test_mixed(self):
-        bugs = [_bug(101, "QA"), _bug(102, "Staging"), _bug(103, "Prod")]
+        bugs = [
+            _bug(101, found_stage="qa"),
+            _bug(102, found_stage="preprod"),
+            _bug(103, found_stage="prod"),
+        ]
         pbis = [_pbi(201), _pbi(202), _pbi(203), _pbi(204)]
         c = Q1MetricsCollector(FakeADOClient(bugs, pbis))
         r = c.caught_before_prod_rate(SINCE, UNTIL)
-        assert r.numerator == 2  # QA + Staging
+        assert r.numerator == 2  # qa + preprod
         assert r.denominator == 4
         assert r.value == 50.0
 
     def test_no_pbis(self):
-        bugs = [_bug(101, "QA")]
+        bugs = [_bug(101, found_stage="qa")]
         c = Q1MetricsCollector(FakeADOClient(bugs, []))
         r = c.caught_before_prod_rate(SINCE, UNTIL)
         assert r.value == 0.0
@@ -330,7 +402,11 @@ class TestCaughtBeforeProdRate:
 
 class TestEscapedDefectRate:
     def test_some_escaped(self):
-        bugs = [_bug(101, "Prod"), _bug(102, "QA"), _bug(103, "Staging")]
+        bugs = [
+            _bug(101, found_stage="prod"),
+            _bug(102, found_stage="qa"),
+            _bug(103, found_stage="preprod"),
+        ]
         c = Q1MetricsCollector(FakeADOClient(bugs, []))
         r = c.escaped_defect_rate(SINCE, UNTIL)
         assert r.numerator == 1
@@ -345,15 +421,20 @@ class TestEscapedDefectRate:
 
 class TestDefectRemovalEfficiency:
     def test_mixed(self):
-        bugs = [_bug(101, "QA"), _bug(102, "Staging"), _bug(103, "Prod"), _bug(104, "")]
+        bugs = [
+            _bug(101, found_stage="qa"),
+            _bug(102, found_stage="preprod"),
+            _bug(103, found_stage="prod"),
+            _bug(104),  # no found_stage — excluded from DRE denominator
+        ]
         c = Q1MetricsCollector(FakeADOClient(bugs, []))
         r = c.defect_removal_efficiency(SINCE, UNTIL)
-        assert r.numerator == 2   # pre-prod (QA + Staging)
-        assert r.denominator == 3  # pre-prod + prod (excludes untagged)
+        assert r.numerator == 2   # pre-prod (qa + preprod)
+        assert r.denominator == 3  # pre-prod + prod (excludes unset)
         assert r.value == pytest.approx(66.7, abs=0.1)
 
     def test_all_prod(self):
-        bugs = [_bug(101, "Prod"), _bug(102, "Prod")]
+        bugs = [_bug(101, found_stage="prod"), _bug(102, found_stage="prod")]
         c = Q1MetricsCollector(FakeADOClient(bugs, []))
         r = c.defect_removal_efficiency(SINCE, UNTIL)
         assert r.numerator == 0
@@ -463,7 +544,10 @@ class TestRiskBasedPlanCoverage:
 
 class TestCollectAll:
     def test_returns_ten_metrics(self):
-        bugs = [_bug(101, "QA; legacy"), _bug(102, "Prod")]
+        bugs = [
+            _bug(101, found_stage="qa", bug_type="Legacy"),
+            _bug(102, found_stage="prod", bug_type="New"),
+        ]
         pbis = [
             _pbi(
                 201,
@@ -497,7 +581,6 @@ class TestCollectAll:
 class TestParseArgs:
     def test_defaults_are_current_month(self):
         args = _parse_args([])
-        # since should be first day of current month
         assert args.since.endswith("-01")
 
     def test_custom_dates(self):
@@ -517,7 +600,7 @@ class TestMain:
         assert "ADO_PAT" in captured.err
 
     def test_runs_and_prints(self, capsys):
-        bugs = [_bug(101, "QA")]
+        bugs = [_bug(101, found_stage="qa", bug_type="New")]
         pbis = [_pbi(201, qa_decision="Ready", risk_level="High", risk_plan="yes")]
         fake_client = FakeADOClient(bugs, pbis)
 

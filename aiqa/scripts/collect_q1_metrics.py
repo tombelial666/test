@@ -7,18 +7,20 @@ Usage:
 Required env:
     ADO_PAT  Personal Access Token with Read scope on Work Items.
 
-Agreed Bug field conventions (Step 1 complete):
-    System.Tags contains "Prod" | "QA" | "Staging"   ← environment
-    System.Tags contains "legacy"                      ← legacy=yes
+Bug field conventions (custom ADO fields — create via Process Customization):
+    Custom.FoundStage   picklist: dev | qa | preprod | prod
+    Custom.BugType      picklist: New | Legacy
 """
 
 from __future__ import annotations
 
 import argparse
 import os
+import re
 import sys
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from itertools import islice
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -30,17 +32,16 @@ from requests.auth import HTTPBasicAuth
 ADO_ORG = "etnasoft"
 ADO_PROJECT = "ETNA_TRADER"
 ADO_API_VERSION = "7.1"
+WORK_ITEMS_BATCH_SIZE = 200
 
-# Environment tags on Bug work items (agreed convention — Step 1 complete)
-# These tags need to be added to existing bugs (Step 2). Until then metrics 3-6 return 0.
-TAG_PROD = "Prod"
-TAG_QA = "QA"
-TAG_STAGING = "Staging"
-TAG_LEGACY = "legacy"  # already in use — metric 2 works immediately
-PRE_PROD_TAGS = (TAG_QA, TAG_STAGING)
+# Custom field reference names for Bug
+FIELD_FOUND_STAGE = "Custom.FoundStage"
+FIELD_BUG_TYPE = "Custom.BugType"
+FOUND_STAGE_PROD = "prod"
+FOUND_STAGE_PRE_PROD = ("dev", "qa", "preprod")
+BUG_TYPE_LEGACY = "Legacy"
 
-# Custom field reference names — these fields need to be created in ADO (Step 2).
-# Currently Custom.Customer and Custom.BugType exist; QaDecision etc. do not yet.
+# Custom field reference names for Feature (PBI)
 FIELD_QA_DECISION = "Custom.QaDecision"
 FIELD_RISK_LEVEL = "Custom.RiskLevel"
 FIELD_RISK_PLAN_COMPLETED = "Custom.RiskPlanCompleted"
@@ -62,8 +63,9 @@ TEST_RELATION_PREFIX = "Microsoft.VSTS.Common.TestedBy"
 # Fields fetched for each work item type
 BUG_FIELDS = [
     "System.Id",
-    "System.Tags",
     "System.Parent",
+    FIELD_FOUND_STAGE,
+    FIELD_BUG_TYPE,
 ]
 PBI_FIELDS = [
     "System.Id",
@@ -118,14 +120,38 @@ class ADOClient:
         if not ids:
             return []
         url = f"{self._org_base}/wit/workitemsbatch?api-version={ADO_API_VERSION}"
-        resp = requests.post(
-            url,
-            json={"ids": ids, "fields": fields},
-            auth=self._auth,
-            timeout=30,
-        )
-        resp.raise_for_status()
-        return [item["fields"] for item in resp.json().get("value", [])]
+        requested_fields = list(dict.fromkeys(fields))
+        missing_fields: set[str] = set()
+        all_items: list[dict] = []
+        for chunk in _chunked(ids, WORK_ITEMS_BATCH_SIZE):
+            active_fields = [f for f in requested_fields if f not in missing_fields] or ["System.Id"]
+            resp = requests.post(url, json={"ids": chunk, "fields": active_fields}, auth=self._auth, timeout=30)
+            while True:
+                try:
+                    resp.raise_for_status()
+                    break
+                except requests.exceptions.HTTPError:
+                    missing_field = _missing_field_from_error(resp.text)
+                    if (
+                        resp.status_code == 400
+                        and missing_field
+                        and missing_field in active_fields
+                    ):
+                        missing_fields.add(missing_field)
+                        active_fields = [f for f in requested_fields if f not in missing_fields] or ["System.Id"]
+                        resp = requests.post(
+                            url, json={"ids": chunk, "fields": active_fields}, auth=self._auth, timeout=30
+                        )
+                        continue
+                    raise
+            all_items.extend(resp.json().get("value", []))
+        result: list[dict] = []
+        for item in all_items:
+            item_fields = item.get("fields", {})
+            for f in requested_fields:
+                item_fields.setdefault(f, None)
+            result.append(item_fields)
+        return result
 
     def get_relations(self, work_item_id: int) -> list[dict]:
         url = (
@@ -147,19 +173,29 @@ def _ratio(numerator: int, denominator: int) -> float:
     return round(numerator / denominator * 100, 1) if denominator else 0.0
 
 
-def _has_tag(tags_str: str | None, tag: str) -> bool:
-    """Return True if *tag* appears (case-insensitive) in the semicolon-separated tags string."""
-    if not tags_str:
-        return False
-    return tag.lower() in {t.strip().lower() for t in tags_str.split(";")}
-
-
 def _period_str(since: datetime, until: datetime) -> str:
     return f"{since.date()} – {until.date()}"
 
 
 def _in_clause(values: tuple[str, ...]) -> str:
     return ", ".join(f"'{v}'" for v in values)
+
+
+def _chunked(values: list[int], chunk_size: int) -> list[list[int]]:
+    if chunk_size <= 0:
+        raise ValueError("chunk_size must be greater than zero")
+    iterator = iter(values)
+    chunks: list[list[int]] = []
+    while chunk := list(islice(iterator, chunk_size)):
+        chunks.append(chunk)
+    return chunks
+
+
+def _missing_field_from_error(response_text: str) -> str | None:
+    match = re.search(r"Cannot find field ([A-Za-z0-9_.]+)\.", response_text)
+    if not match:
+        return None
+    return match.group(1)
 
 
 # ---------------------------------------------------------------------------
@@ -200,10 +236,15 @@ class Q1MetricsCollector:
     def bugs_per_pbi(self, since: datetime, until: datetime) -> MetricResult:
         bugs = self._bugs(since, until)
         pbis = self._closed_pbis(since, until)
-        n_bugs = len(bugs)
+        closed_pbi_ids = {p.get("System.Id") for p in pbis if p.get("System.Id") is not None}
+        linked_new_bugs = [
+            b for b in bugs
+            if b.get(FIELD_BUG_TYPE) == "New" and b.get("System.Parent") in closed_pbi_ids
+        ]
+        n_bugs = len(linked_new_bugs)
         n_pbis = len(pbis)
         return MetricResult(
-            name="Bugs per PBI",
+            name="Bugs per PBI (strict linked)",
             numerator=n_bugs,
             denominator=n_pbis,
             value=round(n_bugs / n_pbis, 2) if n_pbis else 0.0,
@@ -215,7 +256,7 @@ class Q1MetricsCollector:
 
     def legacy_bugs_per_month(self, since: datetime, until: datetime) -> MetricResult:
         bugs = self._bugs(since, until)
-        legacy = [b for b in bugs if _has_tag(b.get("System.Tags"), TAG_LEGACY)]
+        legacy = [b for b in bugs if b.get(FIELD_BUG_TYPE) == BUG_TYPE_LEGACY]
         return MetricResult(
             name="Legacy bugs per month",
             numerator=len(legacy),
@@ -229,7 +270,7 @@ class Q1MetricsCollector:
     def production_bug_rate(self, since: datetime, until: datetime) -> MetricResult:
         bugs = self._bugs(since, until)
         pbis = self._closed_pbis(since, until)
-        prod = [b for b in bugs if _has_tag(b.get("System.Tags"), TAG_PROD)]
+        prod = [b for b in bugs if b.get(FIELD_FOUND_STAGE) == FOUND_STAGE_PROD]
         return MetricResult(
             name="Production bug rate",
             numerator=len(prod),
@@ -245,7 +286,7 @@ class Q1MetricsCollector:
         pbis = self._closed_pbis(since, until)
         pre_prod = [
             b for b in bugs
-            if any(_has_tag(b.get("System.Tags"), t) for t in PRE_PROD_TAGS)
+            if b.get(FIELD_FOUND_STAGE) in FOUND_STAGE_PRE_PROD
         ]
         return MetricResult(
             name="Caught-before-prod bug rate",
@@ -259,7 +300,7 @@ class Q1MetricsCollector:
 
     def escaped_defect_rate(self, since: datetime, until: datetime) -> MetricResult:
         bugs = self._bugs(since, until)
-        prod = [b for b in bugs if _has_tag(b.get("System.Tags"), TAG_PROD)]
+        prod = [b for b in bugs if b.get(FIELD_FOUND_STAGE) == FOUND_STAGE_PROD]
         return MetricResult(
             name="Escaped defect rate",
             numerator=len(prod),
@@ -274,9 +315,9 @@ class Q1MetricsCollector:
         bugs = self._bugs(since, until)
         pre_prod = sum(
             1 for b in bugs
-            if any(_has_tag(b.get("System.Tags"), t) for t in PRE_PROD_TAGS)
+            if b.get(FIELD_FOUND_STAGE) in FOUND_STAGE_PRE_PROD
         )
-        prod = sum(1 for b in bugs if _has_tag(b.get("System.Tags"), TAG_PROD))
+        prod = sum(1 for b in bugs if b.get(FIELD_FOUND_STAGE) == FOUND_STAGE_PROD)
         total = pre_prod + prod
         return MetricResult(
             name="Defect removal efficiency (DRE)",

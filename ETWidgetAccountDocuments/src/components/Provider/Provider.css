@@ -1,0 +1,10 @@
+.provider {
+  height: 100%;
+  width: 100%;
+}
+
+.provider__position-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}

@@ -1,0 +1,13 @@
+.table {
+  margin-top: 20px;
+}
+
+.table__documents {
+  width: 100%;
+  border-spacing: 0;
+}
+
+.table__documents td,
+.table__documents th {
+  width: 33%;
+}

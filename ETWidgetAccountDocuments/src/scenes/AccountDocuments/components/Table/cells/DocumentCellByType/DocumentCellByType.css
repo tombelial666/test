@@ -1,0 +1,19 @@
+.document-cell {
+}
+
+.document-cell__link {
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.document-cell__link--indent {
+  margin-left: 4px;
+}
+
+.document-cell__insert {
+  margin-top: 4px;
+}
+
+.document-cell__insert a:not(:last-child):after {
+  content: ',';
+}

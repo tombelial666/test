@@ -1,0 +1,17 @@
+.app {
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.app__loading-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+@media screen and (max-width: 768px) {
+  .app {
+    padding: 4px;
+  }
+}

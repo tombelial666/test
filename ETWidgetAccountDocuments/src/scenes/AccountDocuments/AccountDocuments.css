@@ -1,0 +1,10 @@
+.account-documents {
+  width: 100%;
+  height: 100%;
+}
+
+.account-documents__position-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}

@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<testsuites name="trivy">
+    <testsuite tests="6" failures="6" name="package-lock.json" errors="0" skipped="0" time="">
+        <properties>
+            <property name="type" value="npm"></property>
+        </properties>
+        <testcase classname="seroval-1.1.1" name="[HIGH] CVE-2026-23736" time="">
+            <failure message="seroval: seroval: Prototype pollution via improper input validation during JSON deserialization" type="description">seroval facilitates JS value stringification, including complex structures beyond JSON.stringify capabilities. In versions 1.4.0 and below, due to improper input validation, a malicious object key can lead to prototype pollution during JSON deserialization. This vulnerability affects only JSON deserialization functionality. This issue is fixed in version 1.4.1.</failure>
+        </testcase>
+        <testcase classname="seroval-1.1.1" name="[HIGH] CVE-2026-23737" time="">
+            <failure message="seroval: seroval: Arbitrary Code Execution via Improper JSON Deserialization" type="description">seroval facilitates JS value stringification, including complex structures beyond JSON.stringify capabilities. In versions 1.4.0 and below, improper input handling in the JSON deserialization component can lead to arbitrary JavaScript code execution. Exploitation is possible via overriding constant value and error deserialization, allowing indirect access to unsafe JS evaluation. At minimum, attackers need the ability to perform 4 separate requests on the same function, and partial knowledge of how the serialized data is used during later runtime processing. This vulnerability affects the fromJSON and fromCrossJSON functions in a client-to-server transmission scenario. This issue has been fixed in version 1.4.0.</failure>
+        </testcase>
+        <testcase classname="seroval-1.1.1" name="[HIGH] CVE-2026-23956" time="">
+            <failure message="seroval: Seroval: Denial of Service via malicious regular expressions during deserialization" type="description">seroval facilitates JS value stringification, including complex structures beyond JSON.stringify capabilities. In versions 1.4.0&#xA;and below, overriding RegExp serialization with extremely large patterns can exhaust JavaScript runtime memory during deserialization. Additionally, overriding RegExp serialization with patterns that trigger catastrophic backtracking can lead to ReDoS (Regular Expression Denial of Service). This issue has been fixed in version 1.4.1.</failure>
+        </testcase>
+        <testcase classname="seroval-1.1.1" name="[HIGH] CVE-2026-23957" time="">
+            <failure message="seroval: Seroval: Denial of Service via large encoded array lengths" type="description">seroval facilitates JS value stringification, including complex structures beyond JSON.stringify capabilities. In versions 1.4.0&#xA;and below, overriding encoded array lengths by replacing them with an excessively large value causes the deserialization process to significantly increase processing time. This issue has been fixed in version 1.4.1.</failure>
+        </testcase>
+        <testcase classname="seroval-1.1.1" name="[HIGH] CVE-2026-24006" time="">
+            <failure message="seroval: Seroval: Denial of Service due to excessive recursion during object serialization" type="description">Seroval facilitates JS value stringification, including complex structures beyond JSON.stringify capabilities. In versions 1.4.0&#xA;and below, serialization of objects with extreme depth can exceed the maximum call stack limit. In version 1.4.1, Seroval introduces a `depthLimit` parameter in serialization/deserialization methods. An error will be thrown if the depth limit is reached.</failure>
+        </testcase>
+        <testcase classname="solid-js-1.8.19" name="[HIGH] CVE-2025-27109" time="">
+            <failure message="Solid Lacks Escaping of HTML in JSX Fragments allows for Cross-Site Scripting (XSS)" type="description">solid-js is a declarative, efficient, and flexible JavaScript library for building user interfaces. In affected versions Inserts/JSX expressions inside illegal inlined JSX fragments lacked escaping, allowing user input to be rendered as HTML when put directly inside JSX fragments. This issue has been addressed in version 1.9.4 and all users are advised to upgrade. There are no known workarounds for this vulnerability.</failure>
+        </testcase>
+    </testsuite>
+    <testsuite tests="0" failures="0" name="package-lock.json" errors="0" skipped="0" time="">
+        <properties>
+            <property name="type" value="npm"></property>
+        </properties>
+    </testsuite>
+</testsuites>

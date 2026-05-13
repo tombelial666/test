@@ -1,0 +1,28 @@
+name: "Etna Widget Account Documents pipeline"
+
+trigger:
+  branches:
+    include:
+      - dev
+
+pr: none
+
+parameters:
+- name: devops_branch
+  type: string
+  default: 'master'
+  displayName: 'Branch of DevOps Repo (Templates)'
+
+resources:
+  repositories:
+  - repository: devops
+    type: git
+    name: ETNA_TRADER/DevOps
+    ref: ${{ parameters.devops_branch }}
+
+jobs:
+- template: templates/node/generic-npm-header.yml@devops
+  parameters:
+    node_version: '20.x'
+    s3_publish: true
+    s3_publish_target_folder: "account-documents/$(version)"
